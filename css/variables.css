@@ -1,0 +1,53 @@
+/*
+  Identidade visual PROVISÓRIA.
+  Quando a identidade oficial da DYNEW (logo, cores, fontes) for definida,
+  troque apenas os valores abaixo — nenhum outro arquivo precisa ser alterado.
+*/
+
+:root {
+  /* Cores — paleta neutra provisória (grafite + tom terroso/pedra) */
+  --color-primary: #4a4038;
+  --color-primary-dark: #332b25;
+  --color-secondary: #8a7b6c;
+  --color-accent: #b08d57;
+
+  --color-bg: #ffffff;
+  --color-bg-alt: #f5f3f0;
+  --color-text: #262220;
+  --color-text-muted: #5c5450;
+  --color-border: #ded8d1;
+
+  --color-whatsapp: #25d366;
+  --color-whatsapp-dark: #1da851;
+
+  /* Tipografia */
+  --font-heading: "Poppins", "Segoe UI", Arial, sans-serif;
+  --font-body: "Inter", "Segoe UI", Arial, sans-serif;
+
+  --fs-h1: clamp(2rem, 5vw, 3.25rem);
+  --fs-h2: clamp(1.5rem, 3.5vw, 2.25rem);
+  --fs-h3: clamp(1.15rem, 2.5vw, 1.5rem);
+  --fs-body: 1rem;
+  --fs-small: 0.875rem;
+
+  /* Espaçamento */
+  --space-xs: 0.5rem;
+  --space-sm: 1rem;
+  --space-md: 1.5rem;
+  --space-lg: 2.5rem;
+  --space-xl: 4rem;
+  --space-2xl: 6rem;
+
+  /* Layout */
+  --max-width: 1200px;
+  --radius: 8px;
+  --radius-sm: 4px;
+
+  /* Foco acessível */
+  --focus-ring: 3px solid var(--color-accent);
+  --focus-offset: 2px;
+
+  /* Transições (respeitam prefers-reduced-motion em style.css) */
+  --transition-fast: 150ms ease;
+  --transition-base: 250ms ease;
+}
