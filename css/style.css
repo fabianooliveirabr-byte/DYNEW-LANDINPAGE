@@ -279,7 +279,6 @@ section {
   background-color: rgba(17, 19, 21, 0.94);
   backdrop-filter: blur(14px);
   -webkit-backdrop-filter: blur(14px);
-  border-bottom-color: rgba(252, 251, 248, 0.08);
 }
 
 .header-inner {
@@ -295,6 +294,11 @@ section {
   flex-direction: column;
   align-items: flex-start;
   gap: 4px;
+  /* .header-inner centraliza os itens verticalmente (align-items: center);
+     numa marca deste tamanho isso empurraria o topo das letras para fora
+     da viewport (acima de y=0). Ancora ao topo da faixa do header e deixa
+     o excesso transbordar para baixo, sobre o hero — nunca para cima. */
+  align-self: flex-start;
 }
 
 .logo {
@@ -311,14 +315,17 @@ section {
   transform-origin: left top;
 }
 
+/* Sublinhado cobre sob "NEW" removido definitivamente (decisão do cliente) —
+   a marca fica limpa, branca e isolada, sem nenhum traço/borda no lugar. */
 .logo span {
   color: inherit;
-  box-shadow: inset 0 -2px 0 var(--dy-copper);
-  padding-bottom: 1px;
 }
 
+/* Removida da composição final (decisão do cliente) — mantida no DOM e no
+   JS (header-motion.js segue animando .style.transform sobre ela) para não
+   quebrar a lógica de dock/undock; display:none basta para ocultá-la. */
 .brand-line {
-  display: block;
+  display: none;
   width: 100%;
   max-width: 72px;
   height: 2px;
@@ -327,7 +334,12 @@ section {
   transform-origin: left center;
 }
 
+/* Oculto no dockado (decisão do cliente: só DYNEW + navegação + CTA
+   dourado ali) e já era invisível no expandido (opacity:0 a t=0) — mantido
+   no DOM e no JS (header-motion.js segue escrevendo .style.opacity), só
+   display:none garante que nunca mais apareça em nenhum estado. */
 .brand-credential {
+  display: none;
   font-family: var(--dy-font-mono);
   font-size: 10px;
   letter-spacing: 0.08em;
@@ -344,15 +356,19 @@ section {
 @media (min-width: 700px) {
   .header-inner {
     height: var(--dy-header-h-desktop);
+    /* Header/hero deixam de ficar presos ao .container de 1200px — a marca
+       precisa se aproximar da borda real da viewport, não de um teto de
+       largura de conteúdo convencional. Usa o token de espaçamento de
+       página do próprio design system CAMADA (já existia, não era usado
+       ainda). Só no desktop: no mobile o .container padrão continua. */
+    max-width: none;
+    padding-left: var(--dy-space-page-desktop);
+    padding-right: var(--dy-space-page-desktop);
+    /* Reduzido de --space-md para caber o menu de 4 itens + CTA ao lado de
+       uma marca bem maior em telas de 1024px (o ponto mais apertado). */
+    gap: var(--space-sm);
   }
 
-  .logo {
-    font-size: 2.5rem;
-  }
-
-  .brand-line {
-    max-width: 96px;
-  }
 }
 
 .nav-toggle {
@@ -426,7 +442,7 @@ section {
 
 .nav-list a:not(.btn) {
   color: var(--dy-paper);
-  font-weight: 600;
+  font-weight: 500;
   display: inline-block;
   padding: var(--space-xs) 0;
   position: relative;
@@ -477,19 +493,50 @@ body.nav-open .whatsapp-float {
   .nav-list {
     flex-direction: row;
     align-items: center;
-    gap: var(--space-lg);
+    gap: var(--space-sm);
     font-size: var(--fs-small);
-    font-weight: 600;
+    font-weight: 500;
     letter-spacing: 0.01em;
   }
 
   .nav-list a {
     padding: 0;
+    /* A marca ficou muito mais larga (seção 1) — com menos espaço sobrando
+       para o menu em telas de 1024px, o CTA de várias palavras podia
+       quebrar em 2-3 linhas. Nenhum item do menu deve quebrar linha. */
+    white-space: nowrap;
   }
 
   .nav-cta {
     margin-top: 0;
   }
+}
+
+/* CTA dourado discreto do header — usa a base do .btn global só para herdar
+   a exclusão do estilo de link sublinhado do menu (.nav-list a:not(.btn));
+   toda a aparência (cor, raio, peso, tamanho) é definida aqui. Mesmo estilo
+   em mobile e desktop — o overlay do menu mobile já tem largura de sobra. */
+.btn-gold {
+  background-color: var(--dy-copper);
+  color: var(--dy-carbon);
+  font-weight: 600;
+  box-shadow: none;
+  transition: opacity var(--transition-fast);
+}
+
+.btn-gold:hover,
+.btn-gold:focus-visible {
+  opacity: 0.85;
+}
+
+/* Especificidade extra (.nav-list a.btn-gold) só para vencer o padding:0 e o
+   font-size que .nav-list a aplica a todos os links do menu em desktop. */
+.nav-list a.btn-gold {
+  min-height: auto;
+  padding: 0.45rem 1rem;
+  border-radius: 12px;
+  font-size: var(--fs-small);
+  line-height: 1;
 }
 
 /* ==========================================================================
@@ -501,12 +548,12 @@ body.nav-open .whatsapp-float {
   position: relative;
   min-height: 100vh;
   min-height: 100svh;
-  display: flex;
-  align-items: flex-end;
+  /* dvh por último: acompanha a barra de endereço do navegador mobile em
+     tempo real, evitando a folga/salto clássico do 100vh fixo. Fallback em
+     cascata — navegadores sem suporte simplesmente ignoram a linha. */
+  min-height: 100dvh;
   overflow: hidden;
   background-color: var(--dy-carbon);
-  color: var(--dy-paper);
-  padding-top: calc(var(--dy-header-h-mobile) + var(--space-lg));
 }
 
 .hero-camada-stage {
@@ -538,30 +585,32 @@ body.nav-open .whatsapp-float {
   background-color: var(--dy-carbon);
 }
 
+/* Prontidão para a fotografia/vídeo real (ainda não fornecida): a <img> de
+   cada cena preenche toda a área da cena (que já ocupa a primeira dobra
+   inteira atrás do header, via .hero-scene acima) em full-bleed cover. */
+.hero-scene img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* Reconfigurado: já não precisa proteger um bloco de texto/CTA (migrado
+   para .proposta-intro) nem o canto inferior esquerdo. Função única agora:
+   manter marca/menu legíveis no topo, sem massa preta pesada na base nem
+   contraste "comercial" — mesma cor base (rgba 17,19,21), só os estágios
+   do gradiente mudam. */
 .hero-scrim {
   position: absolute;
   inset: 0;
   background: linear-gradient(
     180deg,
-    rgba(17, 19, 21, 0.35) 0%,
-    rgba(17, 19, 21, 0.55) 55%,
-    rgba(17, 19, 21, 0.88) 100%
+    rgba(17, 19, 21, 0.55) 0%,
+    rgba(17, 19, 21, 0.32) 30%,
+    rgba(17, 19, 21, 0.32) 70%,
+    rgba(17, 19, 21, 0.5) 100%
   );
   pointer-events: none;
-}
-
-.hero-camada-inner {
-  position: relative;
-  z-index: 1;
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-lg);
-  padding-bottom: var(--space-xl);
-  width: 100%;
-}
-
-.hero-camada-text {
-  max-width: 640px;
 }
 
 .hero-eyebrow {
@@ -575,31 +624,27 @@ body.nav-open .whatsapp-float {
   margin-bottom: var(--space-sm);
 }
 
-.hero-eyebrow--dark {
-  color: var(--dy-copper);
+/* ==========================================================================
+   Proposta — eyebrow/H1/subcopy/CTAs migrados do hero (decisão final: a
+   primeira dobra fica só com marca + menu + imagem + Rail CAMADA). Herda a
+   tipografia global de h1/p (css acima) — aqui só o essencial de layout e
+   o raio dos CTAs, sem tocar no .btn global.
+   ========================================================================== */
+.proposta-intro-inner {
+  max-width: 640px;
 }
 
-.hero-camada-text h1 {
-  font-family: var(--dy-font-sans);
-  font-weight: 800;
-  font-size: clamp(2.4rem, 6vw, 4.5rem);
-  line-height: 0.98;
-  letter-spacing: -0.03em;
-  color: var(--dy-paper);
-}
-
-.hero-camada-text p {
-  margin-top: var(--space-md);
-  font-size: 1.1rem;
-  max-width: 52ch;
-  color: rgba(252, 251, 248, 0.82);
-}
-
-.hero-actions {
+.proposta-intro-actions {
   display: flex;
   flex-wrap: wrap;
   gap: var(--space-sm);
   margin-top: var(--space-lg);
+}
+
+/* Cantos arredondados só aqui — não no --radius global (2px), usado em
+   todo o resto do site. Mesmo raio para os dois CTAs, sem pill (999px). */
+.proposta-intro-actions .btn {
+  border-radius: 12px;
 }
 
 /* Rail CAMADA — indicador editorial discreto (01 / 04), sincronizado com o
@@ -663,16 +708,6 @@ body.nav-open .whatsapp-float {
   transform: scaleX(0.25);
   transform-origin: left center;
   background-color: var(--dy-copper);
-}
-
-@media (min-width: 700px) {
-  .hero-camada {
-    /* Espaço extra (não só a altura real do header) porque a logo do
-       estado inicial é ampliada via transform e transborda visualmente
-       para baixo da caixa de 76px do header — precisa de folga para não
-       encostar no eyebrow do hero. */
-    padding-top: calc(var(--dy-header-h-desktop) + 120px);
-  }
 }
 
 .hero-media {
@@ -1755,6 +1790,9 @@ body.nav-open .whatsapp-float {
    Botão flutuante WhatsApp
    ========================================================================== */
 
+/* Oculto na abertura do hero; aparece só depois de ~80px de scroll (ver
+   .is-visible, controlado por js/header-motion.js reaproveitando o mesmo
+   ScrollTrigger/scroll listener do dock do header — nenhum novo estado). */
 .whatsapp-float {
   position: fixed;
   right: var(--space-md);
@@ -1769,7 +1807,16 @@ body.nav-open .whatsapp-float {
   background-color: var(--color-whatsapp);
   color: #fff;
   box-shadow: 0 4px 14px rgba(13, 13, 13, 0.28);
-  transition: background-color var(--transition-fast), transform var(--transition-fast);
+  opacity: 0;
+  transform: translateY(12px) scale(0.92);
+  pointer-events: none;
+  transition: background-color var(--transition-fast), opacity var(--transition-base), transform var(--transition-base);
+}
+
+.whatsapp-float.is-visible {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  pointer-events: auto;
 }
 
 .whatsapp-float:hover,

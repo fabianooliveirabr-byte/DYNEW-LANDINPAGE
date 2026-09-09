@@ -83,7 +83,7 @@
 
   --dy-space-page-mobile: 20px;
   --dy-space-page-tablet: 32px;
-  --dy-space-page-desktop: clamp(56px, 5vw, 80px);
+  --dy-space-page-desktop: clamp(56px, 4.86vw, 70px);
   --dy-space-section: clamp(72px, 9vw, 144px);
 
   --dy-cut-sm: 12px;
