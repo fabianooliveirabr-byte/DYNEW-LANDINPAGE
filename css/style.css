@@ -674,10 +674,11 @@ body.nav-open .whatsapp-float {
   position: absolute;
   top: 0;
   bottom: 0;
-  left: 50%;
+  left: 0;
   width: 0;
   border-left: 2px solid var(--color-champanhe);
   pointer-events: none;
+  will-change: transform;
 }
 
 .compare-handle::after {

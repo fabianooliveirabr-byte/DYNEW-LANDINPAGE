@@ -106,12 +106,21 @@
 
     if (!panel || !finish || !handle || !range) return;
 
+    // Retângulo do painel em cache — lido apenas no início de cada gesto e no
+    // resize, nunca durante o arraste em si, para não intercalar leitura e
+    // escrita de layout a cada pointermove (evita layout thrashing). O handle
+    // é posicionado via transform (GPU), não mais via `left` (propriedade de
+    // layout).
+    var panelRect = panel.getBoundingClientRect();
+
     var setCompare = function (pct) {
       pct = Math.max(0, Math.min(100, pct));
       finish.style.clipPath = "inset(0 0 0 " + pct + "%)";
-      handle.style.left = pct + "%";
+      handle.style.transform = "translateX(" + (pct / 100) * panelRect.width + "px)";
       range.value = String(pct);
     };
+
+    setCompare(Number(range.value));
 
     range.addEventListener("input", function () {
       setCompare(Number(range.value));
@@ -119,12 +128,12 @@
 
     var dragging = false;
     var pctFromEvent = function (event) {
-      var rect = panel.getBoundingClientRect();
       var clientX = event.touches ? event.touches[0].clientX : event.clientX;
-      return ((clientX - rect.left) / rect.width) * 100;
+      return ((clientX - panelRect.left) / panelRect.width) * 100;
     };
     panel.addEventListener("pointerdown", function (event) {
       dragging = true;
+      panelRect = panel.getBoundingClientRect();
       setCompare(pctFromEvent(event));
     });
     window.addEventListener("pointermove", function (event) {
@@ -132,6 +141,10 @@
     });
     window.addEventListener("pointerup", function () {
       dragging = false;
+    });
+    window.addEventListener("resize", function () {
+      panelRect = panel.getBoundingClientRect();
+      setCompare(Number(range.value));
     });
   }
 

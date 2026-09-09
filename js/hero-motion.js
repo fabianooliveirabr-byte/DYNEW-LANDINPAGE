@@ -37,7 +37,27 @@
     gsap.set(scene, { autoAlpha: i === 0 ? 1 : 0, scale: 1 });
   });
 
-  var tl = gsap.timeline({ repeat: -1, paused: false });
+  // Pausa/retoma o loop conforme o hero entra/sai da viewport — sem isso o
+  // crossfade continuava rodando (e consumindo GPU) para sempre, mesmo com
+  // o hero há muito fora de tela. Usa toggleActions em vez de scrub: não
+  // amarra o progresso ao scroll, só o play/pause; preserva a cena e o
+  // tempo exato em que a timeline estava ao pausar (nenhum reinício).
+  var heroSection = document.getElementById("heroCamada");
+  var hasScrollTrigger = heroSection && typeof ScrollTrigger !== "undefined";
+  if (hasScrollTrigger) gsap.registerPlugin(ScrollTrigger);
+
+  var tl = gsap.timeline({
+    repeat: -1,
+    paused: false,
+    scrollTrigger: hasScrollTrigger
+      ? {
+          trigger: heroSection,
+          start: "top bottom",
+          end: "bottom top",
+          toggleActions: "play pause resume pause",
+        }
+      : undefined,
+  });
 
   scenes.forEach(function (scene, i) {
     var next = scenes[(i + 1) % scenes.length];
@@ -69,7 +89,9 @@
   document.addEventListener("visibilitychange", function () {
     if (document.hidden) {
       tl.pause();
-    } else {
+    } else if (!tl.scrollTrigger || tl.scrollTrigger.isActive) {
+      // Só retoma ao voltar para a aba se o hero também estiver visível na
+      // tela — evita reativar o loop se o usuário já rolou para longe dele.
       tl.play();
     }
   });

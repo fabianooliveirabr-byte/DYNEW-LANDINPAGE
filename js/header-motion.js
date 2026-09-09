@@ -51,6 +51,12 @@
     applyState();
     window.addEventListener("scroll", applyState, { passive: true });
     window.addEventListener("resize", applyState);
+    // Corrige a medida inicial da logo caso tenha sido calculada antes da
+    // fonte Manrope terminar de carregar (fallback do navegador tem largura
+    // diferente) — reaplica o estado assim que a fonte real estiver pronta.
+    if (document.fonts && document.fonts.ready && typeof document.fonts.ready.then === "function") {
+      document.fonts.ready.then(applyState).catch(function () {});
+    }
     return;
   }
 
@@ -58,6 +64,10 @@
   gsap.registerPlugin(ScrollTrigger);
   logo.style.transformOrigin = "left top";
   brandLine.style.transformOrigin = "left center";
+  // O fade do selo passa a ser escrito diretamente a partir do progresso do
+  // scroll (única fonte de verdade); desliga a transition CSS para que ela
+  // não fique competindo/suavizando por cima do valor já suavizado pelo scrub.
+  brandCredential.style.transition = "none";
 
   var scale0 = initialScale();
   gsap.set(logo, { scale: scale0 });
@@ -85,7 +95,10 @@
       gsap.set(brandLine, { scaleX: t });
       if (navList) navList.style.opacity = String(0.78 + 0.22 * t);
 
-      brandCredential.classList.toggle("is-visible", t >= 0.7);
+      // Selo aparece só perto do fim do dock (mesmo ponto de antes, t=0.7),
+      // mas agora como fade contínuo amarrado ao próprio progresso do scroll
+      // em vez de uma classe + transition CSS correndo em paralelo.
+      brandCredential.style.opacity = String(gsap.utils.clamp(0, 1, gsap.utils.mapRange(0.7, 1, 0, 1, t)));
       header.classList.toggle("is-docked", t >= 0.999);
     },
     onEnter: function () {
@@ -108,6 +121,21 @@
 
   window.addEventListener("resize", function () {
     scale0 = initialScale();
-    ScrollTrigger.refresh();
+    // ScrollTrigger.refresh() removido: este trigger usa document.body com
+    // deslocamento fixo em px (não depende da altura de nenhum elemento), e
+    // o próprio ScrollTrigger já reprocessa resize automaticamente (debounce
+    // interno de 200ms) — chamar refresh() aqui era trabalho redundante a
+    // cada evento de resize, sem nenhum recálculo útil.
   });
+
+  // Corrige a medida inicial da logo caso o scale0 tenha sido calculado
+  // antes da fonte Manrope terminar de carregar (largura do fallback do
+  // navegador é diferente da fonte real) — reaplica preservando o progresso
+  // de scroll atual (dock.t), sem resetar nem saltar visualmente.
+  if (document.fonts && document.fonts.ready && typeof document.fonts.ready.then === "function") {
+    document.fonts.ready.then(function () {
+      scale0 = initialScale();
+      gsap.set(logo, { scale: scale0 + (1 - scale0) * dock.t });
+    }).catch(function () {});
+  }
 })();
