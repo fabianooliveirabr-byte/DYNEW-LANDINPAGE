@@ -1,0 +1,21 @@
+# Catálogo fonte (grande, não deve ir para o repositório) — ver THIRD_PARTY_ASSETS.md
+assets/catalogo/raw/
+.tmp-audit/
+
+# Dependências npm — só usadas para instalar o GSAP oficial (não-CDN) e copiar
+# os builds minificados para js/vendor/gsap/, que é o que a página realmente
+# carrega. node_modules/ não precisa ir para o repositório nem ser servido.
+node_modules/
+
+# Instaladores e ferramentas locais colocados acidentalmente na pasta do projeto
+*.exe
+PortableGit/
+Git-*.exe
+GitHubDesktopSetup*.exe
+
+# Arquivos temporários comuns do Windows e desenvolvimento local
+Thumbs.db
+Desktop.ini
+.DS_Store
+*.tmp
+*.log
