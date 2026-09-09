@@ -10,6 +10,7 @@
       var isOpen = mainNav.classList.toggle("is-open");
       navToggle.setAttribute("aria-expanded", String(isOpen));
       document.body.style.overflow = isOpen ? "hidden" : "";
+      document.body.classList.toggle("nav-open", isOpen);
     });
 
     // Fecha o menu ao clicar em um link
@@ -19,6 +20,7 @@
           mainNav.classList.remove("is-open");
           navToggle.setAttribute("aria-expanded", "false");
           document.body.style.overflow = "";
+          document.body.classList.remove("nav-open");
         }
       });
     });
@@ -29,6 +31,7 @@
         mainNav.classList.remove("is-open");
         navToggle.setAttribute("aria-expanded", "false");
         document.body.style.overflow = "";
+        document.body.classList.remove("nav-open");
         navToggle.focus();
       }
     });
