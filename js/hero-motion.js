@@ -22,13 +22,75 @@
 
   var reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
+  /* ============================================================
+     Rail CAMADA (01 / 04) — indicador editorial que reage à cena
+     ativa do hero. Não é um estado paralelo: o passo do rail é
+     sempre derivado do mesmo índice de cena que já controla o
+     crossfade, no único ponto em que esse índice muda (abaixo).
+     5 cenas reais agrupam-se em 4 passos do rail:
+       inspeção + preparação -> 01 Base
+       aplicação              -> 02 Camada
+       acabamento             -> 03 Pressão
+       resultado              -> 04 Revelação
+     ============================================================ */
+  var rail = document.getElementById("camadaRail");
+  var railCurrentEl = rail && rail.querySelector(".camada-rail-current");
+  var railFillEl = rail && rail.querySelector(".camada-rail-fill");
+  var SCENE_TO_STEP = [1, 1, 2, 3, 4];
+  var STEP_LABELS = [
+    "Base — leitura e preparação do substrato",
+    "Camada — aplicação do revestimento",
+    "Pressão — acabamento de cantos e emendas",
+    "Revelação — resultado final",
+  ];
+  var currentRailStep = 0;
+
+  function setRailStep(step, animate) {
+    if (!rail || step === currentRailStep) return;
+    currentRailStep = step;
+    rail.setAttribute("aria-label", "Etapa " + step + " de 4: " + STEP_LABELS[step - 1]);
+    var target = step / 4;
+    if (animate && typeof gsap !== "undefined") {
+      var railTl = gsap.timeline();
+      railTl
+        .to(railCurrentEl, { autoAlpha: 0, duration: 0.15, ease: "power1.in" })
+        .call(function () {
+          railCurrentEl.textContent = step < 10 ? "0" + step : String(step);
+        })
+        .to(railCurrentEl, { autoAlpha: 1, duration: 0.15, ease: "power1.out" });
+      if (railFillEl) {
+        gsap.to(railFillEl, { scaleX: target, duration: 0.5, ease: "power2.out" });
+      }
+    } else {
+      if (railCurrentEl) railCurrentEl.textContent = step < 10 ? "0" + step : String(step);
+      if (railFillEl) railFillEl.style.transform = "scaleX(" + target + ")";
+    }
+  }
+
   // prefers-reduced-motion: mostra só a primeira cena, sem timeline.
   if (reduceMotion || typeof gsap === "undefined") {
     scenes.forEach(function (scene, i) {
       scene.classList.toggle("is-active", i === 0);
     });
+    setRailStep(1, false);
+    // Sem GSAP/ScrollTrigger neste modo — visibilidade do rail via scroll
+    // simples (mesmo padrão do fallback de header-motion.js), não é um
+    // ScrollTrigger novo nem um estado de cena paralelo.
+    if (rail) {
+      var heroSectionEl = document.getElementById("heroCamada");
+      var applyRailVisibility = function () {
+        if (!heroSectionEl) return;
+        var rect = heroSectionEl.getBoundingClientRect();
+        rail.classList.toggle("is-visible", rect.bottom > 0 && rect.top < window.innerHeight);
+      };
+      applyRailVisibility();
+      window.addEventListener("scroll", applyRailVisibility, { passive: true });
+      window.addEventListener("resize", applyRailVisibility);
+    }
     return;
   }
+
+  setRailStep(1, false);
 
   var HOLD = 4; // segundos por cena (3.5–4.5s)
   var CROSSFADE = 1; // segundos de transição (900–1200ms)
@@ -55,6 +117,10 @@
           start: "top bottom",
           end: "bottom top",
           toggleActions: "play pause resume pause",
+          // Reaproveita o MESMO ScrollTrigger (nenhum novo é criado) para
+          // mostrar/ocultar o rail — ele só deve existir enquanto o hero
+          // está na tela.
+          toggleClass: rail ? { targets: rail, className: "is-visible" } : undefined,
         }
       : undefined,
   });
@@ -77,9 +143,11 @@
     tl.to(next, { autoAlpha: 1, duration: CROSSFADE, ease: "power1.inOut" }, holdStart + HOLD - CROSSFADE);
     tl.call(
       function () {
+        var nextIndex = (i + 1) % scenes.length;
         scenes.forEach(function (s, si) {
-          s.classList.toggle("is-active", si === (i + 1) % scenes.length);
+          s.classList.toggle("is-active", si === nextIndex);
         });
+        setRailStep(SCENE_TO_STEP[nextIndex], true);
       },
       [],
       holdStart + HOLD

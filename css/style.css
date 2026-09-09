@@ -602,28 +602,67 @@ body.nav-open .whatsapp-float {
   margin-top: var(--space-lg);
 }
 
+/* Rail CAMADA — indicador editorial discreto (01 / 04), sincronizado com o
+   crossfade do hero em js/hero-motion.js. Sem caixa, sem fundo, sem borda —
+   uma legenda periférica, não um componente de interface. Deslocado do
+   botão do WhatsApp (right/bottom + espessura do próprio botão + uma folga)
+   para nunca formar um agrupamento de UI no canto inferior direito. Some em
+   telas estreitas (ver media query abaixo) — nesse tamanho de viewport ele
+   disputaria espaço real com CTA/menu/WhatsApp. */
 .camada-rail {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--space-lg);
-  margin: var(--space-lg) 0 0;
-  padding-top: var(--space-md);
-  border-top: 1px solid rgba(252, 251, 248, 0.16);
+  display: none;
+  position: fixed;
+  right: calc(var(--space-md) + 56px + var(--space-lg));
+  bottom: var(--space-md);
+  z-index: 400;
   font-family: var(--dy-font-mono);
   font-size: 11px;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: rgba(252, 251, 248, 0.6);
+  letter-spacing: 0.04em;
+  pointer-events: none;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity var(--dy-motion-ui) var(--dy-ease-adhere);
 }
 
-.camada-rail li {
+.camada-rail.is-visible {
+  opacity: 1;
+  visibility: visible;
+}
+
+@media (min-width: 700px) {
+  .camada-rail {
+    display: block;
+  }
+}
+
+.camada-rail-visual {
   display: flex;
-  align-items: baseline;
-  gap: 6px;
+  align-items: center;
+  gap: var(--space-xs);
 }
 
-.camada-rail-num {
+.camada-rail-current {
   color: var(--dy-copper);
+}
+
+.camada-rail-total {
+  color: rgba(252, 251, 248, 0.4);
+}
+
+.camada-rail-track {
+  position: relative;
+  display: block;
+  width: 48px;
+  height: 1px;
+  background-color: rgba(252, 251, 248, 0.18);
+}
+
+.camada-rail-fill {
+  position: absolute;
+  inset: 0;
+  transform: scaleX(0.25);
+  transform-origin: left center;
+  background-color: var(--dy-copper);
 }
 
 @media (min-width: 700px) {

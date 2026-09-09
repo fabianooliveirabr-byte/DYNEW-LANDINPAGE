@@ -173,13 +173,6 @@
             <a class="btn btn-outline btn-outline--dark" href="#antes-depois">Ver a transformação</a>
           </div>
         </div>
-
-        <ol class="camada-rail" aria-label="As quatro etapas do sistema DYNEW CAMADA">
-          <li><span class="camada-rail-num">01</span><span>Base</span></li>
-          <li><span class="camada-rail-num">02</span><span>Camada</span></li>
-          <li><span class="camada-rail-num">03</span><span>Pressão</span></li>
-          <li><span class="camada-rail-num">04</span><span>Revelação</span></li>
-        </ol>
       </div>
     </section>
 
@@ -731,6 +724,21 @@
       </p>
     </div>
   </footer>
+
+  <!-- Rail CAMADA — indicador editorial discreto (01 / 04) sincronizado com
+       o crossfade do hero (ver js/hero-motion.js). position:fixed no nível
+       de <body>, mesmo padrão do botão do WhatsApp logo abaixo, para não
+       herdar a altura real do hero (maior que 100vh no desktop) nem
+       depender de nenhum ancestral com transform. Visibilidade controlada
+       via classe .is-visible (só aparece enquanto o hero está na tela).
+       Deslocado do botão do WhatsApp para não formar um agrupamento de UI
+       no canto inferior direito — ver css/style.css. -->
+  <div class="camada-rail" id="camadaRail" aria-label="Etapa 1 de 4: Base — leitura e preparação do substrato">
+    <span class="camada-rail-visual" aria-hidden="true">
+      <span class="camada-rail-current">01</span><span class="camada-rail-total"> / 04</span>
+      <span class="camada-rail-track"><span class="camada-rail-fill"></span></span>
+    </span>
+  </div>
 
   <!-- Botão flutuante WhatsApp -->
   <a
