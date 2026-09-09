@@ -19,3 +19,16 @@ Desktop.ini
 .DS_Store
 *.tmp
 *.log
+
+# Saída gerada do graphify (regenerável via `graphify update .`) — ver CLAUDE.md
+graphify-out/
+
+# Cache/config local da ferramenta de crítica de design (impeccable)
+.impeccable/
+
+# Página de tutorial salva do navegador por engano (não é documentação do projeto)
+docs/Integrar Git GitHub Claude Code.html
+docs/Integrar Git GitHub Claude Code_files/
+
+# Fotos/vídeos brutos de projetos reais de clientes — não deve ir para o repositório
+docs/Photos-1-001/
