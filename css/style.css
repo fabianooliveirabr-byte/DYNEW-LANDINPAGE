@@ -585,14 +585,55 @@ body.nav-open .whatsapp-float {
   background-color: var(--dy-carbon);
 }
 
-/* Prontidão para a fotografia/vídeo real (ainda não fornecida): a <img> de
-   cada cena preenche toda a área da cena (que já ocupa a primeira dobra
-   inteira atrás do header, via .hero-scene acima) em full-bleed cover. */
-.hero-scene img {
+/* Vídeo real de cada cena preenche toda a área (que já ocupa a primeira
+   dobra inteira atrás do header, via .hero-scene acima) em full-bleed
+   cover. object-position individual por cena logo abaixo. */
+.hero-scene-video {
   width: 100%;
   height: 100%;
   object-fit: cover;
   display: block;
+  background-color: var(--dy-carbon);
+}
+
+/* Enquadramento por cena — mantém o assunto mais relevante de cada clipe
+   (madeira/materialidade, mobiliário) visível ao cortar para o hero, e
+   evita compor uma área muito clara/poluída atrás do canto onde a marca
+   DYNEW fica grande. Ajuste fino apenas de posição, sem recodificar. */
+.hero-scene[data-scene="inspecao"] .hero-scene-video,
+.hero-scene[data-scene="preparacao"] .hero-scene-video {
+  object-position: 20% 30%;
+}
+
+.hero-scene[data-scene="aplicacao"] .hero-scene-video {
+  object-position: 55% 50%;
+}
+
+.hero-scene[data-scene="acabamento"] .hero-scene-video {
+  object-position: 18% 20%;
+}
+
+/* Reforço de scrim só desta cena (janela clara ao centro-direita competindo
+   com a madeira) — gradiente horizontal, transparente sobre a madeira à
+   esquerda, mais escuro só sobre a área da janela. Acompanha a opacidade
+   do crossfade da própria cena (herda de .hero-scene), não é um elemento
+   novo na composição visível fora desta cena. */
+.hero-scene[data-scene="acabamento"]::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    rgba(17, 19, 21, 0) 0%,
+    rgba(17, 19, 21, 0) 45%,
+    rgba(17, 19, 21, 0.4) 70%,
+    rgba(17, 19, 21, 0.45) 100%
+  );
+  pointer-events: none;
+}
+
+.hero-scene[data-scene="resultado"] .hero-scene-video {
+  object-position: 30% 35%;
 }
 
 /* Reconfigurado: já não precisa proteger um bloco de texto/CTA (migrado

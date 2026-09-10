@@ -2,10 +2,11 @@
  * DYNEW CAMADA — hero cinematográfico em crossfade.
  * Ver docs/DYNEW-CAMADA-design-system-v1.md, seções 8, 9 e 10 ("Hero").
  *
- * Nenhuma foto/vídeo real foi fornecido ainda — cada cena é um espaço de
- * mídia real pendente (ver assets/img/README.md e os data-scene abaixo).
- * O timeline de movimento já está pronto para receber as mídias reais
- * assim que existirem, sem precisar reescrever este arquivo.
+ * Vídeo real (2 masters do cliente recortados em 4 clipes, ver
+ * assets/videos/hero/) em cada cena — inspeção e preparação, mesmo passo
+ * 01 do Rail, reaproveitam o mesmo clipe de abertura. O timeline de
+ * movimento não muda: cada <video> só troca de play/pause no mesmo ponto
+ * em que a cena já virava is-active (ver playSceneVideo abaixo).
  *
  * Timing: permanência 4s por cena (dentro de 3,5–4,5s), crossfade 1000ms
  * (dentro de 900–1200ms), zoom sutil scale(1.025) -> scale(1). Sem flashes
@@ -95,9 +96,28 @@
   var HOLD = 4; // segundos por cena (3.5–4.5s)
   var CROSSFADE = 1; // segundos de transição (900–1200ms)
 
+  // Reproduz/pausa o <video> de cada cena — não é uma timeline nova nem
+  // muda quando as cenas trocam (mesmo ponto de tl.call() de sempre), só
+  // evita decodificar os 4 vídeos ao mesmo tempo: cena 0 já nasce com
+  // preload="auto" (prioritária), as demais com preload="none" (lazy) e só
+  // começam a carregar/tocar no instante em que se tornam a cena ativa.
+  function playSceneVideo(scene) {
+    var video = scene.querySelector(".hero-scene-video");
+    if (!video || !video.paused) return;
+    if (video.preload !== "auto") video.preload = "auto";
+    var playPromise = video.play();
+    if (playPromise && typeof playPromise.catch === "function") playPromise.catch(function () {});
+  }
+
+  function pauseSceneVideo(scene) {
+    var video = scene.querySelector(".hero-scene-video");
+    if (video && !video.paused) video.pause();
+  }
+
   scenes.forEach(function (scene, i) {
     gsap.set(scene, { autoAlpha: i === 0 ? 1 : 0, scale: 1 });
   });
+  playSceneVideo(scenes[0]);
 
   // Pausa/retoma o loop conforme o hero entra/sai da viewport — sem isso o
   // crossfade continuava rodando (e consumindo GPU) para sempre, mesmo com
@@ -148,6 +168,8 @@
           s.classList.toggle("is-active", si === nextIndex);
         });
         setRailStep(SCENE_TO_STEP[nextIndex], true);
+        playSceneVideo(scenes[nextIndex]);
+        pauseSceneVideo(scene);
       },
       [],
       holdStart + HOLD

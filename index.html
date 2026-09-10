@@ -124,31 +124,41 @@
 
     <!-- ================= 1. HERO — DYNEW CAMADA =================
          Cinematográfico, fullscreen, Carbon. 5 cenas em crossfade (ver
-         js/hero-motion.js) — nenhuma foto/vídeo real foi fornecida ainda,
-         então cada cena é um espaço de mídia real claramente identificado
-         (arquivo esperado no <img> + legenda), nunca textura CSS fingindo
-         ser fotografia. Ver assets/img/README.md. -->
+         js/hero-motion.js), agora com vídeo real: 2 masters do cliente
+         (quarto/closet amadeirado + sala/living) recortados em 4 clipes web
+         distintos (ver assets/videos/hero/). inspeção e preparação (mesmo
+         passo 01 do Rail) reaproveitam o mesmo clipe de abertura. -->
     <section class="hero-camada" id="heroCamada">
       <div class="hero-camada-stage" id="heroStage" aria-hidden="true">
-        <figure class="hero-scene is-active" data-scene="inspecao" data-photo-slot>
-          <img class="js-photo-slot-img" src="assets/img/hero-scene-inspecao.jpg" alt="Cena pendente: inspeção do substrato antes da aplicação">
-          <figcaption class="photo-slot-pending-label"><span>Cena pendente — inspeção do substrato</span><small>assets/img/hero-scene-inspecao.jpg</small></figcaption>
+        <figure class="hero-scene is-active" data-scene="inspecao">
+          <video class="hero-scene-video" muted loop playsinline preload="auto" poster="assets/videos/hero/hero-scene-01-poster.webp">
+            <source src="assets/videos/hero/hero-scene-01-mobile.mp4" type="video/mp4" media="(max-width: 767px)">
+            <source src="assets/videos/hero/hero-scene-01.mp4" type="video/mp4">
+          </video>
         </figure>
-        <figure class="hero-scene" data-scene="preparacao" data-photo-slot>
-          <img class="js-photo-slot-img" src="assets/img/hero-scene-preparacao.jpg" alt="Cena pendente: preparação e limpeza da superfície">
-          <figcaption class="photo-slot-pending-label"><span>Cena pendente — preparação da superfície</span><small>assets/img/hero-scene-preparacao.jpg</small></figcaption>
+        <figure class="hero-scene" data-scene="preparacao">
+          <video class="hero-scene-video" muted loop playsinline preload="none" poster="assets/videos/hero/hero-scene-01-poster.webp">
+            <source src="assets/videos/hero/hero-scene-01-mobile.mp4" type="video/mp4" media="(max-width: 767px)">
+            <source src="assets/videos/hero/hero-scene-01.mp4" type="video/mp4">
+          </video>
         </figure>
-        <figure class="hero-scene" data-scene="aplicacao" data-photo-slot>
-          <img class="js-photo-slot-img" src="assets/img/hero-scene-aplicacao.jpg" alt="Cena pendente: espátula em close durante a aplicação do revestimento">
-          <figcaption class="photo-slot-pending-label"><span>Cena pendente — aplicação com espátula</span><small>assets/img/hero-scene-aplicacao.jpg</small></figcaption>
+        <figure class="hero-scene" data-scene="aplicacao">
+          <video class="hero-scene-video" muted loop playsinline preload="none" poster="assets/videos/hero/hero-scene-02-poster.webp">
+            <source src="assets/videos/hero/hero-scene-02-mobile.mp4" type="video/mp4" media="(max-width: 767px)">
+            <source src="assets/videos/hero/hero-scene-02.mp4" type="video/mp4">
+          </video>
         </figure>
-        <figure class="hero-scene" data-scene="acabamento" data-photo-slot>
-          <img class="js-photo-slot-img" src="assets/img/hero-scene-acabamento.jpg" alt="Cena pendente: acabamento de cantos e emendas">
-          <figcaption class="photo-slot-pending-label"><span>Cena pendente — acabamento de cantos</span><small>assets/img/hero-scene-acabamento.jpg</small></figcaption>
+        <figure class="hero-scene" data-scene="acabamento">
+          <video class="hero-scene-video" muted loop playsinline preload="none" poster="assets/videos/hero/hero-scene-03-poster.webp">
+            <source src="assets/videos/hero/hero-scene-03-mobile.mp4" type="video/mp4" media="(max-width: 767px)">
+            <source src="assets/videos/hero/hero-scene-03.mp4" type="video/mp4">
+          </video>
         </figure>
-        <figure class="hero-scene" data-scene="resultado" data-photo-slot>
-          <img class="js-photo-slot-img" src="assets/img/hero-scene-resultado.jpg" alt="Cena pendente: ambiente devolvido ao uso após a aplicação">
-          <figcaption class="photo-slot-pending-label"><span>Cena pendente — resultado / ambiente entregue</span><small>assets/img/hero-scene-resultado.jpg</small></figcaption>
+        <figure class="hero-scene" data-scene="resultado">
+          <video class="hero-scene-video" muted loop playsinline preload="none" poster="assets/videos/hero/hero-scene-04-poster.webp">
+            <source src="assets/videos/hero/hero-scene-04-mobile.mp4" type="video/mp4" media="(max-width: 767px)">
+            <source src="assets/videos/hero/hero-scene-04.mp4" type="video/mp4">
+          </video>
         </figure>
         <div class="hero-scrim" aria-hidden="true"></div>
       </div>
