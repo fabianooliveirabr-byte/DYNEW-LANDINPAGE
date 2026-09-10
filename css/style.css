@@ -272,16 +272,34 @@ section {
   border-bottom: 1px solid transparent;
 }
 
+/* Camada isolada só para o backdrop-filter (ver comentário no HTML) — sem
+   nenhum descendente, então virar containing block não afeta nada. */
+.site-header-blur {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
 /* Usado pelo fallback de prefers-reduced-motion (2 estados discretos, sem
    scrub) em js/header-motion.js — o caminho com GSAP anima estes mesmos
    valores via inline style, então esta regra não interfere com o scrub. */
 .site-header.is-docked {
   background-color: rgba(17, 19, 21, 0.94);
+}
+
+.site-header.is-docked .site-header-blur {
   backdrop-filter: blur(14px);
   -webkit-backdrop-filter: blur(14px);
 }
 
 .header-inner {
+  position: relative;
+  /* .site-header-blur é position:absolute (categoria "positioned" na ordem
+     de pintura), então pintaria por cima do conteúdo do header mesmo vindo
+     antes no DOM se este ficasse "static". position:relative move o
+     conteúdo real para a mesma categoria — como vem depois no DOM, fica
+     acima do blur, que é só decoração de fundo. */
+  z-index: 1;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -301,24 +319,71 @@ section {
   align-self: flex-start;
 }
 
+/* Container de posicionamento para os dois recortes do logo oficial —
+   ambos ocupam o mesmo canto superior esquerdo, alternando por opacity
+   (crossfade em js/header-motion.js), nunca por transform:scale(). O
+   wordmark (fluxo normal) define o tamanho de repouso do link; o lockup
+   completo (absoluto) se sobrepõe a ele quando visível. */
 .logo {
-  font-family: var(--dy-font-sans);
-  /* Tamanho final (após o encaixe no header): ~144px de largura,
-     dentro de 132–156px (desktop) e 112–124px (mobile) do design system.
-     O estado inicial ampliado é só um transform:scale() em cima disto,
-     calculado em js/header-motion.js — nunca mexe em font-size. */
-  font-size: 2.05rem;
-  font-weight: 800;
-  color: var(--dy-paper);
-  letter-spacing: -0.01em;
+  position: relative;
   display: inline-block;
-  transform-origin: left top;
 }
 
-/* Sublinhado cobre sob "NEW" removido definitivamente (decisão do cliente) —
-   a marca fica limpa, branca e isolada, sem nenhum traço/borda no lugar. */
-.logo span {
-  color: inherit;
+/* Estado dockado — só a palavra DYNEW, recorte de
+   assets/images/brand/dynew-wordmark-gold.png (677×85px). Tamanho fixo,
+   confortável e legível em qualquer breakpoint (pedido explícito: não
+   minúsculo), sem depender de font/CSS-texto. */
+.brand-wordmark-docked {
+  display: block;
+  width: 160px;
+  height: auto;
+}
+
+/* Estado expandido — lockup completo (símbolo ND + DYNEW), recorte de
+   dynew-lockup-gold.png (677×371px, proporção real preservada, sem
+   esticar). Larguras calibradas para reproduzir em CSS puro a mesma
+   presença "monumental" já aprovada (antes calculada via vw em JS para o
+   wordmark em texto): 165px mobile, 297px de 700-1023px, interpolação
+   contínua 297→435→500 entre 1024/1280/1440px, e 500px acima de 1440px. */
+.brand-lockup-full {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: block;
+  width: 165px;
+  /* Sem isso, o reset global "img{max-width:100%}" clampa esta imagem à
+     largura do próprio .logo — que, como o lockup é position:absolute (não
+     contribui para o tamanho do pai), acaba sendo só a largura do wordmark
+     dockado (elemento em fluxo normal, o único que define a caixa do
+     .logo). */
+  max-width: none;
+  height: auto;
+  opacity: 0;
+  pointer-events: none;
+}
+
+@media (min-width: 700px) {
+  .brand-lockup-full {
+    width: 297px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .brand-lockup-full {
+    width: calc(53.90625vw - 255px);
+  }
+}
+
+@media (min-width: 1280px) {
+  .brand-lockup-full {
+    width: calc(40.625vw - 85px);
+  }
+}
+
+@media (min-width: 1440px) {
+  .brand-lockup-full {
+    width: 500px;
+  }
 }
 
 /* Removida da composição final (decisão do cliente) — mantida no DOM e no
@@ -422,7 +487,11 @@ section {
   position: fixed;
   inset: 0;
   top: var(--dy-header-h-mobile);
-  background-color: var(--dy-carbon);
+  /* Sem fundo — pedido explícito: nada de painel/retângulo escuro atrás da
+     navegação mobile, só o texto sobre o que já está por trás (hero/página
+     na posição de scroll atual). Legibilidade vem só da tipografia (cor +
+     text-shadow sutil abaixo), não de uma caixa. */
+  background-color: transparent;
   padding: var(--space-lg) var(--space-md);
   transform: translateX(100%);
   transition: transform var(--transition-base);
@@ -436,7 +505,11 @@ section {
 .nav-list {
   display: flex;
   flex-direction: column;
-  gap: var(--space-md);
+  /* Reduzido em três etapas: --space-md (24px) -> --space-sm (16px) -> 10px
+     -> 6px — navegação compacta no menu mobile em tela cheia. Só afeta
+     <768px: a media query abaixo já sobrescreve para linha (não coluna)
+     no desktop, então esse valor nunca chegava lá. */
+  gap: 6px;
   font-size: 1.1rem;
 }
 
@@ -444,8 +517,19 @@ section {
   color: var(--dy-paper);
   font-weight: 500;
   display: inline-block;
-  padding: var(--space-xs) 0;
+  /* Reduzido de 6px para 4px, acompanhando o gap mais justo acima — ainda
+     com área de toque razoável (texto 1.1rem + padding + gap somados). */
+  padding: 4px 0;
   position: relative;
+}
+
+/* Sem fundo atrás dos links no overlay mobile (item 6) — a proteção de
+   contraste vem só de uma sombra branca bem sutil, não de uma caixa.
+   Escopado a <768px para não alterar em nada o menu desktop. */
+@media (max-width: 767px) {
+  .nav-list a:not(.btn) {
+    text-shadow: 0 0 8px rgba(255, 255, 255, 0.12);
+  }
 }
 
 .nav-list a:not(.btn)::after {
@@ -467,7 +551,10 @@ section {
 }
 
 .nav-cta {
-  margin-top: var(--space-lg);
+  /* Reduzido em três etapas: --space-lg (40px) -> --space-md (24px) -> 16px
+     — acompanha o restante da lista mais compacta, ainda perceptível como
+     item final/separado dos links de navegação. */
+  margin-top: 16px;
 }
 
 /* Some corpo enquanto o menu mobile está aberto, evitando sobrepor o botão flutuante */
@@ -537,6 +624,25 @@ body.nav-open .whatsapp-float {
   border-radius: 12px;
   font-size: var(--fs-small);
   line-height: 1;
+}
+
+/* Dentro do overlay mobile em tela cheia o CTA não deve repetir o botão
+   compacto do header — texto dourado discreto, sem bloco/pill. O botão
+   dourado do header/desktop (regra acima) permanece intocado em >=768px. */
+@media (max-width: 767px) {
+  .nav-cta a.btn-gold {
+    background-color: transparent;
+    color: var(--dy-copper);
+    padding: 0;
+    border-radius: 0;
+    font-size: 1.1rem;
+    box-shadow: none;
+  }
+
+  .nav-cta a.btn-gold:hover,
+  .nav-cta a.btn-gold:focus-visible {
+    opacity: 0.8;
+  }
 }
 
 /* ==========================================================================
@@ -667,12 +773,42 @@ body.nav-open .whatsapp-float {
 
 /* ==========================================================================
    Proposta — eyebrow/H1/subcopy/CTAs migrados do hero (decisão final: a
-   primeira dobra fica só com marca + menu + imagem + Rail CAMADA). Herda a
-   tipografia global de h1/p (css acima) — aqui só o essencial de layout e
-   o raio dos CTAs, sem tocar no .btn global.
+   primeira dobra fica só com marca + menu + vídeo + Rail CAMADA). Composição
+   assimétrica: texto à esquerda em coluna controlada, imagem conceitual à
+   direita ocupando a fatia maior da seção e sangrando até a borda real da
+   viewport (fora do .container) — pensada como continuação arquitetônica da
+   página, não como card de landing page. Fundo claro do design system
+   (--color-bg), sem cor nova.
    ========================================================================== */
-.proposta-intro-inner {
-  max-width: 640px;
+.proposta-intro {
+  padding: 0;
+  background-color: var(--color-bg);
+}
+
+.proposta-intro-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+}
+
+.proposta-intro-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: var(--space-2xl) var(--space-md);
+}
+
+/* Escala editorial só nesta seção — o H1 deixou de competir com o hero e
+   pode recuperar presença; não mexe no --fs-h1 global (usado em qualquer
+   outro h1 do site). Quebra de linha intencional preservada via <br> no
+   HTML, não por CSS. */
+.proposta-intro-content h1 {
+  font-size: clamp(2rem, 1.2rem + 2.5vw, 3.5rem);
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+}
+
+.proposta-intro-content p {
+  max-width: 46ch;
 }
 
 .proposta-intro-actions {
@@ -686,6 +822,207 @@ body.nav-open .whatsapp-float {
    todo o resto do site. Mesmo raio para os dois CTAs, sem pill (999px). */
 .proposta-intro-actions .btn {
   border-radius: 12px;
+}
+
+@media (max-width: 899px) {
+  /* No empilhamento mobile os dois CTAs ficam em linhas separadas com
+     larguras diferentes (uma segue o texto mais longo do primário, a outra
+     o texto mais curto do secundário) — sem virar full-width, uma coluna de
+     grid com largura = max-content do item mais largo e justify-items:
+     stretch (padrão do grid) faz os dois ocuparem exatamente essa mesma
+     largura, sem esticar até a borda do container. */
+  .proposta-intro-actions {
+    display: grid;
+    grid-template-columns: max-content;
+    justify-content: start;
+  }
+
+  /* Respiro entre o segundo CTA e o início da imagem estava com folga
+     excessiva (padding-bottom do bloco de texto = --space-2xl = 96px);
+     reduzido em 40px (dentro dos 30-50px pedidos), só neste breakpoint. */
+  .proposta-intro-content {
+    padding-bottom: calc(var(--space-2xl) - 40px);
+  }
+}
+
+/* Imagem conceitual — grande, sem moldura/sombra, cheia de borda a borda no
+   próprio bloco (o bleed até a viewport real acontece no breakpoint
+   desktop abaixo, onde a grade deixa de ser de coluna única). */
+.proposta-intro-media {
+  position: relative;
+  min-height: 280px;
+}
+
+.proposta-intro-media img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  /* Nesse formato mais baixo/largo a imagem só corta na horizontal (a
+     altura do source cobre a caixa inteira sem sobra vertical). Enquadrado
+     para revelar o instalador (costas, logo DYNEW, braço e ferramenta) —
+     o aço corten preenche o restante da largura visível à direita. */
+  object-position: 22% 45%;
+  display: block;
+}
+
+@media (min-width: 700px) {
+  .proposta-intro-media img {
+    object-position: 10% 45%;
+  }
+}
+
+@media (min-width: 900px) {
+  .proposta-intro-grid {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr);
+    align-items: stretch;
+  }
+
+  .proposta-intro-content {
+    max-width: 560px;
+    padding: var(--space-2xl) var(--space-lg) var(--space-2xl) var(--dy-space-page-desktop);
+  }
+
+  .proposta-intro-media {
+    min-height: 480px;
+  }
+}
+
+/* Painel translúcido sobre a área de aço corten (nunca sobre o instalador,
+   que fica à esquerda do recorte em qualquer largura — ver object-position
+   acima). Vidro extremamente sutil: branco quase transparente, borda clara
+   fina, raio grande — nunca um card sólido. */
+.proposta-intro-overlay {
+  position: absolute;
+  right: var(--space-sm);
+  bottom: var(--space-sm);
+  /* Mobile ~20-30% mais compacto que a rodada anterior (172px). */
+  max-width: 135px;
+  padding: 10px;
+  background: rgba(255, 255, 255, 0.13);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 16px;
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+
+.proposta-intro-overlay-title {
+  font-family: var(--dy-font-sans);
+  color: var(--dy-paper);
+  font-weight: 700;
+  font-size: 0.6875rem;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+  text-align: left;
+  margin: 0;
+}
+
+/* Acento dourado/copper abaixo do título, pedido no lugar de um ícone. */
+.proposta-intro-overlay-title::after {
+  content: "";
+  display: block;
+  width: 18px;
+  height: 2px;
+  background-color: var(--dy-copper);
+  margin: 4px 0 6px;
+}
+
+.proposta-intro-overlay-list {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.proposta-intro-overlay-list li {
+  position: relative;
+  padding-left: 10px;
+  color: rgba(252, 251, 248, 0.92);
+  font-size: 0.625rem;
+  line-height: 1.25;
+}
+
+.proposta-intro-overlay-list li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.4em;
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background-color: var(--dy-copper);
+}
+
+@media (min-width: 900px) {
+  /* Centralizado no eixo vertical da imagem, mas mais estreito e mais
+     próximo da borda direita do que antes — o recorte da imagem agora
+     revela o instalador (ver object-position acima), então o painel
+     precisa caber inteiro sobre a área de aço corten, sem invadir a
+     figura/ferramenta. */
+  .proposta-intro-overlay {
+    right: var(--space-md);
+    bottom: auto;
+    top: 50%;
+    transform: translateY(-50%);
+    max-width: 220px;
+    padding: var(--space-md);
+    border-radius: 20px;
+  }
+
+  .proposta-intro-overlay-title {
+    font-size: 1.625rem;
+  }
+
+  .proposta-intro-overlay-title::after {
+    width: 48px;
+    margin: var(--space-md) 0 var(--space-md);
+  }
+
+  .proposta-intro-overlay-list {
+    gap: 12px;
+  }
+
+  .proposta-intro-overlay-list li {
+    padding-left: 16px;
+    font-size: 1rem;
+    line-height: 1.45;
+  }
+
+  .proposta-intro-overlay-list li::before {
+    width: 6px;
+    height: 6px;
+    top: 0.55em;
+  }
+}
+
+/* Entre 900-1279px a coluna da imagem é proporcionalmente mais estreita que
+   no desktop grande (mesma grade 1fr/1.15fr, mas menos espaço total) — o
+   painel de 900px+ não cabe sem invadir o braço/ferramenta do instalador
+   nessa faixa. Versão mais compacta só aqui, encostada na borda. */
+@media (min-width: 900px) and (max-width: 1279px) {
+  .proposta-intro-overlay {
+    right: var(--space-sm);
+    max-width: 190px;
+    padding: var(--space-sm);
+  }
+
+  .proposta-intro-overlay-title {
+    font-size: 1.0625rem;
+  }
+
+  .proposta-intro-overlay-title::after {
+    width: 32px;
+    margin: var(--space-sm) 0 var(--space-sm);
+  }
+
+  .proposta-intro-overlay-list {
+    gap: 8px;
+  }
+
+  .proposta-intro-overlay-list li {
+    font-size: 0.8125rem;
+    line-height: 1.35;
+  }
 }
 
 /* Rail CAMADA — indicador editorial discreto (01 / 04), sincronizado com o
@@ -855,45 +1192,6 @@ body.nav-open .whatsapp-float {
 /* ==========================================================================
    Faixa de credibilidade
    ========================================================================== */
-
-.credibility-bar {
-  background-color: var(--color-bg);
-  border-top: 1px solid var(--color-border);
-  border-bottom: 1px solid var(--color-border);
-}
-
-.credibility-list {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 0;
-  padding: var(--space-sm) var(--space-md);
-}
-
-.credibility-item {
-  position: relative;
-  font-size: 12.5px;
-  font-weight: 700;
-  letter-spacing: 0.01em;
-  color: var(--color-text-muted);
-  padding: var(--space-xs) var(--space-md);
-}
-
-.credibility-item::before {
-  content: "";
-  position: absolute;
-  left: -1px;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 4px;
-  height: 4px;
-  border-radius: 50%;
-  background-color: var(--color-champanhe);
-}
-
-.credibility-item:first-child::before {
-  display: none;
-}
 
 /* ==========================================================================
    Quem somos

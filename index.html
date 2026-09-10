@@ -82,9 +82,24 @@
        final (var(--dy-header-h-*)) para não causar CLS — a logo grande do
        estado inicial é só um transform:scale() por cima, sem afetar layout. -->
   <header class="site-header" id="siteHeader">
+    <!-- Camada de fundo/blur separada do #siteHeader: o #main-nav mobile é
+         filho do próprio header, e qualquer backdrop-filter != none (mesmo
+         blur(0px)) no header criaria containing block para ele, quebrando
+         o overlay fixed em tela cheia. Isolado aqui, sem descendentes
+         fixed, não tem esse efeito colateral. -->
+    <span class="site-header-blur" aria-hidden="true"></span>
     <div class="container header-inner">
       <div class="header-brand">
-        <a href="#main-content" class="logo" id="siteLogo" aria-label="DYNEW - página inicial">DY<span>NEW</span></a>
+        <!-- Logo oficial dourado (assets/images/brand/, derivados de
+             assets/images/projetos/masters/LOGO CABEÇALHO/LOGO DOURADO.png,
+             master intacto) — dois recortes do MESMO arquivo, um por
+             estado, com crossfade de opacity via js/header-motion.js:
+             lockup completo (símbolo+palavra) no expandido, só a palavra
+             no dockado (proporção real de cada recorte preservada). -->
+        <a href="#main-content" class="logo" id="siteLogo" aria-label="DYNEW - página inicial">
+          <img src="assets/images/brand/dynew-lockup-gold.png" class="brand-lockup-full" alt="" aria-hidden="true">
+          <img src="assets/images/brand/dynew-wordmark-gold.png" class="brand-wordmark-docked" alt="" aria-hidden="true">
+        </a>
         <span class="brand-line" id="brandLine" aria-hidden="true"></span>
         <span class="brand-credential" id="brandCredential">Especialista em 3M™ DI-NOC™</span>
       </div>
@@ -166,41 +181,58 @@
 
     <!-- ================= PROPOSTA — eyebrow/H1/subcopy/CTAs =================
          Decisão final: a primeira dobra (.hero-camada) fica só com marca,
-         menu, imagem/vídeo de fundo e o Rail CAMADA. O bloco textual/CTA que
-         antes ficava sobreposto ao hero foi deslocado para o início desta
-         seção, imediatamente seguinte — mesmo conteúdo, mesmos links. -->
+         menu, vídeo de fundo e o Rail CAMADA. O bloco textual/CTA que antes
+         ficava sobreposto ao hero foi deslocado para o início desta seção,
+         imediatamente seguinte — mesmo conteúdo, mesmos links. Composição
+         assimétrica: texto à esquerda, imagem conceitual DYNEW em grande
+         escala à direita (full-bleed até a borda da viewport), sem cartão/
+         sombra — pensada como continuação editorial do hero, não como bloco
+         de landing page genérico. -->
     <section class="proposta-intro">
-      <div class="container proposta-intro-inner">
-        <span class="hero-eyebrow">DYNEW · Especialista em 3M™ DI-NOC™</span>
-        <h1>Transformamos a superfície.<br>Preservamos o que ainda funciona.</h1>
-        <p>
-          Aplicação especializada de revestimentos 3M™ DI-NOC™ em paredes, portas, painéis,
-          tetos e mobiliário — da preparação da superfície ao acabamento final.
-        </p>
-        <div class="proposta-intro-actions">
-          <a
-            class="btn btn-whatsapp"
-            href="https://wa.me/5511925039297?text=Ol%C3%A1%2C%20gostaria%20de%20solicitar%20uma%20avalia%C3%A7%C3%A3o%20t%C3%A9cnica%20para%20o%20meu%20projeto%20de%20revestimento%20arquitet%C3%B4nico."
-            target="_blank"
-            rel="noopener noreferrer"
+      <div class="proposta-intro-grid">
+        <div class="proposta-intro-content">
+          <span class="hero-eyebrow">DYNEW · Especialista em 3M™ DI-NOC™</span>
+          <h1>Transformamos a superfície.<br>Preservamos o que ainda funciona.</h1>
+          <p>
+            Aplicação especializada de revestimentos 3M™ DI-NOC™ em paredes, portas, painéis,
+            tetos e mobiliário — da preparação da superfície ao acabamento final.
+          </p>
+          <div class="proposta-intro-actions">
+            <a
+              class="btn btn-gold"
+              href="https://wa.me/5511925039297?text=Ol%C3%A1%2C%20gostaria%20de%20solicitar%20uma%20avalia%C3%A7%C3%A3o%20t%C3%A9cnica%20para%20o%20meu%20projeto%20de%20revestimento%20arquitet%C3%B4nico."
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Solicitar avaliação técnica
+            </a>
+            <a class="btn btn-outline" href="#antes-depois">Ver a transformação</a>
+          </div>
+        </div>
+        <div class="proposta-intro-media">
+          <img
+            src="assets/images/proposta-revestimento.webp"
+            alt="Imagem conceitual DYNEW: aplicação de revestimento arquitetônico decorativo sobre parede, evidenciando textura e acabamento premium"
+            loading="lazy"
+            width="1440"
+            height="810"
           >
-            Solicitar avaliação técnica
-          </a>
-          <a class="btn btn-outline" href="#antes-depois">Ver a transformação</a>
+          <!-- Painel translúcido sobre a área de aço corten (nunca sobre o
+               instalador) — mesmo texto que antes vivia na faixa de
+               credibilidade separada abaixo da foto; existe uma única vez
+               agora. -->
+          <div class="proposta-intro-overlay">
+            <h2 class="proposta-intro-overlay-title">Aplicação técnica especializada</h2>
+            <ul class="proposta-intro-overlay-list">
+              <li>Especialização em 3M™ DI-NOC™</li>
+              <li>Menor peso adicional à estrutura</li>
+              <li>Menos descarte de material</li>
+              <li>Menor interferência no ambiente</li>
+            </ul>
+          </div>
         </div>
       </div>
     </section>
-
-    <!-- ================= FAIXA DE CREDIBILIDADE ================= -->
-    <div class="credibility-bar">
-      <div class="container credibility-list">
-        <span class="credibility-item">Aplicação técnica especializada</span>
-        <span class="credibility-item">Especialização em 3M™ DI-NOC™</span>
-        <span class="credibility-item">Menor peso adicional à estrutura</span>
-        <span class="credibility-item">Menos descarte de material</span>
-        <span class="credibility-item">Menor interferência no ambiente</span>
-      </div>
-    </div>
 
     <!-- ================= QUEM SOMOS ================= -->
     <section id="quem-somos" class="bg-alt quem-somos-editorial">
