@@ -1264,6 +1264,22 @@ body.nav-open .whatsapp-float {
   z-index: 2;
 }
 
+/* Par real (Teto Piscina): o "antes" é quadrado (1280×1280) e o "depois" é
+   retrato (1086×1448) — nenhum dos dois nasceu no formato 4:3 da caixa, e
+   cada um perde a área importante em um eixo diferente com object-position
+   50% 50% (padrão). "Antes": o teto em obra ocupa a metade superior do
+   quadro — sobe o ponto focal para não cortar justamente o teto, que é o
+   assunto da comparação. "Depois": o teto amadeirado e as janelas/colunas
+   ficam na faixa superior do retrato — mesma lógica, sem repetir o mesmo
+   valor por não ser o mesmo enquadramento de origem. */
+.before-after .compare-base .photo-slot img {
+  object-position: 50% 18%;
+}
+
+.before-after .compare-finish .photo-slot img {
+  object-position: 50% 28%;
+}
+
 /* ==========================================================================
    Espaços de fotografia real (hero, Quem somos, Antes e Depois)
    Nenhuma imagem real foi fornecida ainda (ver assets/img/README.md).
