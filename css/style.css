@@ -80,8 +80,26 @@ ul {
   padding: 0 var(--space-md);
 }
 
+/* Alinha a borda esquerda/direita de TODAS as seções com o header/hero, que
+   desde a Fase 1 do design system CAMADA usam --dy-space-page-desktop em
+   vez do .container de 1200px (ver .header-inner acima, ~L421). Sem isso,
+   o conteúdo de cada seção "pulava" ~45-65px em relação ao header ao
+   rolar a página — a causa do corte/desalinhamento lateral reportado.
+   Header e hero continuam exatamente como estão; só o restante da página
+   passa a usar o mesmo sistema de respiro que eles já usavam. */
+@media (min-width: 700px) {
+  .container {
+    max-width: none;
+    padding-left: var(--dy-space-page-desktop);
+    padding-right: var(--dy-space-page-desktop);
+  }
+}
+
+/* Reduzido de --space-2xl (96px) — a página inteira lia como "uma tela por
+   informação". Seções que precisam de mais respiro (ex. dinoc-showcase)
+   continuam com override próprio. */
 section {
-  padding: var(--space-2xl) 0;
+  padding: var(--space-xl) 0;
   scroll-margin-top: var(--dy-header-h-mobile);
 }
 
@@ -93,7 +111,7 @@ section {
 
 .section-header {
   max-width: 640px;
-  margin: 0 0 var(--space-xl);
+  margin: 0 0 var(--space-lg);
 }
 
 .section-header p {
@@ -112,7 +130,23 @@ section {
   font-size: 0.95rem;
   color: var(--color-text-muted);
   max-width: 46ch;
-  margin: var(--space-xl) auto 0;
+  margin: 0 auto;
+  padding: 0 var(--space-md);
+}
+
+.problema-closing {
+  margin-top: var(--space-xl);
+}
+
+/* Fecho discreto que incorpora o argumento de sustentabilidade (antes uma
+   seção grande própria) — nota secundária, menor e mais silenciosa que
+   .section-transition, nunca outro bloco/caixa. */
+.problema-sustain-note {
+  text-align: center;
+  font-size: 0.9375rem;
+  color: var(--color-text-muted);
+  max-width: 52ch;
+  margin: var(--space-sm) auto 0;
   padding: 0 var(--space-md);
 }
 
@@ -161,10 +195,7 @@ section {
     color-adjust: exact;
   }
 
-  .whatsapp-float,
-  .compare-tray,
-  .catalog-backdrop,
-  .catalog-panel {
+  .whatsapp-float {
     display: none !important;
   }
 }
@@ -185,9 +216,36 @@ section {
 }
 
 /* ==========================================================================
+   Reveal — entrada única ao entrar no viewport (js/reveal.js). Só
+   transform+opacity (sem width/height/top/left). A regra de
+   prefers-reduced-motion acima já zera a duração da transição, e o JS
+   marca tudo .is-revealed sem observer nesse modo — o conteúdo nunca fica
+   invisível/inacessível.
+   ========================================================================== */
+
+[data-reveal],
+[data-reveal-item] {
+  opacity: 0;
+  transform: translateY(22px);
+  transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1), transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+  transition-delay: var(--reveal-delay, 0ms);
+}
+
+[data-reveal].is-revealed,
+[data-reveal-item].is-revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ==========================================================================
    Botões / CTA
    ========================================================================== */
 
+/* Sistema único de botão — raio, altura, padding e tipografia iguais para
+   todas as variantes de cor (gold/whatsapp/outline/carbon); só a cor muda
+   por variante. O CTA dourado do header (.nav-list a.btn-gold) continua com
+   sua própria geometria compacta, já aprovada — espaço de menu é um
+   contexto à parte, não faz parte deste padrão. */
 .btn {
   display: inline-flex;
   align-items: center;
@@ -195,7 +253,7 @@ section {
   gap: var(--space-xs);
   min-height: 44px;
   padding: 0.8rem 1.5rem;
-  border-radius: var(--radius);
+  border-radius: 12px;
   font-weight: 700;
   font-family: var(--font-body);
   font-size: var(--fs-body);
@@ -208,14 +266,17 @@ section {
   transform: scale(0.97);
 }
 
-.btn-whatsapp {
-  background-color: var(--color-grafite);
-  color: var(--color-marfim);
+/* Variante carbon — só o CTA do catálogo 3M™ DI-NOC™ usa esta cor, para
+   ganhar identidade própria sem sair da mesma construção do .btn. */
+.btn-carbon {
+  background-color: var(--dy-carbon);
+  color: var(--dy-copper);
 }
 
-.btn-whatsapp:hover,
-.btn-whatsapp:focus-visible {
+.btn-carbon:hover,
+.btn-carbon:focus-visible {
   background-color: var(--color-preto);
+  color: var(--dy-wood);
 }
 
 .btn-outline {
@@ -240,17 +301,6 @@ section {
 .btn-outline--dark:focus-visible {
   border-color: var(--dy-copper);
   color: var(--dy-copper);
-}
-
-/* Seção de contato (escura): botões invertem para permanecer legíveis */
-.contact .btn-whatsapp {
-  background-color: var(--color-marfim);
-  color: var(--color-preto);
-}
-
-.contact .btn-whatsapp:hover,
-.contact .btn-whatsapp:focus-visible {
-  background-color: var(--color-areia);
 }
 
 /* ==========================================================================
@@ -317,6 +367,14 @@ section {
      da viewport (acima de y=0). Ancora ao topo da faixa do header e deixa
      o excesso transbordar para baixo, sobre o hero — nunca para cima. */
   align-self: flex-start;
+}
+
+/* Estado dockado: só o wordmark pequeno fica visível (sem o lockup grande
+   que precisa do overflow acima) — nada mais para "vazar" para cima, então
+   volta a acompanhar o centro vertical do header (.header-inner já é
+   align-items:center) em vez de ficar colado no topo da faixa. */
+.site-header.is-docked .header-brand {
+  align-self: center;
 }
 
 /* Container de posicionamento para os dois recortes do logo oficial —
@@ -820,10 +878,6 @@ body.nav-open .whatsapp-float {
 
 /* Cantos arredondados só aqui — não no --radius global (2px), usado em
    todo o resto do site. Mesmo raio para os dois CTAs, sem pill (999px). */
-.proposta-intro-actions .btn {
-  border-radius: 12px;
-}
-
 @media (max-width: 899px) {
   /* No empilhamento mobile os dois CTAs ficam em linhas separadas com
      larguras diferentes (uma segue o texto mais longo do primário, a outra
@@ -874,8 +928,13 @@ body.nav-open .whatsapp-float {
 }
 
 @media (min-width: 900px) {
+  /* Coluna de texto dimensionada para o próprio conteúdo (560px, mesmo
+     max-width de .proposta-intro-content) em vez de 1fr — antes a fração
+     sobrava mais larga que o texto, abrindo um corredor branco de ~100px
+     antes da foto começar. Sem essa folga a imagem também ganha mais
+     largura (ocupa o restante real da seção). */
   .proposta-intro-grid {
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr);
+    grid-template-columns: minmax(0, 560px) minmax(0, 1fr);
     align-items: stretch;
   }
 
@@ -895,11 +954,13 @@ body.nav-open .whatsapp-float {
    fina, raio grande — nunca um card sólido. */
 .proposta-intro-overlay {
   position: absolute;
-  right: var(--space-sm);
+  right: var(--space-md);
   bottom: var(--space-sm);
-  /* Mobile ~20-30% mais compacto que a rodada anterior (172px). */
-  max-width: 135px;
-  padding: 10px;
+  /* Recuo maior da borda direita (space-md) + largura um pouco maior que a
+     versão anterior (135px) para o texto não quebrar em 2 linhas quase toda
+     a lista — sem virar um card grande. */
+  max-width: 168px;
+  padding: 12px 14px;
   background: rgba(255, 255, 255, 0.13);
   border: 1px solid rgba(255, 255, 255, 0.25);
   border-radius: 16px;
@@ -931,7 +992,7 @@ body.nav-open .whatsapp-float {
 .proposta-intro-overlay-list {
   display: flex;
   flex-direction: column;
-  gap: 3px;
+  gap: 5px;
 }
 
 .proposta-intro-overlay-list li {
@@ -939,7 +1000,7 @@ body.nav-open .whatsapp-float {
   padding-left: 10px;
   color: rgba(252, 251, 248, 0.92);
   font-size: 0.625rem;
-  line-height: 1.25;
+  line-height: 1.35;
 }
 
 .proposta-intro-overlay-list li::before {
@@ -1001,9 +1062,9 @@ body.nav-open .whatsapp-float {
    nessa faixa. Versão mais compacta só aqui, encostada na borda. */
 @media (min-width: 900px) and (max-width: 1279px) {
   .proposta-intro-overlay {
-    right: var(--space-sm);
-    max-width: 190px;
-    padding: var(--space-sm);
+    right: var(--space-md);
+    max-width: 212px;
+    padding: 14px 16px;
   }
 
   .proposta-intro-overlay-title {
@@ -1021,7 +1082,7 @@ body.nav-open .whatsapp-float {
 
   .proposta-intro-overlay-list li {
     font-size: 0.8125rem;
-    line-height: 1.35;
+    line-height: 1.45;
   }
 }
 
@@ -1138,22 +1199,36 @@ body.nav-open .whatsapp-float {
   position: absolute;
   top: 50%;
   left: 50%;
-  transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%) scale(1);
   width: 36px;
   height: 36px;
   border-radius: 50%;
   background-color: var(--color-marfim);
   border: 1px solid var(--color-champanhe);
   box-shadow: 0 1px 4px rgba(13, 13, 13, 0.25);
+  transition: transform var(--transition-fast), border-color var(--transition-fast);
+}
+
+/* Percepção do handle muito sutil no hover/focus do comparador inteiro —
+   nunca depende só de hover (o range abaixo cobre teclado/touch). */
+.compare-hero:hover .compare-handle::after,
+.before-after-wrap:focus-within .compare-handle::after {
+  transform: translate(-50%, -50%) scale(1.08);
+  border-color: var(--dy-copper);
 }
 
 .compare-label {
   position: absolute;
   bottom: var(--space-sm);
-  font-size: 11px;
+  font-size: 13px;
   font-weight: 700;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.09em;
   text-transform: uppercase;
+  padding: 5px 10px;
+  border-radius: 999px;
+  background-color: rgba(13, 13, 13, 0.35);
+  backdrop-filter: blur(3px);
+  -webkit-backdrop-filter: blur(3px);
   pointer-events: none;
   z-index: 1;
 }
@@ -1201,10 +1276,53 @@ body.nav-open .whatsapp-float {
   padding-top: var(--space-xl);
 }
 
+/* Destaque editorial — não é eyebrow (não é label curto) nem banner (sem
+   fundo/caixa): itálico de apoio, mesmo tratamento tipográfico do <em> usado
+   no resto do site, só que como frase inteira. Medida reduzida (60ch, não
+   68ch) e peso/cor/tamanho um pouco maiores para funcionar como ponto de
+   respiro e síntese — a frase dos "17 anos" precisa parar o olho antes do
+   corpo do texto, não seguir no mesmo fluxo denso. Margem inferior maior
+   (space-lg, não space-md) cria a pausa antes do primeiro parágrafo. */
+.quem-somos-highlight {
+  max-width: 60ch;
+  font-family: var(--font-accent);
+  font-style: italic;
+  font-weight: 600;
+  font-size: 1.3rem;
+  line-height: 1.45;
+  color: var(--dy-copper);
+  margin: 0 0 var(--space-lg);
+}
+
+/* Medida mais curta (60ch) e line-height mais aberto (1.7, não o 1.6 padrão
+   do body) — reduz a sensação de parede de texto sem cortar nenhum
+   parágrafo. Espaçamento entre parágrafos um pouco maior que o padrão do
+   site (space-md + space-xs) para separar melhor os 4 blocos. */
 .quem-somos-body {
-  max-width: 68ch;
+  max-width: 60ch;
   font-size: 1.05rem;
+  line-height: 1.7;
   color: var(--color-text);
+  margin-bottom: calc(var(--space-md) + var(--space-xs));
+}
+
+.quem-somos-body:last-child {
+  margin-bottom: 0;
+}
+
+/* Frase de fechamento — antes vivia como headline da seção "Padrão DYNEW"
+   (removida; ocupava uma seção inteira só por essa mensagem). Aqui funciona
+   como fechamento editorial, não como novo card. */
+.quem-somos-closing {
+  max-width: 52ch;
+  margin: var(--space-lg) 0 0;
+  padding-top: var(--space-md);
+  border-top: 1px solid var(--color-border);
+  font-family: var(--font-accent);
+  font-style: italic;
+  font-size: 1.05rem;
+  line-height: 1.6;
+  color: var(--color-heading);
 }
 
 /* ==========================================================================
@@ -1236,11 +1354,27 @@ body.nav-open .whatsapp-float {
   color: var(--color-text-muted-on-dark);
 }
 
+/* Legenda editorial do case — antes ficava "solta": o gap do flex pai
+   (.hero-media, var(--space-sm)) já dava 16px de distância da faixa de
+   arraste, e este margin-top somava mais 16px em cima disso (32px no
+   total). Margem negativa aqui cancela boa parte do gap do pai (sem tocar
+   nele — ele também separa a imagem do slider, fora deste ajuste) e deixa
+   a legenda colada ao bloco visual, como uma legenda de imagem de verdade. */
 .simulation-caption {
-  font-size: 11px;
-  letter-spacing: 0.02em;
+  font-size: 0.8125rem;
+  letter-spacing: 0.01em;
   color: var(--color-text-muted);
-  margin-top: var(--space-sm);
+  margin-top: -10px;
+}
+
+/* Uma linha só a partir de 900px (mesmo piso de largura já usado por
+   outros componentes do site) — abaixo disso o container real já fica
+   pequeno demais para as ~85 letras da frase sem forçar overflow; nesse
+   caso a legenda quebra em 2 linhas com boa leitura em vez de vazar. */
+@media (min-width: 900px) {
+  .simulation-caption {
+    white-space: nowrap;
+  }
 }
 
 /* ==========================================================================
@@ -1251,9 +1385,12 @@ body.nav-open .whatsapp-float {
   padding: var(--space-xl) 0;
 }
 
+/* Antes só 760px dentro de um container bem mais largo — o comparador
+   (o argumento visual mais forte da página) ficava pequeno rodeado de
+   vazio. Sem limite próprio agora: ocupa a largura real do container,
+   ultrapassando de propósito a coluna de texto de 640px acima. */
 .before-after-wrap {
-  max-width: 760px;
-  margin: 0 auto;
+  width: 100%;
 }
 
 /* Rótulos legíveis sobre o espaço de fotografia (fundo grafite enquanto
@@ -1276,8 +1413,12 @@ body.nav-open .whatsapp-float {
   object-position: 50% 18%;
 }
 
+/* Ajuste desta rodada: 28% ainda deixava a piscina/janelas ocupando mais
+   da metade do quadro visível, diluindo o teto amadeirado (o argumento da
+   comparação). Subindo a âncora para 10%, o teto passa a dominar a moldura
+   na mesma proporção do lado ANTES — mesmo par de fotos, só o recorte. */
 .before-after .compare-finish .photo-slot img {
-  object-position: 50% 28%;
+  object-position: 50% 10%;
 }
 
 /* ==========================================================================
@@ -1357,11 +1498,23 @@ body.nav-open .whatsapp-float {
   overflow: hidden;
 }
 
+/* Fotografia de origem é paisagem (1672×941) dentro de um slot retrato
+   (4:5) — cover recorta a maior parte da largura. Posição escolhida para
+   manter mão/ferramenta, a película se soltando (transição aço original x
+   revestido) e o logo DYNEW nas costas sempre dentro do quadro. */
+.quem-somos-photo img {
+  object-position: 66% 32%;
+}
+
 @media (min-width: 800px) {
   .quem-somos-grid {
     grid-template-columns: 0.85fr 1.15fr;
     align-items: center;
     gap: var(--space-xl);
+  }
+
+  .quem-somos-photo img {
+    object-position: 63% 35%;
   }
 }
 
@@ -1369,28 +1522,74 @@ body.nav-open .whatsapp-float {
    Por que revestir — três caminhos (Revestir em destaque)
    ========================================================================== */
 
+/* Ajuste pontual: título centralizado, caixa alta, cor herdada de h2 —
+   estrutura/fonte/peso/tamanho sem override. Escopado a #problema para não
+   afetar .section-header de nenhuma outra seção. */
+#problema .section-header {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+#problema .section-header h2 {
+  text-align: center;
+  text-transform: uppercase;
+  /* h2 herda --color-heading (quase preto) por padrão — ilegível sobre o
+     novo fundo grafite da seção. */
+  color: var(--color-marfim);
+}
+
+/* Seção inteira em carbon (mesmo tom já usado pela coluna "Revestir",
+   --color-grafite) — antes só a terceira coluna tinha esse fundo, criando
+   a leitura de "card escuro isolado sobre fundo claro". Agora as três
+   colunas (e o fecho abaixo) vivem sobre a mesma superfície contínua. */
+#problema {
+  background-color: var(--color-grafite);
+  color: var(--color-areia);
+}
+
+/* Fecho ("Quando a estrutura pode permanecer..." + nota de sustentabilidade)
+   herdava --color-text-muted (cinza para fundo claro) — trocado para o
+   mesmo bege usado no corpo das três colunas. */
+#problema .section-transition,
+#problema .problema-sustain-note {
+  color: var(--color-areia);
+}
+
 .paths-grid {
   display: grid;
   grid-template-columns: 1fr;
-  gap: var(--space-xl);
-  border-top: 1px solid var(--color-border);
+  gap: var(--space-lg);
+  border-top: 1px solid var(--color-border-on-dark);
+  padding-top: var(--space-md);
+}
+
+/* Divisor horizontal discreto entre os três grupos empilhados (mobile) —
+   reset em desktop, onde o grid vira 3 colunas lado a lado. */
+.path-item + .path-item {
+  border-top: 1px solid var(--color-border-on-dark);
   padding-top: var(--space-lg);
 }
 
+/* Os três subtítulos (Substituir / Manter como está / Revestir) em
+   dourado DYNEW — antes só "Revestir" tinha esse destaque; agora os três
+   ganham o mesmo tratamento, e o que diferencia "Revestir" é só a borda
+   dourada abaixo (não mais um card com fundo próprio). */
 .path-item h3 {
-  font-size: 1.05rem;
+  font-size: 1.15rem;
   margin-bottom: var(--space-sm);
+  color: var(--color-champanhe);
 }
 
 .path-item ul {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 10px;
 }
 
 .path-item li {
-  font-size: var(--fs-small);
-  color: var(--color-text-muted);
+  font-size: 0.9375rem;
+  line-height: 1.5;
+  color: var(--color-areia);
   padding-left: 14px;
   position: relative;
 }
@@ -1399,618 +1598,442 @@ body.nav-open .whatsapp-float {
   content: "–";
   position: absolute;
   left: 0;
-  color: var(--color-text-muted);
-}
-
-.path-item--highlight {
-  background-color: var(--color-grafite);
-  color: var(--color-marfim);
-  padding: var(--space-lg);
-}
-
-.path-item--highlight h3 {
-  color: var(--color-champanhe);
-}
-
-.path-item--highlight li {
   color: var(--color-areia);
 }
 
-.path-item--highlight li::before {
-  color: var(--color-champanhe);
+/* "Revestir" continua com leve prioridade visual, mas integrado à mesma
+   superfície — sem fundo/padding de card, só uma borda dourada fina à
+   esquerda (mesmo idioma visual já usado em .dinoc-tip/.faq-answer aberto
+   neste projeto para marcar destaque, sem inventar um tratamento novo). */
+.path-item--highlight {
+  border-left: 2px solid var(--color-champanhe);
+  padding-left: var(--space-md);
 }
 
 @media (min-width: 800px) {
   .paths-grid {
     grid-template-columns: 1fr 1fr 1.15fr;
     align-items: start;
+    gap: var(--space-lg);
+  }
+
+  .path-item + .path-item {
+    border-top: none;
+    padding-top: 0;
+  }
+
+  /* Filete entre as duas primeiras colunas para as três leituras
+     parecerem uma comparação única, não três ilhas soltas — a terceira
+     já se diferencia pela borda dourada de .path-item--highlight. */
+  .paths-grid .path-item:nth-child(2) {
+    border-left: 1px solid var(--color-border-on-dark);
+    padding-left: var(--space-lg);
+  }
+
+  .path-item--highlight {
+    padding-left: var(--space-lg);
   }
 }
 
 /* ==========================================================================
-   Diferencial de peso
-   ========================================================================== */
-
-#peso {
-  padding: var(--space-xl) 0;
-}
-
-.applications-tags {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0;
-  margin: var(--space-lg) 0;
-}
-
-.applications-tags span {
-  position: relative;
-  font-size: 12.5px;
-  font-weight: 700;
-  color: var(--color-text-muted);
-  padding: var(--space-xs) var(--space-md) var(--space-xs) 0;
-  margin-right: var(--space-sm);
-}
-
-.applications-tags span:not(:last-child)::after {
-  content: "";
-  position: absolute;
-  right: 0;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 3px;
-  height: 3px;
-  border-radius: 50%;
-  background-color: var(--color-champanhe);
-}
-
-.weight-diagram {
-  display: flex;
-  align-items: flex-end;
-  gap: var(--space-xl);
-  margin-top: var(--space-xl);
-  padding-top: var(--space-lg);
-  border-top: 1px solid var(--color-border);
-}
-
-.weight-item {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-sm);
-  max-width: 220px;
-}
-
-.weight-block {
-  width: 100%;
-  border: 1px solid var(--color-border);
-}
-
-.weight-block--heavy {
-  height: 160px;
-  background-color: var(--color-grafite);
-}
-
-.weight-block--light {
-  height: 26px;
-  background-color: var(--color-champanhe);
-}
-
-.weight-item-label {
-  font-size: 12.5px;
-  font-weight: 600;
-  color: var(--color-text);
-}
-
-/* ==========================================================================
-   Tetos
+   Teto / leveza — composição editorial texto + fotografia. Absorve a
+   mensagem da antiga seção independente "Nova materialidade sem
+   sobrecarregar..." (removida — repetia a mesma ideia desta), substituindo
+   o grid de 6 linhas por 4 benefícios + fotografia real grande.
    ========================================================================== */
 
 #tetos {
   padding: var(--space-xl) 0;
 }
 
-.tetos-grid {
+.tetos-layout {
   display: grid;
-  gap: 0;
   grid-template-columns: 1fr;
-  border-top: 1px solid var(--color-border-on-dark);
-  margin-top: var(--space-lg);
+  gap: var(--space-lg);
 }
 
-.tetos-item {
-  padding: var(--space-md) 0;
-  border-bottom: 1px solid var(--color-border-on-dark);
-}
-
-.tetos-item p {
-  margin: 0;
-  color: var(--color-text-on-dark);
-}
-
-@media (min-width: 700px) {
-  .tetos-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-  .tetos-item {
-    padding: var(--space-md) var(--space-lg) var(--space-md) 0;
-  }
-}
-
-/* ==========================================================================
-   Chamada para a biblioteca de materiais (a biblioteca em si vive em materiais.html)
-   ========================================================================== */
-
-.materiais-teaser {
-  padding: var(--space-xl) 0;
-}
-
-.materiais-teaser-inner {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--space-md);
-  border-top: 1px solid var(--color-border);
-  border-bottom: 1px solid var(--color-border);
-  padding: var(--space-lg) 0;
-}
-
-.materiais-teaser-inner p {
-  margin: 0;
-  font-size: 1.05rem;
-  color: var(--color-text);
+.tetos-support {
   max-width: 46ch;
-}
-
-/* ==========================================================================
-   Nota institucional discreta (fim da página, antes do rodapé)
-   ========================================================================== */
-
-.institutional-note {
-  max-width: 60ch;
-  margin: 0 auto;
-  padding: var(--space-lg) var(--space-md);
-  text-align: center;
-  font-size: 12px;
-  color: var(--color-text-muted);
-}
-
-/* ==========================================================================
-   Introdução da página de materiais (materiais.html)
-   ========================================================================== */
-
-.materials-disclaimer-text {
-  font-size: 12px;
-  color: var(--color-text-muted);
-  max-width: 70ch;
-  border-top: 1px solid var(--color-border);
-  padding-top: var(--space-md);
-  margin-top: var(--space-md);
-  margin-bottom: 0;
-}
-
-/* ==========================================================================
-   Biblioteca de Materiais — seção escura
-   ========================================================================== */
-
-.materials {
-  background-color: var(--color-bg-dark);
-  color: var(--color-text-on-dark);
-}
-
-.materials .section-header h2 {
-  color: var(--color-text-on-dark);
-}
-
-.materials .section-header p {
+  margin-top: var(--space-sm);
   color: var(--color-text-muted-on-dark);
 }
 
-.catalog-intro {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: flex-end;
-  justify-content: space-between;
-  gap: var(--space-md);
-}
-
-.catalog-download.btn-outline {
-  border-color: var(--color-marfim);
-  color: var(--color-marfim);
-}
-
-.catalog-download.btn-outline:hover,
-.catalog-download.btn-outline:focus-visible {
-  border-color: var(--color-champanhe);
-  color: var(--color-champanhe);
-}
-
-.catalog-filters {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--space-sm);
-  margin: var(--space-lg) 0;
-}
-
-.catalog-filter-group {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: var(--space-xs);
-}
-
-.catalog-chip {
-  font-family: var(--font-body);
-  font-size: var(--fs-small);
-  font-weight: 600;
-  padding: 0.4rem 0.9rem;
-  min-height: 36px;
-  border-radius: 999px;
-  border: 1px solid var(--color-border-on-dark);
-  background: transparent;
-  color: var(--color-areia);
-  cursor: pointer;
-  transition: background-color var(--transition-fast), color var(--transition-fast), border-color var(--transition-fast);
-}
-
-.catalog-chip[aria-pressed="true"] {
-  background-color: var(--color-champanhe);
-  border-color: var(--color-champanhe);
-  color: var(--color-preto);
-}
-
-.catalog-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-  gap: 1px;
-  background-color: transparent;
-}
-
-.catalog-tile {
-  position: relative;
-  background-color: var(--color-preto);
-  border: 1px solid var(--color-border-on-dark);
-  cursor: pointer;
-  text-align: left;
+.tetos-benefits {
   display: flex;
   flex-direction: column;
-  gap: 6px;
-  padding: var(--space-md);
-  min-height: 140px;
+  gap: 10px;
+  margin: var(--space-md) 0 0;
+  padding: 0;
+  list-style: none;
 }
 
-.catalog-tile:hover,
-.catalog-tile:focus-visible {
-  border-color: var(--color-champanhe);
+.tetos-benefits li {
+  position: relative;
+  padding-left: 18px;
+  font-size: 0.9375rem;
+  color: var(--color-text-on-dark);
 }
 
-.catalog-tile-family {
-  display: block;
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--color-champanhe);
+.tetos-benefits li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.5em;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: var(--dy-copper);
 }
 
-.catalog-tile-name {
-  font-family: var(--font-heading);
-  font-weight: 700;
-  color: var(--color-marfim);
-  font-size: 1rem;
+.tetos-caveat {
+  max-width: 50ch;
 }
 
-.catalog-tile-meta {
-  font-size: 12px;
-  color: var(--color-areia);
-  margin-top: auto;
-}
-
-.catalog-consult {
-  margin-top: var(--space-xl);
-  padding-top: var(--space-lg);
-  border-top: 1px solid var(--color-border-on-dark);
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--space-md);
-}
-
-.catalog-consult p {
-  color: var(--color-areia);
-  margin: 0;
-  max-width: 45ch;
-}
-
-/* Bandeja de comparação */
-.compare-tray {
-  position: sticky;
-  bottom: 0;
-  z-index: 20;
-  margin-top: var(--space-lg);
+.tetos-media {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  border-radius: var(--radius);
   background-color: var(--color-grafite);
-  border: 1px solid var(--color-border-on-dark);
-  padding: var(--space-sm) var(--space-md);
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: var(--space-sm);
 }
 
-.compare-tray[hidden] {
+.tetos-media img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+@media (min-width: 900px) {
+  .tetos-layout {
+    /* ~45/55 — texto compacto à esquerda, fotografia protagonista à
+       direita, esticada (align-items:stretch, default) até a altura que a
+       coluna de texto define naturalmente. */
+    grid-template-columns: minmax(0, 45%) minmax(0, 55%);
+    align-items: stretch;
+    gap: var(--space-xl);
+  }
+
+  .tetos-text {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .tetos-media {
+    aspect-ratio: auto;
+    height: 100%;
+    min-height: 420px;
+  }
+}
+
+/* ==========================================================================
+   Aplicações — faixa horizontal (carrossel)
+   Mesmos 6 itens de antes; scroll nativo (touch/trackpad) + drag de mouse
+   (js/applications-carousel.js) + scroll-snap. Sem foto própria por item
+   (não existe no projeto) — cartão editorial com numeração no lugar.
+   ========================================================================== */
+
+.applications-carousel-wrap {
+  position: relative;
+  margin-top: var(--space-lg);
+}
+
+.applications-carousel {
+  display: flex;
+  gap: var(--space-md);
+  overflow-x: auto;
+  scroll-snap-type: x proximity;
+  scroll-padding-left: var(--space-md);
+  list-style: none;
+  margin: 0;
+  padding: 0 var(--space-md) var(--space-sm);
+  cursor: grab;
+  /* Esconde a scrollbar nativa — a navegação visível é por seta/drag/swipe. */
+  scrollbar-width: none;
+}
+
+.applications-carousel:active {
+  cursor: grabbing;
+}
+
+.applications-carousel::-webkit-scrollbar {
   display: none;
 }
 
-.compare-tray .btn-whatsapp {
-  background-color: var(--color-champanhe);
-  color: var(--color-preto);
+/* Cartão fotográfico: imagem preenche o cartão inteiro, número reduzido a
+   marca d'água, nome em destaque sobre um gradiente sutil na base — a foto
+   é a protagonista, não um card de texto com número grande. */
+.applications-card {
+  position: relative;
+  flex: 0 0 auto;
+  width: 74vw;
+  max-width: 280px;
+  aspect-ratio: 4 / 5;
+  scroll-snap-align: start;
+  border-radius: var(--radius);
+  overflow: hidden;
+  background-color: var(--color-grafite);
 }
 
-.compare-tray .btn-whatsapp:hover,
-.compare-tray .btn-whatsapp:focus-visible {
-  background-color: var(--color-areia);
-}
-
-.compare-tray-items {
-  display: flex;
-  gap: var(--space-xs);
-  flex: 1;
-  flex-wrap: wrap;
-}
-
-.compare-tray-item {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  background: rgba(245, 242, 237, 0.08);
-  border: 1px solid var(--color-border-on-dark);
-  border-radius: var(--radius-sm);
-  padding: 0.35rem 0.5rem 0.35rem 0.7rem;
-  font-size: 12px;
-  color: var(--color-marfim);
-}
-
-.compare-tray-item button {
-  background: none;
-  border: none;
-  color: var(--color-areia);
-  cursor: pointer;
-  font-size: 14px;
-  line-height: 1;
-  padding: 4px;
-}
-
-.compare-tray-item button:hover {
-  color: var(--color-champanhe);
-}
-
-/* Painel lateral de detalhes / comparação */
-.catalog-backdrop {
-  position: fixed;
+.applications-card-photo {
+  position: absolute;
   inset: 0;
-  background-color: rgba(13, 13, 13, 0.45);
-  opacity: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.applications-card-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(13, 13, 13, 0) 45%, rgba(13, 13, 13, 0.75) 100%);
   pointer-events: none;
-  transition: opacity var(--transition-base);
-  z-index: 1190;
 }
 
-.catalog-backdrop.is-open {
-  opacity: 1;
-  pointer-events: auto;
+.applications-card-index {
+  position: absolute;
+  top: var(--space-sm);
+  left: var(--space-sm);
+  font-family: var(--dy-font-mono);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  color: rgba(252, 251, 248, 0.7);
 }
 
-.catalog-panel {
-  position: fixed;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  width: min(440px, 100%);
-  background-color: var(--color-marfim);
-  color: var(--color-text);
-  transform: translateX(100%);
-  transition: transform var(--transition-base);
-  z-index: 1200;
-  overflow-y: auto;
-  padding: var(--space-lg);
-}
-
-.catalog-panel.is-open {
-  transform: translateX(0);
-}
-
-.catalog-panel-close {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 40px;
-  height: 40px;
-  border: 1px solid var(--color-border);
-  background: transparent;
-  cursor: pointer;
-  font-size: 18px;
-  color: var(--color-preto);
-  float: right;
-}
-
-.catalog-panel-meta {
-  font-size: var(--fs-small);
-  color: var(--color-text-muted);
-  margin-top: 4px;
-}
-
-.catalog-panel-specs {
-  border-top: 1px solid var(--color-border);
-  margin-top: var(--space-lg);
-}
-
-.catalog-panel-specs .spec-row {
-  display: flex;
-  justify-content: space-between;
-  gap: var(--space-md);
-  padding: var(--space-xs) 0;
-  border-bottom: 1px solid var(--color-border);
-  font-size: var(--fs-small);
-}
-
-.catalog-panel-specs .spec-row dt {
-  color: var(--color-text-muted);
-}
-
-.catalog-panel-specs .spec-row dd {
+.applications-card-title {
+  position: absolute;
+  left: var(--space-sm);
+  right: var(--space-sm);
+  bottom: var(--space-sm);
   margin: 0;
-  font-weight: 600;
-  text-align: right;
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: var(--dy-paper);
+  transition: transform var(--transition-base);
 }
 
-.catalog-panel-note {
-  font-size: 12px;
-  color: var(--color-text-muted);
-  border: 1px dashed var(--color-border);
-  border-radius: var(--radius-sm);
-  padding: var(--space-sm);
-  margin-top: var(--space-md);
+.applications-card:hover .applications-card-photo,
+.applications-card:focus-within .applications-card-photo {
+  transform: scale(1.02);
 }
 
-.catalog-panel-actions {
-  margin-top: var(--space-lg);
+.applications-card:hover .applications-card-title,
+.applications-card:focus-within .applications-card-title {
+  transform: translateY(-2px);
+}
+
+.applications-arrow {
+  display: none;
+}
+
+@media (min-width: 700px) {
+  .applications-card {
+    width: 260px;
+  }
+
+  .applications-carousel {
+    padding-left: var(--dy-space-page-desktop);
+    padding-right: var(--dy-space-page-desktop);
+  }
+
+  .applications-arrow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 1px solid var(--color-border);
+    background-color: var(--color-bg);
+    color: var(--color-heading);
+    cursor: pointer;
+    z-index: 1;
+    transition: border-color var(--transition-fast), color var(--transition-fast);
+  }
+
+  .applications-arrow svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  .applications-arrow:hover,
+  .applications-arrow:focus-visible {
+    border-color: var(--color-champanhe);
+    color: var(--color-champanhe-text);
+  }
+
+  .applications-arrow--prev {
+    left: 8px;
+  }
+
+  .applications-arrow--next {
+    right: 8px;
+  }
+}
+
+/* ==========================================================================
+   Case real — curvas e volumes (antiga "Sustentabilidade")
+   Rodada anterior já tinha trocado o fundo claro por carbon full-bleed, mas
+   a composição em si ainda ficava presa a um max-width próprio (780/800px)
+   — numa seção de ~1300px de largura real (desktop grande), isso deixava
+   ~250px de vazio carbon de cada lado, ainda lendo como "componente
+   estreito centralizado", só que agora sobre preto em vez de branco.
+   Correção: usa .container (mesmo sistema de largura de TODAS as outras
+   seções — 900+, Teto, Aplicações) em vez de max-width bespoke, então o
+   conjunto ocupa a largura real do conteúdo da página, não uma ilha menor
+   dentro dela. */
+.case-piscina {
+  background-color: var(--color-bg-dark);
+  color: var(--color-text-on-dark);
+  padding: var(--space-2xl) 0;
+}
+
+/* Mobile: empilha na ordem do DOM (antes → texto → depois), largura cheia
+   do .container em cada bloco. Desktop/tablet: grid de 3 colunas abaixo. */
+.case-piscina-layout {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-lg);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+
+.case-piscina-text {
+  padding: var(--space-xl) var(--space-lg);
   display: flex;
-  flex-wrap: wrap;
+  flex-direction: column;
+  justify-content: center;
   gap: var(--space-sm);
 }
 
-/* Painel de comparação (até 3 colunas) */
-.catalog-panel.is-compare {
-  width: min(920px, 100%);
+.case-piscina-eyebrow {
+  display: inline-block;
+  font-family: var(--dy-font-mono);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--dy-copper);
 }
 
-.compare-columns {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: var(--space-lg);
-  margin-top: var(--space-lg);
-}
-
-.compare-column h4 {
-  font-size: 1rem;
-}
-
-/* ==========================================================================
-   Confiança — Evidência técnica
-   ========================================================================== */
-
-.evidence-grid {
-  display: grid;
-  gap: 0;
-  grid-template-columns: 1fr;
-  border-top: 1px solid var(--color-border);
-}
-
-.evidence-item {
-  padding: var(--space-md) 0;
-  border-bottom: 1px solid var(--color-border);
-}
-
-.evidence-item h3 {
-  font-size: 1rem;
-  margin-bottom: 4px;
-}
-
-.evidence-item p {
+.case-piscina-text h2 {
+  font-size: 1.5rem;
+  color: var(--color-marfim);
   margin: 0;
-  font-size: var(--fs-small);
 }
 
-@media (min-width: 700px) {
-  .evidence-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-  .evidence-item {
-    padding: var(--space-md) var(--space-lg) var(--space-md) 0;
-  }
+/* Body off-white (não dourado) — dourado fica só para o eyebrow, um
+   acento pequeno, não para o parágrafo inteiro. */
+.case-piscina-text > p {
+  max-width: 46ch;
+  color: var(--color-text-on-dark);
+  margin: 0;
 }
 
-@media (min-width: 1000px) {
-  .evidence-grid {
-    grid-template-columns: repeat(4, 1fr);
-  }
-
-  /* Aplicações tem 6 itens — 3 colunas evita uma última linha com vão vazio */
-  #aplicacoes .evidence-grid {
-    grid-template-columns: repeat(3, 1fr);
-  }
-}
-
-/* ==========================================================================
-   Padrão DYNEW — processo de execução (numeração reaproveita o padrão
-   visual do antigo bloco de processo do Contato, agora em seção própria)
-   ========================================================================== */
-
-.standard-grid {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: var(--space-lg);
-  margin-top: var(--space-lg);
-  padding-top: var(--space-lg);
-  border-top: 1px solid var(--color-border);
-  counter-reset: dstep;
-}
-
-.standard-step {
-  padding-left: 2.75rem;
-  position: relative;
-}
-
-.standard-step::before {
-  counter-increment: dstep;
-  content: counter(dstep, decimal-leading-zero);
-  position: absolute;
-  left: 0;
-  top: 0;
+.case-piscina-closing {
+  margin: var(--space-sm) 0 0;
   font-family: var(--font-accent);
   font-style: italic;
-  font-size: 1.1rem;
-  color: var(--color-champanhe-text);
+  color: var(--color-marfim);
 }
 
-.standard-step h3 {
-  font-size: 0.95rem;
-  margin: 0 0 4px;
+.case-piscina-media {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 3 / 4;
+  background-color: var(--color-grafite);
 }
 
-.standard-step p {
-  margin: 0;
-  font-size: var(--fs-small);
-  color: var(--color-text-muted);
+.case-piscina-media video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  /* Escurecimento leve (~15%) pedido para dar profundidade e valorizar a
+     geometria da curva — via CSS, os arquivos de vídeo não são alterados.
+     Aplicado igualmente aos dois vídeos para lerem como a mesma peça. */
+  filter: brightness(0.85);
 }
 
-@media (min-width: 700px) {
-  .standard-grid {
-    grid-template-columns: repeat(4, 1fr);
-  }
-}
-
-/* ==========================================================================
-   Sustentabilidade
-   ========================================================================== */
-
-#sustentabilidade {
-  padding: var(--space-xl) 0;
-}
-
-.evidence-attribution {
-  margin-top: var(--space-xl);
+/* Selo "Antes"/"Depois" — mesmo idioma visual do comparador da seção
+   Antes e Depois (.compare-label), não um componente novo. */
+.case-piscina-media-tag {
+  position: absolute;
+  bottom: var(--space-sm);
+  left: var(--space-sm);
   font-size: 12px;
-  color: var(--color-text-muted);
-  max-width: 70ch;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 5px 10px;
+  border-radius: 999px;
+  background-color: rgba(13, 13, 13, 0.4);
+  color: var(--color-marfim);
+  backdrop-filter: blur(3px);
+  -webkit-backdrop-filter: blur(3px);
+  z-index: 1;
+}
+
+@media (min-width: 900px) {
+  .case-piscina-layout {
+    /* Vídeo / texto / vídeo — texto um pouco mais estreito que cada vídeo
+       (1fr contra 1.1fr). Altura da linha definida pelo conteúdo da coluna
+       de texto (mais alta, de propósito — ver comentário em .case-piscina-
+       media abaixo) — os dois vídeos esticam para acompanhar, então as
+       três colunas terminam sempre na mesma base, nunca com o texto
+       vazando por baixo do vídeo. */
+    grid-template-columns: 1.1fr 1fr 1.1fr;
+    align-items: stretch;
+    gap: 0;
+  }
+
+  /* Divisores finos entre os 3 blocos — mesma superfície carbon contínua,
+     não 3 cartões soltos. */
+  .case-piscina-text {
+    border-left: 1px solid var(--color-border-on-dark);
+    border-right: 1px solid var(--color-border-on-dark);
+    padding: var(--space-2xl) var(--space-xl);
+  }
+
+  /* Sem aspect-ratio fixo aqui: como o <video> é absolute/inset:0, esta
+     coluna não contribui altura própria para o grid — ela estica
+     (align-items:stretch) até a altura que a coluna de TEXTO já definiu
+     naturalmente (mesma técnica usada em .tetos-media/.dinoc-showcase-
+     media). Garante que os dois vídeos e o texto terminem exatamente na
+     mesma base, como uma peça só. */
+  .case-piscina-media {
+    aspect-ratio: auto;
+    height: 100%;
+    min-height: 460px;
+  }
 }
 
 /* ==========================================================================
    FAQ
    ========================================================================== */
+
+/* Ritmo mais compacto: menos respiro entre título e lista, seção não
+   precisa do padding-vertical padrão (64px) de todas as outras — os
+   próprios accordions já respiram o suficiente entre si. */
+#faq {
+  padding: var(--space-lg) 0;
+}
+
+#faq .section-header {
+  margin: 0 auto var(--space-md);
+  text-align: center;
+}
 
 .faq-list {
   max-width: 800px;
@@ -2027,12 +2050,32 @@ body.nav-open .whatsapp-float {
   border-top: 1px solid var(--color-border);
 }
 
+/* Duas colunas a partir de 900px — mesma lista, mesmos accordions, só o
+   container muda de flex (empilhado) para grid (2 colunas). A ordem no DOM
+   preenche por linha (Q1/Q2 na primeira linha, Q3/Q4 na segunda...), então
+   nada muda na lógica de abrir/fechar nem na leitura por teclado. */
+@media (min-width: 900px) {
+  .faq-list {
+    max-width: 1040px;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: var(--space-xl);
+    row-gap: 0;
+  }
+
+  /* :first-child só cobre a coluna esquerda; a segunda linha do grid (Q2)
+     também abre a composição e precisa do mesmo filete superior. */
+  .faq-item:nth-child(-n + 2) {
+    border-top: 1px solid var(--color-border);
+  }
+}
+
 .faq-question {
   width: 100%;
   text-align: left;
   background-color: transparent;
   border: none;
-  padding: var(--space-md) 0;
+  padding: var(--space-sm) 0;
   font-family: var(--font-heading);
   font-weight: 700;
   font-size: 1rem;
@@ -2043,12 +2086,18 @@ body.nav-open .whatsapp-float {
   align-items: center;
   gap: var(--space-sm);
   min-height: 44px;
+  transition: color var(--transition-fast);
+}
+
+/* Pergunta ativa ganha um leve acento — não um card, só cor. */
+.faq-question[aria-expanded="true"] {
+  color: var(--color-champanhe-text);
 }
 
 .faq-icon {
   flex-shrink: 0;
-  color: var(--color-heading);
-  transition: transform var(--transition-fast);
+  color: currentColor;
+  transition: transform var(--transition-base);
 }
 
 .faq-question[aria-expanded="true"] .faq-icon {
@@ -2067,15 +2116,389 @@ body.nav-open .whatsapp-float {
 }
 
 .faq-answer > p {
+  /* Bug pré-existente corrigido: (1) sem margin:0, o margin-bottom padrão
+     do navegador (1em) impedia a linha 0fr de colapsar de verdade; (2) o
+     padding-bottom vivia fixo aqui em vez de só aparecer no estado aberto
+     (par do padding-top abaixo) — juntos, os dois deixavam uma lasca do
+     texto sempre visível sob cada pergunta fechada. */
+  margin: 0;
   min-height: 0;
   overflow: hidden;
-  padding-bottom: var(--space-md);
+  padding-bottom: 0;
   border-top: 1px solid transparent;
 }
 
 .faq-answer[data-open="true"] > p {
   border-top-color: var(--color-champanhe);
   padding-top: var(--space-sm);
+  padding-bottom: var(--space-sm);
+}
+
+/* Disabled genérico — estado reutilizável para qualquer .btn, se necessário. */
+.btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.btn:disabled:hover,
+.btn:disabled:focus-visible {
+  transform: none;
+}
+
+/* ==========================================================================
+   3M™ DI-NOC™ — possibilidades (showcase com hotspots)
+   ========================================================================== */
+
+.dinoc-showcase {
+  padding: var(--space-lg) 0;
+}
+
+/* Composição editorial: texto e foto lado a lado a partir de 900px (mesmo
+   breakpoint em que hotspots/tip já viram versão "desktop" — evita estado
+   intermediário dessincronizado). Abaixo disso, empilha em coluna única na
+   ordem do DOM: texto → 900+ → suporte → CTAs → imagem. */
+.dinoc-showcase-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-lg);
+}
+
+.dinoc-showcase-text {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.dinoc-showcase-eyebrow {
+  display: inline-block;
+  font-family: var(--dy-font-mono);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-champanhe-text);
+}
+
+.dinoc-showcase-headline-row {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-xs);
+}
+
+.dinoc-showcase-headline-row h2 {
+  margin: 0;
+  max-width: 20ch;
+}
+
+/* "900+" colado ao headline (não flutuando sozinho) — por isso vive dentro
+   de .dinoc-showcase-headline-row, com o mesmo gap apertado (--space-xs). */
+.dinoc-showcase-stat {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  line-height: 1;
+}
+
+.dinoc-showcase-stat-number {
+  font-family: var(--font-heading);
+  font-weight: 800;
+  font-size: clamp(2.5rem, 4.5vw, 3.375rem);
+  letter-spacing: -0.02em;
+  color: var(--color-champanhe-text);
+}
+
+.dinoc-showcase-stat-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+  margin-top: 4px;
+}
+
+.dinoc-showcase-support {
+  max-width: 42ch;
+  margin: 0;
+  font-size: 1rem;
+}
+
+.dinoc-showcase-media {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 3 / 2;
+  overflow: hidden;
+  border-radius: var(--radius);
+  background-color: var(--color-grafite);
+}
+
+.dinoc-showcase-media img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* Escurecimento sutil — só o suficiente para as legendas ficarem legíveis
+   em qualquer ponto da foto e dar profundidade, sem apagar a fotografia. */
+.dinoc-showcase-scrim {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(13, 13, 13, 0.16) 0%, rgba(13, 13, 13, 0.04) 30%, rgba(13, 13, 13, 0.04) 65%, rgba(13, 13, 13, 0.32) 100%);
+  pointer-events: none;
+}
+
+@media (min-width: 900px) {
+  .dinoc-showcase-grid {
+    /* ~38%/62%: texto compacto à esquerda, foto ocupando o restante à
+       direita, sem virar dois cartões — mesmo fundo, mesmo bloco. */
+    grid-template-columns: minmax(0, 38%) minmax(0, 62%);
+    align-items: stretch;
+    gap: var(--space-xl);
+  }
+
+  .dinoc-showcase-text {
+    justify-content: center;
+  }
+
+  /* Trecho da foto sem aspect-ratio fixo: como .dinoc-showcase-media img é
+     absolute, a coluna não contribui altura própria para o grid — ela
+     estica (align-items:stretch) até a altura que a coluna de texto já
+     definiu naturalmente. Resultado: a foto preenche a linha inteira,
+     começando no topo do texto e terminando na base da composição, sem
+     moldura vazia. min-height é só um piso de segurança. */
+  .dinoc-showcase-media {
+    aspect-ratio: auto;
+    height: 100%;
+    min-height: 420px;
+  }
+
+  /* Mantém a legenda na coluna da foto (coluna 2), não na do texto. O
+     ajuste de margin-top para este breakpoint (gap do grid maior aqui)
+     vive junto da regra base de .dinoc-showcase-note, mais abaixo neste
+     arquivo — precisa vir depois dela na cascata (mesma especificidade,
+     a base usa o shorthand `margin` e sobrescreveria um override colocado
+     aqui). */
+  .dinoc-showcase-note {
+    grid-column: 2;
+  }
+}
+
+/* Hotspots — no mobile é só um marcador pequeno (o nome completo vive em
+   .dinoc-showcase-panel, abaixo da foto, para não arriscar estourar a
+   largura); a partir de 900px vira uma pílula discreta com o nome do
+   acabamento direto sobre a fotografia (pedido do cliente: nomes, não só
+   números). --hx/--hy vêm inline por ponto. */
+/* Refinado para leitura editorial/arquitetônica, não pill de interface
+   SaaS: fundo carbon bem mais translúcido, borda fio-de-cabelo, tipografia
+   pequena com tracking maior (lê como legenda de planta, não botão),
+   padding reduzido, sem sombra. */
+.dinoc-hotspot {
+  position: absolute;
+  left: var(--hx);
+  top: var(--hy);
+  transform: translate(-50%, -50%);
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  width: 20px;
+  height: 20px;
+  justify-content: center;
+  border-radius: 999px;
+  border: 1px solid rgba(252, 251, 248, 0.45);
+  background: rgba(13, 13, 13, 0.24);
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
+  color: var(--dy-paper);
+  font-family: var(--dy-font-sans);
+  /* 11px, não 10px: piso de legibilidade para texto funcional/interativo
+     (rótulo de um botão clicável) — abaixo disso falha em telas de alta
+     densidade e mira de toque, mesmo com a leitura editorial pretendida. */
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+  cursor: pointer;
+  padding: 0;
+  transition: border-color var(--transition-fast), background-color var(--transition-fast), color var(--transition-fast);
+  opacity: 0;
+  transform: translate(-50%, -50%) scale(0.6);
+}
+
+.dinoc-hotspot-dot {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background-color: var(--dy-paper);
+  flex-shrink: 0;
+}
+
+.dinoc-hotspot-label {
+  display: none;
+}
+
+@media (min-width: 900px) {
+  .dinoc-hotspot {
+    width: auto;
+    height: auto;
+    padding: 4px 10px 4px 7px;
+  }
+
+  .dinoc-hotspot-label {
+    display: inline;
+  }
+}
+
+/* Entrada progressiva — só dispara quando .dinoc-showcase-media ganha
+   .is-visible (IntersectionObserver em js/dinoc-showcase.js), nunca no
+   parse da página (a seção fica bem abaixo da dobra). */
+.dinoc-showcase-media.is-visible .dinoc-hotspot {
+  animation: dinocHotspotIn var(--transition-base) forwards;
+}
+
+.dinoc-showcase-media.is-visible .dinoc-hotspot:nth-of-type(1) { animation-delay: 0ms; }
+.dinoc-showcase-media.is-visible .dinoc-hotspot:nth-of-type(2) { animation-delay: 60ms; }
+.dinoc-showcase-media.is-visible .dinoc-hotspot:nth-of-type(3) { animation-delay: 120ms; }
+.dinoc-showcase-media.is-visible .dinoc-hotspot:nth-of-type(4) { animation-delay: 180ms; }
+.dinoc-showcase-media.is-visible .dinoc-hotspot:nth-of-type(5) { animation-delay: 240ms; }
+.dinoc-showcase-media.is-visible .dinoc-hotspot:nth-of-type(6) { animation-delay: 300ms; }
+.dinoc-showcase-media.is-visible .dinoc-hotspot:nth-of-type(7) { animation-delay: 360ms; }
+.dinoc-showcase-media.is-visible .dinoc-hotspot:nth-of-type(8) { animation-delay: 420ms; }
+.dinoc-showcase-media.is-visible .dinoc-hotspot:nth-of-type(9) { animation-delay: 480ms; }
+
+@keyframes dinocHotspotIn {
+  from { opacity: 0; transform: translate(-50%, -50%) scale(0.6); }
+  to { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dinoc-hotspot,
+  .dinoc-showcase-media.is-visible .dinoc-hotspot {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+    animation: none;
+  }
+}
+
+.dinoc-hotspot:hover,
+.dinoc-hotspot:focus-visible,
+.dinoc-hotspot.is-active {
+  border-color: var(--dy-copper);
+  background-color: rgba(13, 13, 13, 0.55);
+  color: var(--color-champanhe);
+}
+
+.dinoc-hotspot:hover .dinoc-hotspot-dot,
+.dinoc-hotspot:focus-visible .dinoc-hotspot-dot,
+.dinoc-hotspot.is-active .dinoc-hotspot-dot {
+  background-color: var(--dy-copper);
+}
+
+.dinoc-hotspot:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-offset);
+}
+
+/* Ficha flutuante — só existe dentro da imagem a partir de 900px; abaixo
+   disso a informação vive em .dinoc-showcase-panel, fora da fotografia. */
+.dinoc-tip {
+  display: none;
+}
+
+@media (min-width: 900px) {
+  .dinoc-tip {
+    display: block;
+    position: absolute;
+    left: var(--space-md);
+    bottom: var(--space-md);
+    max-width: 260px;
+    padding: 12px 16px;
+    background: rgba(13, 13, 13, 0.82);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    border-left: 2px solid var(--color-champanhe);
+    opacity: 0;
+    transform: translateY(6px);
+    transition: opacity var(--transition-fast), transform var(--transition-fast);
+    pointer-events: none;
+  }
+
+  .dinoc-tip.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.dinoc-tip-name {
+  margin: 0;
+  font-size: 0.9375rem;
+  font-weight: 700;
+  color: var(--dy-paper);
+}
+
+.dinoc-tip-code {
+  margin: 4px 0 0;
+  font-family: var(--dy-font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.02em;
+  color: rgba(252, 251, 248, 0.75);
+}
+
+/* Ficha mobile — abaixo da imagem, nunca sobre a foto. Altura reservada
+   desde o início (min-height) para não gerar CLS quando o conteúdo troca. */
+.dinoc-showcase-panel {
+  margin-top: var(--space-sm);
+  min-height: 62px;
+  padding: 12px var(--space-sm);
+  background-color: var(--color-bg);
+  border-left: 2px solid var(--color-champanhe);
+}
+
+.dinoc-showcase-panel .dinoc-tip-name,
+.dinoc-showcase-panel .dinoc-tip-code {
+  color: var(--color-text);
+}
+
+.dinoc-showcase-panel .dinoc-tip-code {
+  color: var(--color-text-muted);
+}
+
+@media (min-width: 900px) {
+  .dinoc-showcase-panel {
+    display: none;
+  }
+}
+
+.dinoc-showcase-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-sm);
+  margin-top: var(--space-xs);
+}
+
+/* Legenda da foto — vive dentro de .dinoc-showcase-grid, logo depois de
+   .dinoc-showcase-media (rodapé da imagem), alinhada à esquerda como uma
+   legenda editorial, não mais centralizada sob a composição inteira.
+   O gap do grid (space-lg aqui, space-xl no desktop) existe para separar
+   texto↔foto, não foto↔legenda — margin-top negativa cancela a maior parte
+   desse gap, deixando só ~10px reais até o fim da imagem. */
+.dinoc-showcase-note {
+  text-align: left;
+  font-size: 11px;
+  color: var(--color-text-muted);
+  max-width: 60ch;
+  margin: calc(10px - var(--space-lg)) 0 0;
+}
+
+/* Precisa vir depois da regra base acima (mesma especificidade, cascata
+   por ordem) — recalcula o residual para ~12px reais, já que o gap do
+   grid neste breakpoint é space-xl, não space-lg. */
+@media (min-width: 900px) {
+  .dinoc-showcase-note {
+    margin-top: calc(12px - var(--space-xl));
+  }
 }
 
 /* ==========================================================================
@@ -2086,6 +2509,31 @@ body.nav-open .whatsapp-float {
   background-color: var(--color-bg-dark);
   color: var(--color-text-on-dark);
   text-align: left;
+  /* Bottom reduzido (padrão de section é --space-xl/64px): a seção já
+     continua direto no rodapé (mesmo carbon, sem borda) — não precisa do
+     mesmo respiro inferior de uma seção que termina sozinha. */
+  padding-bottom: var(--space-lg);
+}
+
+/* Antes só a metade esquerda tinha conteúdo (o resto da seção escura ficava
+   vazio). Grid assimétrico usa a largura inteira: texto/CTA à esquerda,
+   dados de contato — os mesmos já existentes no site — à direita. */
+.contact-grid {
+  display: grid;
+  gap: var(--space-xl);
+}
+
+@media (min-width: 800px) {
+  .contact-grid {
+    grid-template-columns: 1.2fr 1fr;
+    align-items: center;
+    gap: var(--space-2xl);
+  }
+
+  .contact-info {
+    border-left: 1px solid var(--color-border-on-dark);
+    padding-left: var(--space-xl);
+  }
 }
 
 .contact h2 {
@@ -2093,9 +2541,19 @@ body.nav-open .whatsapp-float {
   max-width: 24ch;
 }
 
-.contact p {
+.contact-primary p {
   color: var(--color-text-muted-on-dark);
   max-width: 50ch;
+}
+
+/* Incorpora o conceito da antiga seção "Cada projeto começa..." (removida)
+   sem criar novo bloco — uma linha curta, dourada (é um destaque pontual,
+   não um parágrafo longo), entre a descrição e o CTA. */
+.contact-analysis-note {
+  margin: var(--space-xs) 0 0;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--dy-copper);
 }
 
 .contact-actions {
@@ -2111,11 +2569,15 @@ body.nav-open .whatsapp-float {
   margin-top: var(--space-sm);
 }
 
+.contact-info {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
 .contact-details {
-  margin-top: var(--space-xl);
-  padding-top: var(--space-lg);
-  border-top: 1px solid var(--color-border-on-dark);
-  font-size: var(--fs-small);
+  margin: 0;
+  font-size: 1.05rem;
 }
 
 .contact-details a {
@@ -2123,22 +2585,160 @@ body.nav-open .whatsapp-float {
   border-bottom: 1px solid var(--color-champanhe);
 }
 
+.contact-institutional {
+  margin-top: var(--space-sm);
+  font-size: 12px;
+  color: var(--color-text-muted-on-dark);
+  max-width: 42ch;
+}
+
 /* ==========================================================================
-   Footer
+   Footer — continua #contato sem costura (mesmo carbon, sem borda entre os
+   dois): CTA → informações (em #contato) → assinatura monumental →
+   navegação/copyright, uma sequência única.
    ========================================================================== */
 
 .site-footer {
-  padding: var(--space-lg) 0;
-  border-top: 1px solid var(--color-border);
-  text-align: center;
-  font-size: var(--fs-small);
-  color: var(--color-text-muted);
+  background-color: var(--color-bg-dark);
+  color: var(--color-text-muted-on-dark);
+  /* Piso de legibilidade (15px) — nav e contatos do rodapé são conteúdo
+     funcional, não microcopy; só .site-footer-legal (info legal) fica
+     menor, com override próprio. */
+  font-size: 0.9375rem;
 }
 
-.site-footer a {
-  color: var(--color-text-muted);
-  text-decoration: underline;
-  text-decoration-color: var(--color-champanhe);
+/* Instagram — vive em #contato .contact-info, logo abaixo do e-mail (mesma
+   coluna flex, mesmo eixo à esquerda). Ícone + @dynewbr + seta, sem card,
+   sem fundo, sem cor de marca do Instagram — só a paleta DYNEW. URL só no
+   href, nunca exibida como texto. */
+.dynew-social {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--color-text-muted-on-dark);
+  text-decoration: none;
+  font-family: var(--dy-font-mono);
+  font-size: 0.8125rem;
+  letter-spacing: 0.04em;
+  min-height: 44px;
+  transition: color var(--transition-fast);
+}
+
+.dynew-social-icon {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+}
+
+.dynew-social-arrow {
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
+  transition: transform var(--transition-fast);
+}
+
+.dynew-social:hover,
+.dynew-social:focus-visible {
+  color: var(--dy-copper);
+}
+
+.dynew-social:hover .dynew-social-arrow,
+.dynew-social:focus-visible .dynew-social-arrow {
+  transform: translate(2px, -2px);
+}
+
+/* Assinatura monumental — conjunto completo (ícone ND + wordmark), branco,
+   recorte próprio de assets/images/projetos/masters/LOGO CABEÇALHO/LOGO
+   BRANCO.png (mesma arte da versão dourada já usada no header, só cor
+   diferente — nenhum logo novo desenhado). overflow:hidden aqui é local ao
+   componente — nunca no body/html, então não pode gerar scroll horizontal
+   real mesmo se a marca tocar a borda. */
+.dynew-signature {
+  overflow: hidden;
+  text-align: center;
+  /* Respiro próprio no topo do rodapé — a marca é alta (ícone em cima do
+     nome, não é mais uma tira fina), por isso o padding generoso. Base
+     reduzida (space-lg, não space-2xl) para a faixa compacta ficar
+     diretamente abaixo da assinatura, sem vão entre as duas. */
+  padding: var(--space-md) var(--space-md) var(--space-lg);
+}
+
+/* Proporção própria (677×385, muito mais "quadrada" que o wordmark-só de
+   677×85): min(90vw,1100px) faria a marca ficar enorme em altura. Largura
+   recalibrada para o conjunto ícone+wordmark continuar monumental sem
+   dominar o rodapé inteiro. */
+.dynew-signature-mark {
+  width: min(48vw, 560px);
+  height: auto;
+  display: inline-block;
+}
+
+/* Entrada única (scale, não translateY) ao entrar no viewport — mesmo
+   mecanismo genérico de [data-reveal] (js/reveal.js), só a curva muda
+   aqui para a assinatura. */
+.dynew-signature[data-reveal] {
+  opacity: 0;
+  transform: scale(0.96);
+  transition: opacity 1s cubic-bezier(0.16, 1, 0.3, 1), transform 1s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.dynew-signature[data-reveal].is-revealed {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* Rodapé final: só copyright + nota legal, centralizados no mesmo eixo do
+   logo acima — sem nav, sem contato (já vive em #contato .contact-info,
+   logo acima do rodapé, sem duplicar). border-bottom (não border-top) para
+   a linha fina funcionar como fechamento da composição, não como abertura. */
+.site-footer-bottom {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-md);
+  padding: var(--space-md) 0 var(--space-lg);
+  border-bottom: 1px solid var(--color-border-on-dark);
+  text-align: center;
+}
+
+.site-footer-bottom p {
+  margin: 0;
+}
+
+/* Copyright + nota legal 3M: grupo próprio com respiro curto entre os
+   dois. */
+.site-footer-copy-group {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-xs);
+}
+
+.site-footer-copyright {
+  margin: 0;
+}
+
+/* Atribuição de marca 3M — movida da antiga seção "Confiança" (removida) só
+   como nota pequena de rodapé, logo abaixo do copyright, discreta. */
+.site-footer-legal {
+  margin: 0 auto;
+  font-size: 11px;
+  line-height: 1.5;
+  color: var(--color-text-muted-on-dark);
+  max-width: 62ch;
+  text-align: center;
+}
+
+/* Abaixo de 700px a nota legal é a última coisa antes da linha de
+   fechamento, na mesma altura do botão flutuante do WhatsApp (fixed,
+   canto inferior direito) — sem essa folga ela ficaria embaixo do botão.
+   max-width menor (não padding) mantém o bloco centralizado (margin:auto);
+   como a centralização empurra os dois lados igualmente, o recuo pedido de
+   um lado (space-md + 56px do botão + folga) precisa ser dobrado aqui. */
+@media (max-width: 699px) {
+  .site-footer-legal {
+    max-width: calc(100% - (var(--space-md) + 56px + var(--space-sm)) * 2);
+  }
 }
 
 /* ==========================================================================

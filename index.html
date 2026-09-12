@@ -117,7 +117,7 @@
       <nav id="main-nav" class="main-nav" aria-label="Navegação principal">
         <ul class="nav-list">
           <li><a href="#problema">Por que revestir</a></li>
-          <li><a href="materiais.html">Materiais 3M DI-NOC™</a></li>
+          <li><a href="#dinoc-showcase">Materiais 3M DI-NOC™</a></li>
           <li><a href="#faq">Dúvidas</a></li>
           <li><a href="#contato">Contato</a></li>
           <li class="nav-cta">
@@ -234,51 +234,15 @@
       </div>
     </section>
 
-    <!-- ================= QUEM SOMOS ================= -->
-    <section id="quem-somos" class="bg-alt quem-somos-editorial">
-      <div class="container quem-somos-grid">
-        <!-- Espaço de fotografia real (arquivo ainda não fornecido). Salvar em
-             assets/img/quem-somos-preparacao.jpg quando disponível. -->
-        <div class="quem-somos-photo">
-          <figure class="photo-slot" data-photo-slot>
-            <img
-              class="js-photo-slot-img"
-              src="assets/img/quem-somos-preparacao.jpg"
-              alt="Fotografia pendente: preparação de superfície ou aplicação de revestimento pela equipe DYNEW"
-            >
-            <figcaption class="photo-slot-pending-label">
-              <span>Espaço reservado para fotografia real</span>
-              <small>assets/img/quem-somos-preparacao.jpg</small>
-            </figcaption>
-          </figure>
-        </div>
-
-        <div class="quem-somos-text">
-          <div class="section-header">
-            <h2>Quem é a DYNEW</h2>
-            <p>
-              A DYNEW é especializada na execução técnica de revestimentos arquitetônicos
-              para transformação de superfícies existentes.
-            </p>
-          </div>
-          <p class="quem-somos-body">
-            O material importa. A execução define o resultado: leitura do substrato,
-            preparação da superfície, precisão nos recortes, cantos e emendas, e acabamento
-            final tecnicamente controlado.
-          </p>
-        </div>
-      </div>
-    </section>
-
     <!-- ================= 2. POR QUE REVESTIR ================= -->
     <section id="problema">
       <div class="container">
-        <div class="section-header">
+        <div class="section-header" data-reveal>
           <h2>Antes de substituir, avalie o que ainda pode ser renovado.</h2>
         </div>
 
-        <div class="paths-grid">
-          <div class="path-item">
+        <div class="paths-grid" data-reveal-group>
+          <div class="path-item" data-reveal-item>
             <h3>Substituir</h3>
             <ul>
               <li>Desmontagem</li>
@@ -289,7 +253,7 @@
               <li>Maior interferência na operação</li>
             </ul>
           </div>
-          <div class="path-item">
+          <div class="path-item" data-reveal-item>
             <h3>Manter como está</h3>
             <ul>
               <li>Acabamento desgastado</li>
@@ -298,7 +262,7 @@
               <li>Incompatibilidade com a identidade do ambiente</li>
             </ul>
           </div>
-          <div class="path-item path-item--highlight">
+          <div class="path-item path-item--highlight" data-reveal-item>
             <h3>Revestir</h3>
             <ul>
               <li>Preservação da estrutura funcional</li>
@@ -312,7 +276,10 @@
           </div>
         </div>
       </div>
-      <p class="section-transition">Quando a estrutura pode permanecer, a superfície assume o projeto.</p>
+      <div class="problema-closing">
+        <p class="section-transition">Quando a estrutura pode permanecer, a superfície assume o projeto.</p>
+        <p class="problema-sustain-note">Preservar estruturas existentes também pode significar menos retirada de material, menos descarte e menor interferência de obra.</p>
+      </div>
     </section>
 
     <!-- ================= ANTES E DEPOIS (comparador único da página) =================
@@ -323,7 +290,7 @@
          logo abaixo em css/style.css (seção "Antes e Depois"). -->
     <section id="antes-depois" class="bg-alt antes-depois">
       <div class="container">
-        <div class="section-header">
+        <div class="section-header" data-reveal>
           <h2>A estrutura é a mesma.<br><em>A percepção</em> muda por completo.</h2>
           <p>
             O revestimento atualiza a superfície sem exigir a substituição integral do elemento
@@ -379,222 +346,327 @@
       </div>
     </section>
 
-    <!-- ================= APLICAÇÕES ================= -->
+    <!-- ================= 3M™ DI-NOC™ — POSSIBILIDADES =================
+         Reposicionada logo após o Antes/Depois: o visitante vê a transformação
+         real primeiro e, em seguida, a variedade disponível. Imagem:
+         assets/images/dinoc/dinoc-lobby-showcase.webp, cópia web (2400×1600,
+         sem crop — mesma proporção 3:2 do master) de
+         assets/images/projetos/masters/DINOC-INFORMATIVO/…_ImgID1.png.
+         Hotspots identificados por NOME (não por número) — cada botão já
+         mostra o nome curto do acabamento; código + família aparecem ao
+         hover/focus/toque. A antiga "Biblioteca de acabamentos"
+         (materiais.html) foi removida — esta seção é agora o ponto único de
+         apresentação de materiais. CTA do catálogo abre diretamente o PDF
+         oficial 3M™ DI-NOC™ (cópia publicável em assets/catalogos/, a
+         partir do master em assets/catalogo/raw/…171MB — arquivo grande,
+         ver aviso na entrega desta rodada). -->
+    <section id="dinoc-showcase" class="bg-alt dinoc-showcase">
+      <div class="container">
+        <div class="dinoc-showcase-grid">
+          <div class="dinoc-showcase-text" data-reveal>
+            <p class="dinoc-showcase-eyebrow">3M™ DI-NOC™ Architectural Finishes</p>
+            <div class="dinoc-showcase-headline-row">
+              <h2>Mais de 900 possibilidades para transformar o que já existe.</h2>
+              <div class="dinoc-showcase-stat">
+                <span class="dinoc-showcase-stat-number">900+</span>
+                <span class="dinoc-showcase-stat-label">possibilidades de design</span>
+              </div>
+            </div>
+            <p class="dinoc-showcase-support">
+              Madeiras, metais, pedras, concretos, tecidos, cores e acabamentos de alta
+              performance ampliam as possibilidades de projeto sem exigir que tudo seja
+              demolido e substituído.
+            </p>
+            <div class="dinoc-showcase-actions">
+              <a
+                class="btn btn-carbon"
+                href="assets/catalogos/3m-dinoc-architectural-finishes.pdf"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Explorar catálogo 3M™ DI-NOC™
+              </a>
+              <a
+                class="btn btn-outline"
+                href="https://wa.me/5511925039297?text=Ol%C3%A1%2C%20gostaria%20de%20solicitar%20uma%20avalia%C3%A7%C3%A3o%20t%C3%A9cnica%20para%20o%20meu%20projeto%20de%20revestimento%20arquitet%C3%B4nico."
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Solicitar avaliação técnica
+              </a>
+            </div>
+          </div>
+
+          <div class="dinoc-showcase-media" data-dinoc-media>
+            <img
+              src="assets/images/dinoc/dinoc-lobby-showcase.webp"
+              alt="Ambiente arquitetônico com múltiplas aplicações 3M™ DI-NOC™: parede e volume em metal oxidado, marcenaria em madeira, coluna metálica ripada, painel de pedra, teto em concreto aparente e escada helicoidal em ferro preto"
+              width="2400"
+              height="1600"
+              loading="lazy"
+            >
+            <div class="dinoc-showcase-scrim" aria-hidden="true"></div>
+
+            <button type="button" class="dinoc-hotspot" data-hotspot="1" style="--hx:54%;--hy:23%" aria-expanded="false" aria-describedby="dinoc-tip-name dinoc-tip-code"><span class="dinoc-hotspot-dot" aria-hidden="true"></span><span class="dinoc-hotspot-label">Pedra</span></button>
+            <button type="button" class="dinoc-hotspot" data-hotspot="2" style="--hx:11%;--hy:61%" aria-expanded="false" aria-describedby="dinoc-tip-name dinoc-tip-code"><span class="dinoc-hotspot-dot" aria-hidden="true"></span><span class="dinoc-hotspot-label">Teca</span></button>
+            <button type="button" class="dinoc-hotspot" data-hotspot="3" style="--hx:75%;--hy:75%" aria-expanded="false" aria-describedby="dinoc-tip-name dinoc-tip-code"><span class="dinoc-hotspot-dot" aria-hidden="true"></span><span class="dinoc-hotspot-label">Koa Havaiano</span></button>
+            <button type="button" class="dinoc-hotspot" data-hotspot="4" style="--hx:77%;--hy:30%" aria-expanded="false" aria-describedby="dinoc-tip-name dinoc-tip-code"><span class="dinoc-hotspot-dot" aria-hidden="true"></span><span class="dinoc-hotspot-label">Metal</span></button>
+            <button type="button" class="dinoc-hotspot" data-hotspot="5" style="--hx:31%;--hy:24%" aria-expanded="false" aria-describedby="dinoc-tip-name dinoc-tip-code"><span class="dinoc-hotspot-dot" aria-hidden="true"></span><span class="dinoc-hotspot-label">Metal Oxidado</span></button>
+            <button type="button" class="dinoc-hotspot" data-hotspot="6" style="--hx:24%;--hy:64%" aria-expanded="false" aria-describedby="dinoc-tip-name dinoc-tip-code"><span class="dinoc-hotspot-dot" aria-hidden="true"></span><span class="dinoc-hotspot-label">Marrom Terracota</span></button>
+            <button type="button" class="dinoc-hotspot" data-hotspot="7" style="--hx:34%;--hy:7%" aria-expanded="false" aria-describedby="dinoc-tip-name dinoc-tip-code"><span class="dinoc-hotspot-dot" aria-hidden="true"></span><span class="dinoc-hotspot-label">Concreto</span></button>
+            <button type="button" class="dinoc-hotspot" data-hotspot="8" style="--hx:15%;--hy:92%" aria-expanded="false" aria-describedby="dinoc-tip-name dinoc-tip-code"><span class="dinoc-hotspot-dot" aria-hidden="true"></span><span class="dinoc-hotspot-label">Pedra</span></button>
+            <button type="button" class="dinoc-hotspot" data-hotspot="9" style="--hx:35%;--hy:57%" aria-expanded="false" aria-describedby="dinoc-tip-name dinoc-tip-code"><span class="dinoc-hotspot-dot" aria-hidden="true"></span><span class="dinoc-hotspot-label">Ferro Preto</span></button>
+
+            <div class="dinoc-tip" data-dinoc-tip>
+              <p class="dinoc-tip-name" id="dinoc-tip-name">&nbsp;</p>
+              <p class="dinoc-tip-code" id="dinoc-tip-code">&nbsp;</p>
+            </div>
+          </div>
+
+          <p class="dinoc-showcase-note">Portfólio global 3M™ DI-NOC™. Coleções e códigos sujeitos à disponibilidade.</p>
+        </div>
+
+        <div class="dinoc-showcase-panel" data-dinoc-panel-mobile>
+          <p class="dinoc-tip-name">Toque em um material</p>
+          <p class="dinoc-tip-code">para ver código e família 3M™ DI-NOC™</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= QUEM SOMOS ================= -->
+    <section id="quem-somos" class="bg-alt quem-somos-editorial">
+      <div class="container quem-somos-grid">
+        <!-- Fotografia real: aplicação de revestimento 3M™ DI-NOC™ em porta de
+             elevador. object-position ajustado por breakpoint em css/style.css
+             (seção "Quem somos"). -->
+        <div class="quem-somos-photo">
+          <figure class="photo-slot" data-photo-slot>
+            <img
+              class="js-photo-slot-img"
+              src="assets/images/quem-somos/aplicacao-porta-elevador.webp"
+              alt="Instalador DYNEW aplicando revestimento 3M™ DI-NOC™ sobre porta de elevador em aço, com o acabamento original ainda visível na transição"
+            >
+            <figcaption class="photo-slot-pending-label">
+              <span>Espaço reservado para fotografia real</span>
+              <small>assets/images/quem-somos/aplicacao-porta-elevador.webp</small>
+            </figcaption>
+          </figure>
+        </div>
+
+        <div class="quem-somos-text">
+          <div class="section-header" data-reveal>
+            <h2>Quem é a DYNEW</h2>
+          </div>
+          <p class="quem-somos-highlight">Uma nova empresa. 17 anos de experiência por trás dela.</p>
+          <p class="quem-somos-body">
+            A DYNEW nasce com uma proposta clara: elevar a transformação de superfícies ao
+            universo do revestimento arquitetônico decorativo.
+          </p>
+          <p class="quem-somos-body">
+            Embora seja uma nova empresa, sua origem está apoiada em 17 anos de experiência
+            profissional na comunicação visual, incluindo uma trajetória consistente com adesivos
+            decorativos, aplicações técnicas e diferentes soluções para superfícies.
+          </p>
+          <p class="quem-somos-body">
+            Essa experiência acumulada encontra agora uma nova direção, mais especializada e
+            arquitetônica. Como aplicadora certificada 3M™ DI-NOC™, a DYNEW une conhecimento de
+            execução, tecnologia, inovação e acabamento de alto padrão para renovar ambientes e
+            elementos existentes com menor interferência de obra e maior aproveitamento das
+            estruturas.
+          </p>
+          <p class="quem-somos-body">
+            É a combinação entre experiência de campo e uma visão contemporânea de revestimento:
+            preservar o que ainda funciona e transformar o que pode evoluir.
+          </p>
+          <p class="quem-somos-closing">O material importa. A execução define o resultado — da leitura do substrato à verificação final.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= TETO / LEVEZA =================
+         Absorve a mensagem da antiga seção independente "Nova materialidade
+         sem sobrecarregar..." (removida — repetia a mesma ideia desta).
+         Composição editorial texto+foto no lugar do grid de 6 itens sobre
+         fundo só preto: assets/images/cases/teto-dinoc.webp, cópia web
+         (1600×900) de assets/images/projetos/masters/INSTALADOR/TETO.png
+         (teto revestido em acabamento amadeirado 3M™ DI-NOC™). -->
+    <section id="tetos" class="section-dark tetos-editorial">
+      <div class="container tetos-layout">
+        <div class="tetos-text" data-reveal>
+          <h2>Acabamento no teto sem transformar o visual em uma estrutura pesada.</h2>
+          <p class="tetos-support">
+            Tetos tecnicamente compatíveis podem receber aparência amadeirada, metálica ou
+            mineral com muito menos peso adicional do que determinadas soluções rígidas de acabamento.
+          </p>
+          <ul class="tetos-benefits">
+            <li>Menor peso adicional</li>
+            <li>Preservação da estrutura existente</li>
+            <li>Continuidade entre teto e paredes</li>
+            <li>Intervenção potencialmente mais limpa</li>
+          </ul>
+          <p class="section-note section-note--dark tetos-caveat">
+            O revestimento não substitui avaliação estrutural, não resolve infiltração ou
+            umidade e não garante isolamento térmico ou acústico — a aplicação depende de
+            avaliação técnica.
+          </p>
+        </div>
+        <div class="tetos-media">
+          <img
+            src="assets/images/cases/teto-dinoc.webp"
+            alt="Teto revestido com acabamento amadeirado 3M™ DI-NOC™ em sala de estar, instalador DYNEW aplicando o material com espátula"
+            width="1600"
+            height="900"
+            loading="lazy"
+          >
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= APLICAÇÕES — FAIXA FOTOGRÁFICA =================
+         Carrossel horizontal (drag/swipe + setas, js/applications-carousel.js
+         inalterado). Cada card agora é fotografia real primeiro, nome depois
+         — número reduzido a marca d'água. Fotos: recortes de detalhe/textura
+         (sem repetir o enquadramento já usado no instalador/quem-somos) a
+         partir de assets/images/projetos/masters/INSTALADOR/ e .../piscina
+         de bolinha/, publicados em assets/images/applications/. -->
     <section id="aplicacoes">
       <div class="container">
-        <div class="section-header">
+        <div class="section-header" data-reveal>
           <h2>Onde a transformação pode acontecer</h2>
           <p>
             O revestimento arquitetônico atende diferentes elementos e tipos de projeto —
             a compatibilidade de cada superfície é sempre avaliada tecnicamente.
           </p>
         </div>
+      </div>
 
-        <div class="evidence-grid">
-          <div class="evidence-item">
-            <h3>Paredes</h3>
-            <p>Ambientes internos e áreas específicas, conforme a condição da superfície existente.</p>
-          </div>
-          <div class="evidence-item">
-            <h3>Portas e painéis</h3>
-            <p>Marcenaria, divisórias e painéis, respeitando as condições técnicas de cada peça.</p>
-          </div>
-          <div class="evidence-item">
-            <h3>Mobiliário</h3>
-            <p>Peças planas ou com curvas simples, conforme o padrão escolhido.</p>
-          </div>
-          <div class="evidence-item">
-            <h3>Tetos</h3>
-            <p>Aplicações tecnicamente compatíveis, avaliadas caso a caso.</p>
-          </div>
-          <div class="evidence-item">
-            <h3>Balcões e elevadores</h3>
-            <p>Elementos de alto contato em ambientes corporativos e comerciais.</p>
-          </div>
-          <div class="evidence-item">
-            <h3>Corporativo, hotelaria e retrofit</h3>
-            <p>Projetos comerciais e residenciais de padrão elevado, avaliados individualmente.</p>
-          </div>
-        </div>
+      <div class="applications-carousel-wrap">
+        <button type="button" class="applications-arrow applications-arrow--prev" data-carousel-prev aria-label="Ver aplicações anteriores">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="applications-carousel" data-carousel data-reveal-group>
+          <li class="applications-card" data-reveal-item>
+            <img class="applications-card-photo" src="assets/images/applications/app-tetos.webp" alt="Teto com acabamento 3M™ DI-NOC™ amadeirado" loading="lazy" width="900" height="1125">
+            <span class="applications-card-overlay" aria-hidden="true"></span>
+            <span class="applications-card-index">01</span>
+            <h3 class="applications-card-title">Tetos</h3>
+          </li>
+          <li class="applications-card" data-reveal-item>
+            <img class="applications-card-photo" src="assets/images/applications/app-elevadores.webp" alt="Porta de elevador em aço com acabamento 3M™ DI-NOC™" loading="lazy" width="900" height="1125">
+            <span class="applications-card-overlay" aria-hidden="true"></span>
+            <span class="applications-card-index">02</span>
+            <h3 class="applications-card-title">Elevadores</h3>
+          </li>
+          <li class="applications-card" data-reveal-item>
+            <img class="applications-card-photo" src="assets/images/applications/app-paredes.webp" alt="Parede com acabamento 3M™ DI-NOC™ em metal oxidado" loading="lazy" width="900" height="1125">
+            <span class="applications-card-overlay" aria-hidden="true"></span>
+            <span class="applications-card-index">03</span>
+            <h3 class="applications-card-title">Paredes</h3>
+          </li>
+          <li class="applications-card" data-reveal-item>
+            <img class="applications-card-photo" src="assets/images/applications/app-mobiliario.webp" alt="Marcenaria e mobiliário planejado com acabamento 3M™ DI-NOC™" loading="lazy" width="900" height="941">
+            <span class="applications-card-overlay" aria-hidden="true"></span>
+            <span class="applications-card-index">04</span>
+            <h3 class="applications-card-title">Mobiliário</h3>
+          </li>
+          <li class="applications-card" data-reveal-item>
+            <img class="applications-card-photo" src="assets/images/applications/app-portas.webp" alt="Porta com acabamento 3M™ DI-NOC™ amadeirado, vista frontal" loading="lazy" width="900" height="1200">
+            <span class="applications-card-overlay" aria-hidden="true"></span>
+            <span class="applications-card-index">05</span>
+            <h3 class="applications-card-title">Portas</h3>
+          </li>
+          <li class="applications-card" data-reveal-item>
+            <img class="applications-card-photo" src="assets/images/applications/app-curvas.webp" alt="Canto curvo revestido, transição arredondada entre parede e volume" loading="lazy" width="900" height="1200">
+            <span class="applications-card-overlay" aria-hidden="true"></span>
+            <span class="applications-card-index">06</span>
+            <h3 class="applications-card-title">Curvas e volumes</h3>
+          </li>
+        </ul>
+        <button type="button" class="applications-arrow applications-arrow--next" data-carousel-next aria-label="Ver mais aplicações">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
       </div>
     </section>
 
-    <!-- ================= DIFERENCIAL DE PESO ================= -->
-    <section id="peso" class="bg-alt">
-      <div class="container">
-        <div class="section-header">
-          <h2>Nova materialidade sem sobrecarregar a estrutura com soluções pesadas.</h2>
+    <!-- ================= CASE REAL — CURVAS E VOLUMES =================
+         Antiga Sustentabilidade removida como bloco independente (ver
+         #problema para o argumento incorporado). Composição em 3 colunas —
+         ANTES / TEXTO / DEPOIS — carbon full-bleed, uma peça única.
+
+         Vídeo ANTES: recorte 00:48–01:05 de
+         assets/images/projetos/masters/video piscina de bolinha site/IMG_4510.MOV
+         (17s, mostra a base em MDF/compensado antes do revestimento — curva
+         e cantos arredondados bem visíveis), tonemap HDR→SDR (mesmo filtro
+         já usado no vídeo do depois) e sem metadados de localização.
+         Publicado em assets/videos/cases/piscina-bolinhas-antes.mp4/.webm.
+
+         Vídeo DEPOIS: mesmo asset já aprovado (piscina-bolinhas.mp4/.webm,
+         gerado de IMG_4666.MOV) — inalterado.
+
+         Autoplay/pause por IntersectionObserver em js/case-video.js, agora
+         observando os dois vídeos (querySelectorAll). -->
+    <section id="case-piscina" class="case-piscina">
+      <!-- Sem [data-reveal] aqui de propósito: esse atributo aplica opacity:0
+           até o IntersectionObserver de js/reveal.js marcar .is-revealed —
+           em alguns navegadores mobile, um <video> autoplay dentro de um
+           ancestral com opacity:0 tem a decodificação pausada/limitada pelo
+           próprio navegador (economia de bateria), e o play() disparado por
+           js/case-video.js não é repetido depois que a opacidade volta a 1,
+           deixando o vídeo com aparência de imagem parada. Os dois vídeos já
+           fornecem o próprio movimento de entrada — não precisam do fade
+           genérico por cima. -->
+      <div class="container case-piscina-layout">
+        <div class="case-piscina-media case-piscina-media--antes">
+          <video
+            data-case-video
+            muted
+            loop
+            playsinline
+            preload="auto"
+            poster="assets/images/cases/piscina-bolinhas-antes-poster.webp"
+            aria-label="Vídeo real da base em compensado antes do revestimento, evidenciando a curva e os cantos arredondados do elemento"
+          >
+            <source src="assets/videos/cases/piscina-bolinhas-antes.webm" type="video/webm">
+            <source src="assets/videos/cases/piscina-bolinhas-antes.mp4" type="video/mp4">
+          </video>
+          <span class="case-piscina-media-tag">Antes</span>
+        </div>
+
+        <div class="case-piscina-text">
+          <p class="case-piscina-eyebrow">Projeto real • Transformação técnica</p>
+          <h2>A forma também faz parte da transformação.</h2>
           <p>
-            Em aplicações tecnicamente compatíveis, o revestimento arquitetônico acompanha a
-            superfície existente e acrescenta muito menos peso do que determinadas soluções
-            construídas com madeira, pedras, painéis rígidos ou sistemas volumosos.
+            O estado original já mostra o desafio: curvas, cantos arredondados e transições
+            que exigem leitura técnica, preparação correta e precisão na aplicação. Com o
+            revestimento arquitetônico 3M™ DI-NOC™, a superfície ganha continuidade visual,
+            acabamento uniforme e uma nova percepção de valor, sem descaracterizar a
+            geometria do elemento.
           </p>
+          <p class="case-piscina-closing">Quando a base é complexa, a execução precisa estar à altura.</p>
         </div>
 
-        <div class="applications-tags">
-          <span>Tetos</span><span>Paredes</span><span>Portas</span><span>Painéis</span><span>Balcões</span><span>Elevadores</span><span>Mobiliário</span>
+        <div class="case-piscina-media case-piscina-media--depois">
+          <video
+            data-case-video
+            muted
+            loop
+            playsinline
+            preload="auto"
+            poster="assets/images/cases/piscina-bolinhas-poster.webp"
+            aria-label="Vídeo real de aplicação de revestimento 3M™ DI-NOC™ sobre um volume curvo, com cantos arredondados, já finalizado"
+          >
+            <source src="assets/videos/cases/piscina-bolinhas.webm" type="video/webm">
+            <source src="assets/videos/cases/piscina-bolinhas.mp4" type="video/mp4">
+          </video>
+          <span class="case-piscina-media-tag">Depois</span>
         </div>
-
-        <div class="weight-diagram" role="img" aria-label="Representação esquemática comparando um bloco espesso, representando uma solução rígida ou volumosa, com uma camada fina, representando o revestimento arquitetônico">
-          <div class="weight-item">
-            <div class="weight-block weight-block--heavy"></div>
-            <span class="weight-item-label">Solução rígida / volumosa</span>
-          </div>
-          <div class="weight-item">
-            <div class="weight-block weight-block--light"></div>
-            <span class="weight-item-label">Revestimento arquitetônico</span>
-          </div>
-        </div>
-        <p class="simulation-caption">Representação esquemática — não é uma medição técnica.</p>
-
-        <p class="section-note">
-          A viabilidade depende da condição do substrato, da orientação da aplicação e da
-          especificação técnica do material.
-        </p>
-      </div>
-    </section>
-
-    <!-- ================= TETOS ================= -->
-    <section id="tetos" class="section-dark">
-      <div class="container">
-        <div class="section-header">
-          <h2>Acabamento no teto sem transformar o visual em uma estrutura pesada.</h2>
-          <p>
-            Tetos tecnicamente compatíveis podem receber aparência amadeirada, metálica ou
-            mineral com muito menos peso adicional do que determinadas soluções rígidas de acabamento.
-          </p>
-        </div>
-
-        <div class="tetos-grid">
-          <div class="tetos-item"><p>Transformação estética</p></div>
-          <div class="tetos-item"><p>Menor peso adicional</p></div>
-          <div class="tetos-item"><p>Preservação da estrutura existente</p></div>
-          <div class="tetos-item"><p>Menor necessidade de sistemas volumosos</p></div>
-          <div class="tetos-item"><p>Possibilidade de continuidade entre teto e paredes</p></div>
-          <div class="tetos-item"><p>Intervenção potencialmente mais limpa</p></div>
-        </div>
-
-        <p class="section-note section-note--dark">
-          O revestimento não substitui avaliação estrutural, não resolve infiltração ou umidade
-          e não garante isolamento térmico ou acústico — nem todo teto é compatível; a aplicação
-          depende de avaliação técnica.
-        </p>
-      </div>
-    </section>
-
-    <!-- ================= 3. MECANISMO — CHAMADA PARA A BIBLIOTECA DE MATERIAIS =================
-         A biblioteca completa (filtros, cartões, drawer) vive em materiais.html.
-         Aqui fica só uma chamada curta, para não duplicar o catálogo na home. -->
-    <section id="materiais-chamada" class="materiais-teaser">
-      <div class="container materiais-teaser-inner">
-        <p>Conheça as possibilidades de acabamentos disponíveis para cada superfície.</p>
-        <a class="btn btn-outline" href="materiais.html">Consultar materiais e acabamentos</a>
-      </div>
-    </section>
-
-    <!-- ================= 4. CONFIANÇA — EVIDÊNCIA TÉCNICA ================= -->
-    <section id="confianca" class="bg-alt">
-      <div class="container">
-        <div class="section-header">
-          <h2>Cada projeto começa pela análise da superfície</h2>
-          <p>Sem cases fictícios: o que segue são características técnicas do revestimento, não promessas.</p>
-        </div>
-
-        <div class="evidence-grid">
-          <div class="evidence-item">
-            <h3>Tecnologia adesiva 3M™ Comply™</h3>
-            <p>Facilita a saída de ar durante a aplicação, reduzindo a formação de bolhas.</p>
-          </div>
-          <div class="evidence-item">
-            <h3>Renovação e reutilização</h3>
-            <p>Atualiza a aparência de superfícies existentes sem substituição completa da base.</p>
-          </div>
-          <div class="evidence-item">
-            <h3>Menor interrupção</h3>
-            <p>A aplicação tende a interromper menos o uso do ambiente do que uma reforma convencional.</p>
-          </div>
-          <div class="evidence-item">
-            <h3>Manutenção simples</h3>
-            <p>Limpeza com água, detergente suave e pano ou esponja macia — sem abrasivos.</p>
-          </div>
-          <div class="evidence-item">
-            <h3>Variedade de padrões</h3>
-            <p>Famílias que reproduzem madeira, metal, pedra, concreto, têxtil e outras texturas.</p>
-          </div>
-          <div class="evidence-item">
-            <h3>Famílias funcionais</h3>
-            <p>Séries específicas — alto tráfego, área externa, atrás de vidro, entre outras — cada uma com sua ficha técnica.</p>
-          </div>
-          <div class="evidence-item">
-            <h3>Rastreabilidade de códigos</h3>
-            <p>Cada acabamento tem um código de referência que acompanha o projeto do orçamento à aplicação.</p>
-          </div>
-          <div class="evidence-item">
-            <h3>Consulta técnica</h3>
-            <p>A viabilidade para cada substrato é avaliada antes da aplicação.</p>
-          </div>
-        </div>
-
-        <p class="evidence-attribution">
-          3M, DI-NOC e Comply são marcas da 3M Company. A disponibilidade e a recomendação de
-          aplicação devem ser confirmadas para cada projeto.
-        </p>
-      </div>
-    </section>
-
-    <!-- ================= PADRÃO DYNEW ================= -->
-    <section id="padrao" class="bg-alt">
-      <div class="container">
-        <div class="section-header">
-          <h2>O padrão de execução DYNEW</h2>
-          <p>O material importa. A execução define o resultado — da leitura do substrato à verificação final.</p>
-        </div>
-
-        <div class="standard-grid">
-          <div class="standard-step">
-            <h3>Leitura do substrato</h3>
-            <p>Avaliação técnica da superfície existente antes de qualquer definição de acabamento.</p>
-          </div>
-          <div class="standard-step">
-            <h3>Preparação da superfície</h3>
-            <p>Limpeza e preparo técnico — a etapa que mais impacta o resultado final.</p>
-          </div>
-          <div class="standard-step">
-            <h3>Execução especializada</h3>
-            <p>Precisão em recortes, cantos, emendas e curvas simples, com proteção do ambiente durante a aplicação.</p>
-          </div>
-          <div class="standard-step">
-            <h3>Verificação final</h3>
-            <p>Conferência do resultado antes da entrega do projeto.</p>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- ================= SUSTENTABILIDADE ================= -->
-    <section id="sustentabilidade">
-      <div class="container">
-        <div class="section-header">
-          <h2>Preservar o que já existe também é uma forma de reduzir descarte</h2>
-          <p>
-            Revestir prioriza a conservação da base existente em vez da substituição completa
-            do elemento — uma escolha que tende a gerar menos resíduo e menos interrupção do
-            que uma reforma convencional.
-          </p>
-        </div>
-        <p class="section-note">
-          Isso não é uma certificação ou selo ambiental — é uma decorrência da abordagem de
-          conservar a estrutura existente em vez de substituí-la. O impacto real depende da
-          condição da base, do volume do projeto e do descarte responsável dos materiais
-          removidos, quando houver.
-        </p>
       </div>
     </section>
 
     <!-- ================= FAQ ================= -->
     <section id="faq">
       <div class="container">
-        <div class="section-header">
+        <div class="section-header" data-reveal>
           <h2>Perguntas frequentes</h2>
         </div>
 
@@ -729,46 +801,100 @@
       </div>
     </section>
 
-    <!-- ================= 5. OFERTA — CONTATO ================= -->
+    <!-- ================= 5. OFERTA — CONTATO =================
+         Grid assimétrico (texto+CTA | dados de contato) para usar a largura
+         inteira da seção escura — antes só a metade esquerda tinha conteúdo.
+         Nota institucional que vivia solta depois da seção agora entra na
+         coluna direita (mesmo texto, sem copy nova). -->
     <section id="contato" class="contact">
-      <div class="container">
-        <h2>Vamos avaliar a superfície do seu <em>projeto</em>.</h2>
-        <p>Envie fotos, medidas aproximadas e o tipo de ambiente. A DYNEW orientará os próximos passos.</p>
+      <div class="container contact-grid">
+        <div class="contact-primary" data-reveal>
+          <h2>Vamos avaliar a superfície do seu <em>projeto</em>.</h2>
+          <p>Envie fotos, medidas aproximadas e o tipo de ambiente. A DYNEW orientará os próximos passos.</p>
+          <p class="contact-analysis-note">Cada projeto começa pela análise técnica da superfície.</p>
 
-        <div class="contact-actions">
+          <div class="contact-actions">
+            <a
+              class="btn btn-gold"
+              href="https://wa.me/5511925039297?text=Ol%C3%A1%2C%20gostaria%20de%20solicitar%20uma%20avalia%C3%A7%C3%A3o%20t%C3%A9cnica%20para%20o%20meu%20projeto%20de%20revestimento%20arquitet%C3%B4nico."
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Solicitar avaliação técnica
+            </a>
+          </div>
+          <p class="contact-microcopy">Tenha fotos, medidas aproximadas e o tipo de ambiente em mãos.</p>
+        </div>
+
+        <div class="contact-info">
+          <p class="contact-details">
+            <a href="https://wa.me/5511925039297">+55 11 92503-9297</a>
+          </p>
+          <p class="contact-details">
+            <a href="mailto:contato@dynew.com.br">contato@dynew.com.br</a>
+          </p>
           <a
-            class="btn btn-whatsapp"
-            href="https://wa.me/5511925039297?text=Ol%C3%A1%2C%20gostaria%20de%20solicitar%20uma%20avalia%C3%A7%C3%A3o%20t%C3%A9cnica%20para%20o%20meu%20projeto%20de%20revestimento%20arquitet%C3%B4nico."
+            class="dynew-social"
+            href="https://www.instagram.com/dynewbr/"
             target="_blank"
             rel="noopener noreferrer"
+            aria-label="Instagram da DYNEW"
           >
-            Solicitar avaliação técnica
+            <svg class="dynew-social-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <rect x="2.75" y="2.75" width="18.5" height="18.5" rx="5" stroke="currentColor" stroke-width="1.6"/>
+              <circle cx="12" cy="12" r="4.25" stroke="currentColor" stroke-width="1.6"/>
+              <circle cx="17.35" cy="6.65" r="1.15" fill="currentColor"/>
+            </svg>
+            <span>@dynewbr</span>
+            <svg class="dynew-social-arrow" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path d="M7 17L17 7M9 7h8v8" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
           </a>
+          <p class="contact-institutional">
+            A DYNEW atua na execução especializada de revestimentos arquitetônicos. Não operamos
+            como loja de películas ou escritório de design de interiores.
+          </p>
         </div>
-        <p class="contact-microcopy">Tenha fotos, medidas aproximadas e o tipo de ambiente em mãos.</p>
-
-        <p class="contact-details">
-          <a href="https://wa.me/5511925039297">+55 11 92503-9297</a> ·
-          <a href="mailto:contato@dynew.com.br">contato@dynew.com.br</a>
-        </p>
       </div>
     </section>
-
-    <!-- Nota institucional discreta — não é seção principal, sem título -->
-    <p class="institutional-note">
-      A DYNEW atua na execução especializada de revestimentos arquitetônicos. Não operamos
-      como loja de películas ou escritório de design de interiores.
-    </p>
   </main>
 
-  <!-- ================= FOOTER ================= -->
+  <!-- ================= FOOTER =================
+       Continua visualmente a seção #contato (mesmo carbon, sem borda/gap
+       entre os dois) — CTA → informações (telefone, e-mail, Instagram) →
+       assinatura monumental → copyright + nota legal → linha fina de
+       fechamento, como uma sequência única, não blocos desconectados. Sem
+       nav/links de navegação nem contato duplicado — rodapé final só com
+       créditos (contato já vive em #contato .contact-info, logo acima).
+       Assinatura: assets/images/brand/dynew-lockup-white.png — conjunto
+       completo (ícone ND + wordmark) em branco, recorte de LOGO BRANCO.png
+       (mesma arte/crop já usada na versão dourada do header, só a cor
+       muda). Instagram (ícone + @dynewbr + seta) vive em #contato
+       .contact-info, logo abaixo do e-mail — única ocorrência do site.
+       @dynewbr confirmado em PRODUCT.md (ainda não pronto para tráfego
+       público segundo o mesmo doc) — usado porque já existe oficialmente,
+       não inventado; URL só vive no href, nunca exibida como texto. -->
   <footer class="site-footer">
-    <div class="container">
-      <p>&copy; <span id="current-year"></span> DYNEW — Revestimentos arquitetônicos. Transformações inteligentes.</p>
-      <p>
-        <a href="https://wa.me/5511925039297">WhatsApp</a> ·
-        <a href="mailto:contato@dynew.com.br">contato@dynew.com.br</a>
-      </p>
+    <div class="dynew-signature" data-reveal>
+      <img
+        src="assets/images/brand/dynew-lockup-white.png"
+        alt="DYNEW"
+        class="dynew-signature-mark"
+        loading="lazy"
+        width="677"
+        height="385"
+      >
+    </div>
+
+    <div class="container site-footer-bottom">
+      <div class="site-footer-copy-group">
+        <p class="site-footer-copyright">&copy; <span id="current-year"></span> DYNEW — Revestimentos arquitetônicos. Transformações inteligentes.</p>
+
+        <p class="site-footer-legal">
+          3M, DI-NOC e Comply são marcas da 3M Company. A disponibilidade e a recomendação de
+          aplicação devem ser confirmadas para cada projeto.
+        </p>
+      </div>
     </div>
   </footer>
 
@@ -801,6 +927,10 @@
   </a>
 
   <script src="js/script.js"></script>
+  <script src="js/dinoc-showcase.js"></script>
+  <script src="js/case-video.js"></script>
+  <script src="js/applications-carousel.js"></script>
+  <script src="js/reveal.js"></script>
   <!-- GSAP oficial, instalado via npm (package.json) e copiado para
        js/vendor/gsap/ — sem CDN. Ver README/relatório da Fase 1. -->
   <script src="js/vendor/gsap/gsap.min.js"></script>
