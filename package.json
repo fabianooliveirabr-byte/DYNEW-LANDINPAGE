@@ -1,0 +1,9 @@
+{
+  "name": "dynew-landingpage",
+  "private": true,
+  "version": "1.0.0",
+  "description": "DYNEW landing page (static HTML/CSS/JS, no build step). GSAP is installed via npm and vendored locally into js/vendor/ for the header/hero scroll animation — no CDN, no bundler.",
+  "dependencies": {
+    "gsap": "^3.12.5"
+  }
+}

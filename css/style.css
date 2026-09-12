@@ -1,0 +1,2790 @@
+/* ==========================================================================
+   DYNEW — Landing Page
+   Revestimentos arquitetônicos — mobile-first.
+   Ver css/variables.css para tokens de identidade visual.
+   ========================================================================== */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-body);
+  font-size: var(--fs-body);
+  color: var(--color-text);
+  background-color: var(--color-bg);
+  line-height: 1.6;
+}
+
+h1, h2, h3, h4 {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  color: var(--color-heading);
+  line-height: 1.3;
+  letter-spacing: -0.01em;
+  margin: 0 0 var(--space-sm);
+  text-wrap: balance;
+}
+
+h1 { font-size: var(--fs-h1); font-weight: 800; }
+h2 { font-size: var(--fs-h2); }
+h3 { font-size: var(--fs-h3); }
+
+/* Ênfase restrita — itálico Newsreader; a cor herda o texto ao redor (sempre
+   em contraste correto) e o champanhe entra só como filete sob a palavra. */
+em {
+  font-family: var(--font-accent);
+  font-style: italic;
+  font-weight: 500;
+  color: inherit;
+  background-image: linear-gradient(var(--color-champanhe), var(--color-champanhe));
+  background-repeat: no-repeat;
+  background-size: 100% 2px;
+  background-position: 0 100%;
+  padding-bottom: 0.08em;
+}
+
+p {
+  margin: 0 0 var(--space-sm);
+  color: var(--color-text-muted);
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+a {
+  color: var(--color-text);
+  text-decoration: none;
+}
+
+ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.container {
+  width: 100%;
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 0 var(--space-md);
+}
+
+/* Alinha a borda esquerda/direita de TODAS as seções com o header/hero, que
+   desde a Fase 1 do design system CAMADA usam --dy-space-page-desktop em
+   vez do .container de 1200px (ver .header-inner acima, ~L421). Sem isso,
+   o conteúdo de cada seção "pulava" ~45-65px em relação ao header ao
+   rolar a página — a causa do corte/desalinhamento lateral reportado.
+   Header e hero continuam exatamente como estão; só o restante da página
+   passa a usar o mesmo sistema de respiro que eles já usavam. */
+@media (min-width: 700px) {
+  .container {
+    max-width: none;
+    padding-left: var(--dy-space-page-desktop);
+    padding-right: var(--dy-space-page-desktop);
+  }
+}
+
+/* Reduzido de --space-2xl (96px) — a página inteira lia como "uma tela por
+   informação". Seções que precisam de mais respiro (ex. dinoc-showcase)
+   continuam com override próprio. */
+section {
+  padding: var(--space-xl) 0;
+  scroll-margin-top: var(--dy-header-h-mobile);
+}
+
+@media (min-width: 700px) {
+  section {
+    scroll-margin-top: var(--dy-header-h-desktop);
+  }
+}
+
+.section-header {
+  max-width: 640px;
+  margin: 0 0 var(--space-lg);
+}
+
+.section-header p {
+  max-width: 62ch;
+}
+
+.bg-alt {
+  background-color: var(--color-bg-alt);
+}
+
+/* Linha de transição entre seções — reforça a progressão da narrativa */
+.section-transition {
+  text-align: center;
+  font-family: var(--font-heading);
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: var(--color-text-muted);
+  max-width: 46ch;
+  margin: 0 auto;
+  padding: 0 var(--space-md);
+}
+
+.problema-closing {
+  margin-top: var(--space-xl);
+}
+
+/* Fecho discreto que incorpora o argumento de sustentabilidade (antes uma
+   seção grande própria) — nota secundária, menor e mais silenciosa que
+   .section-transition, nunca outro bloco/caixa. */
+.problema-sustain-note {
+  text-align: center;
+  font-size: 0.9375rem;
+  color: var(--color-text-muted);
+  max-width: 52ch;
+  margin: var(--space-sm) auto 0;
+  padding: 0 var(--space-md);
+}
+
+/* ==========================================================================
+   Acessibilidade
+   ========================================================================== */
+
+:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-offset);
+}
+
+.skip-link {
+  position: absolute;
+  top: -100%;
+  left: var(--space-sm);
+  background-color: var(--color-preto);
+  color: var(--color-marfim);
+  padding: var(--space-xs) var(--space-sm);
+  border-radius: var(--radius-sm);
+  z-index: 1100;
+  transition: top var(--transition-fast);
+}
+
+.skip-link:focus {
+  top: var(--space-sm);
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Preserva cores reais ao exportar/imprimir (ex.: geração do PDF de revisão) */
+@media print {
+  * {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+    color-adjust: exact;
+  }
+
+  .whatsapp-float {
+    display: none !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ==========================================================================
+   Reveal — entrada única ao entrar no viewport (js/reveal.js). Só
+   transform+opacity (sem width/height/top/left). A regra de
+   prefers-reduced-motion acima já zera a duração da transição, e o JS
+   marca tudo .is-revealed sem observer nesse modo — o conteúdo nunca fica
+   invisível/inacessível.
+   ========================================================================== */
+
+[data-reveal],
+[data-reveal-item] {
+  opacity: 0;
+  transform: translateY(22px);
+  transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1), transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+  transition-delay: var(--reveal-delay, 0ms);
+}
+
+[data-reveal].is-revealed,
+[data-reveal-item].is-revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ==========================================================================
+   Botões / CTA
+   ========================================================================== */
+
+/* Sistema único de botão — raio, altura, padding e tipografia iguais para
+   todas as variantes de cor (gold/whatsapp/outline/carbon); só a cor muda
+   por variante. O CTA dourado do header (.nav-list a.btn-gold) continua com
+   sua própria geometria compacta, já aprovada — espaço de menu é um
+   contexto à parte, não faz parte deste padrão. */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-xs);
+  min-height: 44px;
+  padding: 0.8rem 1.5rem;
+  border-radius: 12px;
+  font-weight: 700;
+  font-family: var(--font-body);
+  font-size: var(--fs-body);
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: background-color var(--transition-fast), border-color var(--transition-fast), color var(--transition-fast), transform var(--transition-fast);
+}
+
+.btn:active {
+  transform: scale(0.97);
+}
+
+/* Variante carbon — só o CTA do catálogo 3M™ DI-NOC™ usa esta cor, para
+   ganhar identidade própria sem sair da mesma construção do .btn. */
+.btn-carbon {
+  background-color: var(--dy-carbon);
+  color: var(--dy-copper);
+}
+
+.btn-carbon:hover,
+.btn-carbon:focus-visible {
+  background-color: var(--color-preto);
+  color: var(--dy-wood);
+}
+
+.btn-outline {
+  background-color: transparent;
+  border-color: var(--color-text);
+  color: var(--color-text);
+}
+
+.btn-outline:hover,
+.btn-outline:focus-visible {
+  border-color: var(--color-champanhe);
+  color: var(--color-preto);
+}
+
+/* Variante para uso sobre fundo escuro (hero DYNEW CAMADA) */
+.btn-outline--dark {
+  border-color: rgba(252, 251, 248, 0.4);
+  color: var(--dy-paper);
+}
+
+.btn-outline--dark:hover,
+.btn-outline--dark:focus-visible {
+  border-color: var(--dy-copper);
+  color: var(--dy-copper);
+}
+
+/* ==========================================================================
+   Header
+   ========================================================================== */
+
+/* DYNEW CAMADA — header transparente sobre o hero, Carbon+blur após o
+   scroll inicial (ver js/header-motion.js). A altura já nasce no valor
+   final (var(--dy-header-h-*)) para não causar layout shift; a logo
+   grande do estado inicial é um transform:scale() por cima, sem afetar
+   a caixa do header. */
+.site-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  background-color: transparent;
+  border-bottom: 1px solid transparent;
+}
+
+/* Camada isolada só para o backdrop-filter (ver comentário no HTML) — sem
+   nenhum descendente, então virar containing block não afeta nada. */
+.site-header-blur {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+/* Usado pelo fallback de prefers-reduced-motion (2 estados discretos, sem
+   scrub) em js/header-motion.js — o caminho com GSAP anima estes mesmos
+   valores via inline style, então esta regra não interfere com o scrub. */
+.site-header.is-docked {
+  background-color: rgba(17, 19, 21, 0.94);
+}
+
+.site-header.is-docked .site-header-blur {
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+}
+
+.header-inner {
+  position: relative;
+  /* .site-header-blur é position:absolute (categoria "positioned" na ordem
+     de pintura), então pintaria por cima do conteúdo do header mesmo vindo
+     antes no DOM se este ficasse "static". position:relative move o
+     conteúdo real para a mesma categoria — como vem depois no DOM, fica
+     acima do blur, que é só decoração de fundo. */
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-md);
+  height: var(--dy-header-h-mobile);
+}
+
+.header-brand {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+  /* .header-inner centraliza os itens verticalmente (align-items: center);
+     numa marca deste tamanho isso empurraria o topo das letras para fora
+     da viewport (acima de y=0). Ancora ao topo da faixa do header e deixa
+     o excesso transbordar para baixo, sobre o hero — nunca para cima. */
+  align-self: flex-start;
+}
+
+/* Estado dockado: só o wordmark pequeno fica visível (sem o lockup grande
+   que precisa do overflow acima) — nada mais para "vazar" para cima, então
+   volta a acompanhar o centro vertical do header (.header-inner já é
+   align-items:center) em vez de ficar colado no topo da faixa. */
+.site-header.is-docked .header-brand {
+  align-self: center;
+}
+
+/* Container de posicionamento para os dois recortes do logo oficial —
+   ambos ocupam o mesmo canto superior esquerdo, alternando por opacity
+   (crossfade em js/header-motion.js), nunca por transform:scale(). O
+   wordmark (fluxo normal) define o tamanho de repouso do link; o lockup
+   completo (absoluto) se sobrepõe a ele quando visível. */
+.logo {
+  position: relative;
+  display: inline-block;
+}
+
+/* Estado dockado — só a palavra DYNEW, recorte de
+   assets/images/brand/dynew-wordmark-gold.png (677×85px). Tamanho fixo,
+   confortável e legível em qualquer breakpoint (pedido explícito: não
+   minúsculo), sem depender de font/CSS-texto. */
+.brand-wordmark-docked {
+  display: block;
+  width: 160px;
+  height: auto;
+}
+
+/* Estado expandido — lockup completo (símbolo ND + DYNEW), recorte de
+   dynew-lockup-gold.png (677×371px, proporção real preservada, sem
+   esticar). Larguras calibradas para reproduzir em CSS puro a mesma
+   presença "monumental" já aprovada (antes calculada via vw em JS para o
+   wordmark em texto): 165px mobile, 297px de 700-1023px, interpolação
+   contínua 297→435→500 entre 1024/1280/1440px, e 500px acima de 1440px. */
+.brand-lockup-full {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: block;
+  width: 165px;
+  /* Sem isso, o reset global "img{max-width:100%}" clampa esta imagem à
+     largura do próprio .logo — que, como o lockup é position:absolute (não
+     contribui para o tamanho do pai), acaba sendo só a largura do wordmark
+     dockado (elemento em fluxo normal, o único que define a caixa do
+     .logo). */
+  max-width: none;
+  height: auto;
+  opacity: 0;
+  pointer-events: none;
+}
+
+@media (min-width: 700px) {
+  .brand-lockup-full {
+    width: 297px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .brand-lockup-full {
+    width: calc(53.90625vw - 255px);
+  }
+}
+
+@media (min-width: 1280px) {
+  .brand-lockup-full {
+    width: calc(40.625vw - 85px);
+  }
+}
+
+@media (min-width: 1440px) {
+  .brand-lockup-full {
+    width: 500px;
+  }
+}
+
+/* Removida da composição final (decisão do cliente) — mantida no DOM e no
+   JS (header-motion.js segue animando .style.transform sobre ela) para não
+   quebrar a lógica de dock/undock; display:none basta para ocultá-la. */
+.brand-line {
+  display: none;
+  width: 100%;
+  max-width: 72px;
+  height: 2px;
+  background: linear-gradient(90deg, var(--dy-wood), var(--dy-copper));
+  transform: scaleX(0);
+  transform-origin: left center;
+}
+
+/* Oculto no dockado (decisão do cliente: só DYNEW + navegação + CTA
+   dourado ali) e já era invisível no expandido (opacity:0 a t=0) — mantido
+   no DOM e no JS (header-motion.js segue escrevendo .style.opacity), só
+   display:none garante que nunca mais apareça em nenhum estado. */
+.brand-credential {
+  display: none;
+  font-family: var(--dy-font-mono);
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--dy-copper);
+  opacity: 0;
+  transition: opacity var(--dy-motion-ui) var(--dy-ease-adhere);
+}
+
+.brand-credential.is-visible {
+  opacity: 1;
+}
+
+@media (min-width: 700px) {
+  .header-inner {
+    height: var(--dy-header-h-desktop);
+    /* Header/hero deixam de ficar presos ao .container de 1200px — a marca
+       precisa se aproximar da borda real da viewport, não de um teto de
+       largura de conteúdo convencional. Usa o token de espaçamento de
+       página do próprio design system CAMADA (já existia, não era usado
+       ainda). Só no desktop: no mobile o .container padrão continua. */
+    max-width: none;
+    padding-left: var(--dy-space-page-desktop);
+    padding-right: var(--dy-space-page-desktop);
+    /* Reduzido de --space-md para caber o menu de 4 itens + CTA ao lado de
+       uma marca bem maior em telas de 1024px (o ponto mais apertado). */
+    gap: var(--space-sm);
+  }
+
+}
+
+.nav-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  background: transparent;
+  border: 1px solid rgba(252, 251, 248, 0.35);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+}
+
+.nav-toggle-icon,
+.nav-toggle-icon::before,
+.nav-toggle-icon::after {
+  display: block;
+  width: 20px;
+  height: 1.5px;
+  background-color: var(--dy-paper);
+  position: relative;
+  transition: transform var(--transition-fast), opacity var(--transition-fast);
+}
+
+.nav-toggle-icon::before,
+.nav-toggle-icon::after {
+  content: "";
+  position: absolute;
+  left: 0;
+}
+
+.nav-toggle-icon::before { top: -6px; }
+.nav-toggle-icon::after { top: 6px; }
+
+.nav-toggle[aria-expanded="true"] .nav-toggle-icon {
+  background-color: transparent;
+}
+
+.nav-toggle[aria-expanded="true"] .nav-toggle-icon::before {
+  top: 0;
+  transform: rotate(45deg);
+}
+
+.nav-toggle[aria-expanded="true"] .nav-toggle-icon::after {
+  top: 0;
+  transform: rotate(-45deg);
+}
+
+.main-nav {
+  position: fixed;
+  inset: 0;
+  top: var(--dy-header-h-mobile);
+  /* Sem fundo — pedido explícito: nada de painel/retângulo escuro atrás da
+     navegação mobile, só o texto sobre o que já está por trás (hero/página
+     na posição de scroll atual). Legibilidade vem só da tipografia (cor +
+     text-shadow sutil abaixo), não de uma caixa. */
+  background-color: transparent;
+  padding: var(--space-lg) var(--space-md);
+  transform: translateX(100%);
+  transition: transform var(--transition-base);
+  overflow-y: auto;
+}
+
+.main-nav.is-open {
+  transform: translateX(0);
+}
+
+.nav-list {
+  display: flex;
+  flex-direction: column;
+  /* Reduzido em três etapas: --space-md (24px) -> --space-sm (16px) -> 10px
+     -> 6px — navegação compacta no menu mobile em tela cheia. Só afeta
+     <768px: a media query abaixo já sobrescreve para linha (não coluna)
+     no desktop, então esse valor nunca chegava lá. */
+  gap: 6px;
+  font-size: 1.1rem;
+}
+
+.nav-list a:not(.btn) {
+  color: var(--dy-paper);
+  font-weight: 500;
+  display: inline-block;
+  /* Reduzido de 6px para 4px, acompanhando o gap mais justo acima — ainda
+     com área de toque razoável (texto 1.1rem + padding + gap somados). */
+  padding: 4px 0;
+  position: relative;
+}
+
+/* Sem fundo atrás dos links no overlay mobile (item 6) — a proteção de
+   contraste vem só de uma sombra branca bem sutil, não de uma caixa.
+   Escopado a <768px para não alterar em nada o menu desktop. */
+@media (max-width: 767px) {
+  .nav-list a:not(.btn) {
+    text-shadow: 0 0 8px rgba(255, 255, 255, 0.12);
+  }
+}
+
+.nav-list a:not(.btn)::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 100%;
+  bottom: 2px;
+  height: 1px;
+  background-color: var(--dy-copper);
+  transition: right var(--transition-fast);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .nav-list a:not(.btn):hover::after,
+  .nav-list a:not(.btn):focus-visible::after {
+    right: 0;
+  }
+}
+
+.nav-cta {
+  /* Reduzido em três etapas: --space-lg (40px) -> --space-md (24px) -> 16px
+     — acompanha o restante da lista mais compacta, ainda perceptível como
+     item final/separado dos links de navegação. */
+  margin-top: 16px;
+}
+
+/* Some corpo enquanto o menu mobile está aberto, evitando sobrepor o botão flutuante */
+body.nav-open .whatsapp-float {
+  display: none;
+}
+
+@media (min-width: 768px) {
+  .nav-toggle {
+    display: none;
+  }
+
+  .main-nav {
+    position: static;
+    inset: auto;
+    padding: 0;
+    background: none;
+    transform: none;
+    transition: none;
+    overflow: visible;
+  }
+
+  .nav-list {
+    flex-direction: row;
+    align-items: center;
+    gap: var(--space-sm);
+    font-size: var(--fs-small);
+    font-weight: 500;
+    letter-spacing: 0.01em;
+  }
+
+  .nav-list a {
+    padding: 0;
+    /* A marca ficou muito mais larga (seção 1) — com menos espaço sobrando
+       para o menu em telas de 1024px, o CTA de várias palavras podia
+       quebrar em 2-3 linhas. Nenhum item do menu deve quebrar linha. */
+    white-space: nowrap;
+  }
+
+  .nav-cta {
+    margin-top: 0;
+  }
+}
+
+/* CTA dourado discreto do header — usa a base do .btn global só para herdar
+   a exclusão do estilo de link sublinhado do menu (.nav-list a:not(.btn));
+   toda a aparência (cor, raio, peso, tamanho) é definida aqui. Mesmo estilo
+   em mobile e desktop — o overlay do menu mobile já tem largura de sobra. */
+.btn-gold {
+  background-color: var(--dy-copper);
+  color: var(--dy-carbon);
+  font-weight: 600;
+  box-shadow: none;
+  transition: opacity var(--transition-fast);
+}
+
+.btn-gold:hover,
+.btn-gold:focus-visible {
+  opacity: 0.85;
+}
+
+/* Especificidade extra (.nav-list a.btn-gold) só para vencer o padding:0 e o
+   font-size que .nav-list a aplica a todos os links do menu em desktop. */
+.nav-list a.btn-gold {
+  min-height: auto;
+  padding: 0.45rem 1rem;
+  border-radius: 12px;
+  font-size: var(--fs-small);
+  line-height: 1;
+}
+
+/* Dentro do overlay mobile em tela cheia o CTA não deve repetir o botão
+   compacto do header — texto dourado discreto, sem bloco/pill. O botão
+   dourado do header/desktop (regra acima) permanece intocado em >=768px. */
+@media (max-width: 767px) {
+  .nav-cta a.btn-gold {
+    background-color: transparent;
+    color: var(--dy-copper);
+    padding: 0;
+    border-radius: 0;
+    font-size: 1.1rem;
+    box-shadow: none;
+  }
+
+  .nav-cta a.btn-gold:hover,
+  .nav-cta a.btn-gold:focus-visible {
+    opacity: 0.8;
+  }
+}
+
+/* ==========================================================================
+   Hero — DYNEW CAMADA (cinematográfico, crossfade de cenas)
+   Ver docs/DYNEW-CAMADA-design-system-v1.md, seções 8–10.
+   ========================================================================== */
+
+.hero-camada {
+  position: relative;
+  min-height: 100vh;
+  min-height: 100svh;
+  /* dvh por último: acompanha a barra de endereço do navegador mobile em
+     tempo real, evitando a folga/salto clássico do 100vh fixo. Fallback em
+     cascata — navegadores sem suporte simplesmente ignoram a linha. */
+  min-height: 100dvh;
+  overflow: hidden;
+  background-color: var(--dy-carbon);
+}
+
+.hero-camada-stage {
+  position: absolute;
+  inset: 0;
+  background-color: var(--dy-carbon);
+  overflow: hidden;
+}
+
+.hero-scene {
+  position: absolute;
+  inset: 0;
+  margin: 0;
+  background-color: var(--dy-carbon);
+  /* Estado padrão/CSS: só a cena .is-active aparece (usado pelo fallback
+     de prefers-reduced-motion em js/hero-motion.js, sem GSAP). No modo de
+     movimento completo, GSAP controla opacity/visibility inline por cena
+     (autoAlpha), que tem prioridade sobre esta regra de classe. */
+  opacity: 0;
+  visibility: hidden;
+}
+
+.hero-scene.is-active {
+  opacity: 1;
+  visibility: visible;
+}
+
+.hero-scene .photo-slot {
+  background-color: var(--dy-carbon);
+}
+
+/* Vídeo real de cada cena preenche toda a área (que já ocupa a primeira
+   dobra inteira atrás do header, via .hero-scene acima) em full-bleed
+   cover. object-position individual por cena logo abaixo. */
+.hero-scene-video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  background-color: var(--dy-carbon);
+}
+
+/* Enquadramento por cena — mantém o assunto mais relevante de cada clipe
+   (madeira/materialidade, mobiliário) visível ao cortar para o hero, e
+   evita compor uma área muito clara/poluída atrás do canto onde a marca
+   DYNEW fica grande. Ajuste fino apenas de posição, sem recodificar. */
+.hero-scene[data-scene="inspecao"] .hero-scene-video,
+.hero-scene[data-scene="preparacao"] .hero-scene-video {
+  object-position: 20% 30%;
+}
+
+.hero-scene[data-scene="aplicacao"] .hero-scene-video {
+  object-position: 55% 50%;
+}
+
+.hero-scene[data-scene="acabamento"] .hero-scene-video {
+  object-position: 18% 20%;
+}
+
+/* Reforço de scrim só desta cena (janela clara ao centro-direita competindo
+   com a madeira) — gradiente horizontal, transparente sobre a madeira à
+   esquerda, mais escuro só sobre a área da janela. Acompanha a opacidade
+   do crossfade da própria cena (herda de .hero-scene), não é um elemento
+   novo na composição visível fora desta cena. */
+.hero-scene[data-scene="acabamento"]::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    rgba(17, 19, 21, 0) 0%,
+    rgba(17, 19, 21, 0) 45%,
+    rgba(17, 19, 21, 0.4) 70%,
+    rgba(17, 19, 21, 0.45) 100%
+  );
+  pointer-events: none;
+}
+
+.hero-scene[data-scene="resultado"] .hero-scene-video {
+  object-position: 30% 35%;
+}
+
+/* Reconfigurado: já não precisa proteger um bloco de texto/CTA (migrado
+   para .proposta-intro) nem o canto inferior esquerdo. Função única agora:
+   manter marca/menu legíveis no topo, sem massa preta pesada na base nem
+   contraste "comercial" — mesma cor base (rgba 17,19,21), só os estágios
+   do gradiente mudam. */
+.hero-scrim {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(17, 19, 21, 0.55) 0%,
+    rgba(17, 19, 21, 0.32) 30%,
+    rgba(17, 19, 21, 0.32) 70%,
+    rgba(17, 19, 21, 0.5) 100%
+  );
+  pointer-events: none;
+}
+
+.hero-eyebrow {
+  display: inline-block;
+  font-family: var(--dy-font-mono);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+  margin-bottom: var(--space-sm);
+}
+
+/* ==========================================================================
+   Proposta — eyebrow/H1/subcopy/CTAs migrados do hero (decisão final: a
+   primeira dobra fica só com marca + menu + vídeo + Rail CAMADA). Composição
+   assimétrica: texto à esquerda em coluna controlada, imagem conceitual à
+   direita ocupando a fatia maior da seção e sangrando até a borda real da
+   viewport (fora do .container) — pensada como continuação arquitetônica da
+   página, não como card de landing page. Fundo claro do design system
+   (--color-bg), sem cor nova.
+   ========================================================================== */
+.proposta-intro {
+  padding: 0;
+  background-color: var(--color-bg);
+}
+
+.proposta-intro-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+}
+
+.proposta-intro-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: var(--space-2xl) var(--space-md);
+}
+
+/* Escala editorial só nesta seção — o H1 deixou de competir com o hero e
+   pode recuperar presença; não mexe no --fs-h1 global (usado em qualquer
+   outro h1 do site). Quebra de linha intencional preservada via <br> no
+   HTML, não por CSS. */
+.proposta-intro-content h1 {
+  font-size: clamp(2rem, 1.2rem + 2.5vw, 3.5rem);
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+}
+
+.proposta-intro-content p {
+  max-width: 46ch;
+}
+
+.proposta-intro-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-sm);
+  margin-top: var(--space-lg);
+}
+
+/* Cantos arredondados só aqui — não no --radius global (2px), usado em
+   todo o resto do site. Mesmo raio para os dois CTAs, sem pill (999px). */
+@media (max-width: 899px) {
+  /* No empilhamento mobile os dois CTAs ficam em linhas separadas com
+     larguras diferentes (uma segue o texto mais longo do primário, a outra
+     o texto mais curto do secundário) — sem virar full-width, uma coluna de
+     grid com largura = max-content do item mais largo e justify-items:
+     stretch (padrão do grid) faz os dois ocuparem exatamente essa mesma
+     largura, sem esticar até a borda do container. */
+  .proposta-intro-actions {
+    display: grid;
+    grid-template-columns: max-content;
+    justify-content: start;
+  }
+
+  /* Respiro entre o segundo CTA e o início da imagem estava com folga
+     excessiva (padding-bottom do bloco de texto = --space-2xl = 96px);
+     reduzido em 40px (dentro dos 30-50px pedidos), só neste breakpoint. */
+  .proposta-intro-content {
+    padding-bottom: calc(var(--space-2xl) - 40px);
+  }
+}
+
+/* Imagem conceitual — grande, sem moldura/sombra, cheia de borda a borda no
+   próprio bloco (o bleed até a viewport real acontece no breakpoint
+   desktop abaixo, onde a grade deixa de ser de coluna única). */
+.proposta-intro-media {
+  position: relative;
+  min-height: 280px;
+}
+
+.proposta-intro-media img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  /* Nesse formato mais baixo/largo a imagem só corta na horizontal (a
+     altura do source cobre a caixa inteira sem sobra vertical). Enquadrado
+     para revelar o instalador (costas, logo DYNEW, braço e ferramenta) —
+     o aço corten preenche o restante da largura visível à direita. */
+  object-position: 22% 45%;
+  display: block;
+}
+
+@media (min-width: 700px) {
+  .proposta-intro-media img {
+    object-position: 10% 45%;
+  }
+}
+
+@media (min-width: 900px) {
+  /* Coluna de texto dimensionada para o próprio conteúdo (560px, mesmo
+     max-width de .proposta-intro-content) em vez de 1fr — antes a fração
+     sobrava mais larga que o texto, abrindo um corredor branco de ~100px
+     antes da foto começar. Sem essa folga a imagem também ganha mais
+     largura (ocupa o restante real da seção). */
+  .proposta-intro-grid {
+    grid-template-columns: minmax(0, 560px) minmax(0, 1fr);
+    align-items: stretch;
+  }
+
+  .proposta-intro-content {
+    max-width: 560px;
+    padding: var(--space-2xl) var(--space-lg) var(--space-2xl) var(--dy-space-page-desktop);
+  }
+
+  .proposta-intro-media {
+    min-height: 480px;
+  }
+}
+
+/* Painel translúcido sobre a área de aço corten (nunca sobre o instalador,
+   que fica à esquerda do recorte em qualquer largura — ver object-position
+   acima). Vidro extremamente sutil: branco quase transparente, borda clara
+   fina, raio grande — nunca um card sólido. */
+.proposta-intro-overlay {
+  position: absolute;
+  right: var(--space-md);
+  bottom: var(--space-sm);
+  /* Recuo maior da borda direita (space-md) + largura um pouco maior que a
+     versão anterior (135px) para o texto não quebrar em 2 linhas quase toda
+     a lista — sem virar um card grande. */
+  max-width: 168px;
+  padding: 12px 14px;
+  background: rgba(255, 255, 255, 0.13);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 16px;
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+
+.proposta-intro-overlay-title {
+  font-family: var(--dy-font-sans);
+  color: var(--dy-paper);
+  font-weight: 700;
+  font-size: 0.6875rem;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+  text-align: left;
+  margin: 0;
+}
+
+/* Acento dourado/copper abaixo do título, pedido no lugar de um ícone. */
+.proposta-intro-overlay-title::after {
+  content: "";
+  display: block;
+  width: 18px;
+  height: 2px;
+  background-color: var(--dy-copper);
+  margin: 4px 0 6px;
+}
+
+.proposta-intro-overlay-list {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.proposta-intro-overlay-list li {
+  position: relative;
+  padding-left: 10px;
+  color: rgba(252, 251, 248, 0.92);
+  font-size: 0.625rem;
+  line-height: 1.35;
+}
+
+.proposta-intro-overlay-list li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.4em;
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background-color: var(--dy-copper);
+}
+
+@media (min-width: 900px) {
+  /* Centralizado no eixo vertical da imagem, mas mais estreito e mais
+     próximo da borda direita do que antes — o recorte da imagem agora
+     revela o instalador (ver object-position acima), então o painel
+     precisa caber inteiro sobre a área de aço corten, sem invadir a
+     figura/ferramenta. */
+  .proposta-intro-overlay {
+    right: var(--space-md);
+    bottom: auto;
+    top: 50%;
+    transform: translateY(-50%);
+    max-width: 220px;
+    padding: var(--space-md);
+    border-radius: 20px;
+  }
+
+  .proposta-intro-overlay-title {
+    font-size: 1.625rem;
+  }
+
+  .proposta-intro-overlay-title::after {
+    width: 48px;
+    margin: var(--space-md) 0 var(--space-md);
+  }
+
+  .proposta-intro-overlay-list {
+    gap: 12px;
+  }
+
+  .proposta-intro-overlay-list li {
+    padding-left: 16px;
+    font-size: 1rem;
+    line-height: 1.45;
+  }
+
+  .proposta-intro-overlay-list li::before {
+    width: 6px;
+    height: 6px;
+    top: 0.55em;
+  }
+}
+
+/* Entre 900-1279px a coluna da imagem é proporcionalmente mais estreita que
+   no desktop grande (mesma grade 1fr/1.15fr, mas menos espaço total) — o
+   painel de 900px+ não cabe sem invadir o braço/ferramenta do instalador
+   nessa faixa. Versão mais compacta só aqui, encostada na borda. */
+@media (min-width: 900px) and (max-width: 1279px) {
+  .proposta-intro-overlay {
+    right: var(--space-md);
+    max-width: 212px;
+    padding: 14px 16px;
+  }
+
+  .proposta-intro-overlay-title {
+    font-size: 1.0625rem;
+  }
+
+  .proposta-intro-overlay-title::after {
+    width: 32px;
+    margin: var(--space-sm) 0 var(--space-sm);
+  }
+
+  .proposta-intro-overlay-list {
+    gap: 8px;
+  }
+
+  .proposta-intro-overlay-list li {
+    font-size: 0.8125rem;
+    line-height: 1.45;
+  }
+}
+
+/* Rail CAMADA — indicador editorial discreto (01 / 04), sincronizado com o
+   crossfade do hero em js/hero-motion.js. Sem caixa, sem fundo, sem borda —
+   uma legenda periférica, não um componente de interface. Deslocado do
+   botão do WhatsApp (right/bottom + espessura do próprio botão + uma folga)
+   para nunca formar um agrupamento de UI no canto inferior direito. Some em
+   telas estreitas (ver media query abaixo) — nesse tamanho de viewport ele
+   disputaria espaço real com CTA/menu/WhatsApp. */
+.camada-rail {
+  display: none;
+  position: fixed;
+  right: calc(var(--space-md) + 56px + var(--space-lg));
+  bottom: var(--space-md);
+  z-index: 400;
+  font-family: var(--dy-font-mono);
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  pointer-events: none;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity var(--dy-motion-ui) var(--dy-ease-adhere);
+}
+
+.camada-rail.is-visible {
+  opacity: 1;
+  visibility: visible;
+}
+
+@media (min-width: 700px) {
+  .camada-rail {
+    display: block;
+  }
+}
+
+.camada-rail-visual {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+}
+
+.camada-rail-current {
+  color: var(--dy-copper);
+}
+
+.camada-rail-total {
+  color: rgba(252, 251, 248, 0.4);
+}
+
+.camada-rail-track {
+  position: relative;
+  display: block;
+  width: 48px;
+  height: 1px;
+  background-color: rgba(252, 251, 248, 0.18);
+}
+
+.camada-rail-fill {
+  position: absolute;
+  inset: 0;
+  transform: scaleX(0.25);
+  transform-origin: left center;
+  background-color: var(--dy-copper);
+}
+
+.hero-media {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.compare-hero {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  border-radius: var(--radius);
+  overflow: hidden;
+  background-color: var(--color-grafite);
+  touch-action: none;
+  cursor: ew-resize;
+}
+
+.compare-base {
+  position: absolute;
+  inset: 0;
+  background-color: var(--color-grafite);
+  background-image: linear-gradient(160deg, #3a3b3d 0%, #232325 100%);
+}
+
+.compare-finish {
+  position: absolute;
+  inset: 0;
+  background-color: var(--color-areia);
+  background-image:
+    linear-gradient(150deg, rgba(175, 143, 97, 0.55) 0%, transparent 55%),
+    linear-gradient(20deg, var(--color-areia) 0%, var(--color-creme) 100%);
+  clip-path: inset(0 0 0 50%);
+}
+
+.compare-handle {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 0;
+  border-left: 2px solid var(--color-champanhe);
+  pointer-events: none;
+  will-change: transform;
+}
+
+.compare-handle::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(1);
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background-color: var(--color-marfim);
+  border: 1px solid var(--color-champanhe);
+  box-shadow: 0 1px 4px rgba(13, 13, 13, 0.25);
+  transition: transform var(--transition-fast), border-color var(--transition-fast);
+}
+
+/* Percepção do handle muito sutil no hover/focus do comparador inteiro —
+   nunca depende só de hover (o range abaixo cobre teclado/touch). */
+.compare-hero:hover .compare-handle::after,
+.before-after-wrap:focus-within .compare-handle::after {
+  transform: translate(-50%, -50%) scale(1.08);
+  border-color: var(--dy-copper);
+}
+
+.compare-label {
+  position: absolute;
+  bottom: var(--space-sm);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  padding: 5px 10px;
+  border-radius: 999px;
+  background-color: rgba(13, 13, 13, 0.35);
+  backdrop-filter: blur(3px);
+  -webkit-backdrop-filter: blur(3px);
+  pointer-events: none;
+  z-index: 1;
+}
+
+.compare-label.l { left: var(--space-sm); color: var(--color-areia); }
+.compare-label.r { right: var(--space-sm); color: var(--color-grafite); }
+
+.compare-range {
+  width: 100%;
+  appearance: none;
+  height: 1px;
+  background: var(--color-border);
+  outline-offset: 6px;
+}
+
+.compare-range::-webkit-slider-thumb {
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background-color: var(--color-champanhe);
+  border: none;
+  margin-top: -9.5px;
+  cursor: pointer;
+}
+
+.compare-range::-moz-range-thumb {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background-color: var(--color-champanhe);
+  border: none;
+  cursor: pointer;
+}
+
+/* ==========================================================================
+   Faixa de credibilidade
+   ========================================================================== */
+
+/* ==========================================================================
+   Quem somos
+   ========================================================================== */
+
+#quem-somos {
+  padding-top: var(--space-xl);
+}
+
+/* Destaque editorial — não é eyebrow (não é label curto) nem banner (sem
+   fundo/caixa): itálico de apoio, mesmo tratamento tipográfico do <em> usado
+   no resto do site, só que como frase inteira. Medida reduzida (60ch, não
+   68ch) e peso/cor/tamanho um pouco maiores para funcionar como ponto de
+   respiro e síntese — a frase dos "17 anos" precisa parar o olho antes do
+   corpo do texto, não seguir no mesmo fluxo denso. Margem inferior maior
+   (space-lg, não space-md) cria a pausa antes do primeiro parágrafo. */
+.quem-somos-highlight {
+  max-width: 60ch;
+  font-family: var(--font-accent);
+  font-style: italic;
+  font-weight: 600;
+  font-size: 1.3rem;
+  line-height: 1.45;
+  color: var(--dy-copper);
+  margin: 0 0 var(--space-lg);
+}
+
+/* Medida mais curta (60ch) e line-height mais aberto (1.7, não o 1.6 padrão
+   do body) — reduz a sensação de parede de texto sem cortar nenhum
+   parágrafo. Espaçamento entre parágrafos um pouco maior que o padrão do
+   site (space-md + space-xs) para separar melhor os 4 blocos. */
+.quem-somos-body {
+  max-width: 60ch;
+  font-size: 1.05rem;
+  line-height: 1.7;
+  color: var(--color-text);
+  margin-bottom: calc(var(--space-md) + var(--space-xs));
+}
+
+.quem-somos-body:last-child {
+  margin-bottom: 0;
+}
+
+/* Frase de fechamento — antes vivia como headline da seção "Padrão DYNEW"
+   (removida; ocupava uma seção inteira só por essa mensagem). Aqui funciona
+   como fechamento editorial, não como novo card. */
+.quem-somos-closing {
+  max-width: 52ch;
+  margin: var(--space-lg) 0 0;
+  padding-top: var(--space-md);
+  border-top: 1px solid var(--color-border);
+  font-family: var(--font-accent);
+  font-style: italic;
+  font-size: 1.05rem;
+  line-height: 1.6;
+  color: var(--color-heading);
+}
+
+/* ==========================================================================
+   Utilitário — seção escura genérica (reutilizado por Tetos)
+   ========================================================================== */
+
+.section-dark {
+  background-color: var(--color-bg-dark);
+  color: var(--color-text-on-dark);
+}
+
+.section-dark h2,
+.section-dark h3 {
+  color: var(--color-text-on-dark);
+}
+
+.section-dark .section-header p {
+  color: var(--color-text-muted-on-dark);
+}
+
+.section-note {
+  font-size: 12px;
+  color: var(--color-text-muted);
+  max-width: 70ch;
+  margin-top: var(--space-lg);
+}
+
+.section-note--dark {
+  color: var(--color-text-muted-on-dark);
+}
+
+/* Legenda editorial do case — antes ficava "solta": o gap do flex pai
+   (.hero-media, var(--space-sm)) já dava 16px de distância da faixa de
+   arraste, e este margin-top somava mais 16px em cima disso (32px no
+   total). Margem negativa aqui cancela boa parte do gap do pai (sem tocar
+   nele — ele também separa a imagem do slider, fora deste ajuste) e deixa
+   a legenda colada ao bloco visual, como uma legenda de imagem de verdade. */
+.simulation-caption {
+  font-size: 0.8125rem;
+  letter-spacing: 0.01em;
+  color: var(--color-text-muted);
+  margin-top: -10px;
+}
+
+/* Uma linha só a partir de 900px (mesmo piso de largura já usado por
+   outros componentes do site) — abaixo disso o container real já fica
+   pequeno demais para as ~85 letras da frase sem forçar overflow; nesse
+   caso a legenda quebra em 2 linhas com boa leitura em vez de vazar. */
+@media (min-width: 900px) {
+  .simulation-caption {
+    white-space: nowrap;
+  }
+}
+
+/* ==========================================================================
+   Antes e Depois — único comparador da página
+   ========================================================================== */
+
+.antes-depois {
+  padding: var(--space-xl) 0;
+}
+
+/* Antes só 760px dentro de um container bem mais largo — o comparador
+   (o argumento visual mais forte da página) ficava pequeno rodeado de
+   vazio. Sem limite próprio agora: ocupa a largura real do container,
+   ultrapassando de propósito a coluna de texto de 640px acima. */
+.before-after-wrap {
+  width: 100%;
+}
+
+/* Rótulos legíveis sobre o espaço de fotografia (fundo grafite enquanto
+   a foto real não existe; permanece legível também sobre fotografia). */
+.before-after .compare-label.l,
+.before-after .compare-label.r {
+  color: var(--color-marfim);
+  z-index: 2;
+}
+
+/* Par real (Teto Piscina): o "antes" é quadrado (1280×1280) e o "depois" é
+   retrato (1086×1448) — nenhum dos dois nasceu no formato 4:3 da caixa, e
+   cada um perde a área importante em um eixo diferente com object-position
+   50% 50% (padrão). "Antes": o teto em obra ocupa a metade superior do
+   quadro — sobe o ponto focal para não cortar justamente o teto, que é o
+   assunto da comparação. "Depois": o teto amadeirado e as janelas/colunas
+   ficam na faixa superior do retrato — mesma lógica, sem repetir o mesmo
+   valor por não ser o mesmo enquadramento de origem. */
+.before-after .compare-base .photo-slot img {
+  object-position: 50% 18%;
+}
+
+/* Ajuste desta rodada: 28% ainda deixava a piscina/janelas ocupando mais
+   da metade do quadro visível, diluindo o teto amadeirado (o argumento da
+   comparação). Subindo a âncora para 10%, o teto passa a dominar a moldura
+   na mesma proporção do lado ANTES — mesmo par de fotos, só o recorte. */
+.before-after .compare-finish .photo-slot img {
+  object-position: 50% 10%;
+}
+
+/* ==========================================================================
+   Espaços de fotografia real (hero, Quem somos, Antes e Depois)
+   Nenhuma imagem real foi fornecida ainda (ver assets/img/README.md).
+   Cada <img> aponta para o arquivo esperado; se ele não existir, o
+   script.js adiciona a classe .is-pending e remove a <img>, revelando
+   o rótulo abaixo — nunca uma textura CSS fingindo ser fotografia.
+   ========================================================================== */
+
+.photo-slot {
+  position: absolute;
+  inset: 0;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--color-grafite);
+  overflow: hidden;
+}
+
+.photo-slot img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  /* Invisível até confirmar carregamento (evento "load" em js/script.js) —
+     nunca mostra o ícone nativo de imagem quebrada do navegador, nem por
+     um instante, enquanto não existir foto real. */
+  opacity: 0;
+}
+
+.photo-slot img.is-loaded {
+  opacity: 1;
+}
+
+.photo-slot-pending-label {
+  display: none;
+  text-align: center;
+  padding: var(--space-md);
+}
+
+.photo-slot.is-pending {
+  box-shadow: inset 0 0 0 1px var(--color-border-on-dark);
+}
+
+.photo-slot.is-pending .photo-slot-pending-label {
+  display: block;
+}
+
+.photo-slot-pending-label span {
+  display: block;
+  font-size: var(--fs-small);
+  font-weight: 600;
+  color: var(--color-marfim);
+  margin-bottom: 4px;
+}
+
+.photo-slot-pending-label small {
+  display: block;
+  font-family: var(--font-accent);
+  font-style: italic;
+  font-size: 11px;
+  color: var(--color-areia);
+}
+
+.quem-somos-grid {
+  display: grid;
+  gap: var(--space-lg);
+}
+
+.quem-somos-photo {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 4 / 5;
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+
+/* Fotografia de origem é paisagem (1672×941) dentro de um slot retrato
+   (4:5) — cover recorta a maior parte da largura. Posição escolhida para
+   manter mão/ferramenta, a película se soltando (transição aço original x
+   revestido) e o logo DYNEW nas costas sempre dentro do quadro. */
+.quem-somos-photo img {
+  object-position: 66% 32%;
+}
+
+@media (min-width: 800px) {
+  .quem-somos-grid {
+    grid-template-columns: 0.85fr 1.15fr;
+    align-items: center;
+    gap: var(--space-xl);
+  }
+
+  .quem-somos-photo img {
+    object-position: 63% 35%;
+  }
+}
+
+/* ==========================================================================
+   Por que revestir — três caminhos (Revestir em destaque)
+   ========================================================================== */
+
+/* Ajuste pontual: título centralizado, caixa alta, cor herdada de h2 —
+   estrutura/fonte/peso/tamanho sem override. Escopado a #problema para não
+   afetar .section-header de nenhuma outra seção. */
+#problema .section-header {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+#problema .section-header h2 {
+  text-align: center;
+  text-transform: uppercase;
+  /* h2 herda --color-heading (quase preto) por padrão — ilegível sobre o
+     novo fundo grafite da seção. */
+  color: var(--color-marfim);
+}
+
+/* Seção inteira em carbon (mesmo tom já usado pela coluna "Revestir",
+   --color-grafite) — antes só a terceira coluna tinha esse fundo, criando
+   a leitura de "card escuro isolado sobre fundo claro". Agora as três
+   colunas (e o fecho abaixo) vivem sobre a mesma superfície contínua. */
+#problema {
+  background-color: var(--color-grafite);
+  color: var(--color-areia);
+}
+
+/* Fecho ("Quando a estrutura pode permanecer..." + nota de sustentabilidade)
+   herdava --color-text-muted (cinza para fundo claro) — trocado para o
+   mesmo bege usado no corpo das três colunas. */
+#problema .section-transition,
+#problema .problema-sustain-note {
+  color: var(--color-areia);
+}
+
+.paths-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-lg);
+  border-top: 1px solid var(--color-border-on-dark);
+  padding-top: var(--space-md);
+}
+
+/* Divisor horizontal discreto entre os três grupos empilhados (mobile) —
+   reset em desktop, onde o grid vira 3 colunas lado a lado. */
+.path-item + .path-item {
+  border-top: 1px solid var(--color-border-on-dark);
+  padding-top: var(--space-lg);
+}
+
+/* Os três subtítulos (Substituir / Manter como está / Revestir) em
+   dourado DYNEW — antes só "Revestir" tinha esse destaque; agora os três
+   ganham o mesmo tratamento, e o que diferencia "Revestir" é só a borda
+   dourada abaixo (não mais um card com fundo próprio). */
+.path-item h3 {
+  font-size: 1.15rem;
+  margin-bottom: var(--space-sm);
+  color: var(--color-champanhe);
+}
+
+.path-item ul {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.path-item li {
+  font-size: 0.9375rem;
+  line-height: 1.5;
+  color: var(--color-areia);
+  padding-left: 14px;
+  position: relative;
+}
+
+.path-item li::before {
+  content: "–";
+  position: absolute;
+  left: 0;
+  color: var(--color-areia);
+}
+
+/* "Revestir" continua com leve prioridade visual, mas integrado à mesma
+   superfície — sem fundo/padding de card, só uma borda dourada fina à
+   esquerda (mesmo idioma visual já usado em .dinoc-tip/.faq-answer aberto
+   neste projeto para marcar destaque, sem inventar um tratamento novo). */
+.path-item--highlight {
+  border-left: 2px solid var(--color-champanhe);
+  padding-left: var(--space-md);
+}
+
+@media (min-width: 800px) {
+  .paths-grid {
+    grid-template-columns: 1fr 1fr 1.15fr;
+    align-items: start;
+    gap: var(--space-lg);
+  }
+
+  .path-item + .path-item {
+    border-top: none;
+    padding-top: 0;
+  }
+
+  /* Filete entre as duas primeiras colunas para as três leituras
+     parecerem uma comparação única, não três ilhas soltas — a terceira
+     já se diferencia pela borda dourada de .path-item--highlight. */
+  .paths-grid .path-item:nth-child(2) {
+    border-left: 1px solid var(--color-border-on-dark);
+    padding-left: var(--space-lg);
+  }
+
+  .path-item--highlight {
+    padding-left: var(--space-lg);
+  }
+}
+
+/* ==========================================================================
+   Teto / leveza — composição editorial texto + fotografia. Absorve a
+   mensagem da antiga seção independente "Nova materialidade sem
+   sobrecarregar..." (removida — repetia a mesma ideia desta), substituindo
+   o grid de 6 linhas por 4 benefícios + fotografia real grande.
+   ========================================================================== */
+
+#tetos {
+  padding: var(--space-xl) 0;
+}
+
+.tetos-layout {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-lg);
+}
+
+.tetos-support {
+  max-width: 46ch;
+  margin-top: var(--space-sm);
+  color: var(--color-text-muted-on-dark);
+}
+
+.tetos-benefits {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: var(--space-md) 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.tetos-benefits li {
+  position: relative;
+  padding-left: 18px;
+  font-size: 0.9375rem;
+  color: var(--color-text-on-dark);
+}
+
+.tetos-benefits li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.5em;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: var(--dy-copper);
+}
+
+.tetos-caveat {
+  max-width: 50ch;
+}
+
+.tetos-media {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  border-radius: var(--radius);
+  background-color: var(--color-grafite);
+}
+
+.tetos-media img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+@media (min-width: 900px) {
+  .tetos-layout {
+    /* ~45/55 — texto compacto à esquerda, fotografia protagonista à
+       direita, esticada (align-items:stretch, default) até a altura que a
+       coluna de texto define naturalmente. */
+    grid-template-columns: minmax(0, 45%) minmax(0, 55%);
+    align-items: stretch;
+    gap: var(--space-xl);
+  }
+
+  .tetos-text {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .tetos-media {
+    aspect-ratio: auto;
+    height: 100%;
+    min-height: 420px;
+  }
+}
+
+/* ==========================================================================
+   Aplicações — faixa horizontal (carrossel)
+   Mesmos 6 itens de antes; scroll nativo (touch/trackpad) + drag de mouse
+   (js/applications-carousel.js) + scroll-snap. Sem foto própria por item
+   (não existe no projeto) — cartão editorial com numeração no lugar.
+   ========================================================================== */
+
+.applications-carousel-wrap {
+  position: relative;
+  margin-top: var(--space-lg);
+}
+
+.applications-carousel {
+  display: flex;
+  gap: var(--space-md);
+  overflow-x: auto;
+  scroll-snap-type: x proximity;
+  scroll-padding-left: var(--space-md);
+  list-style: none;
+  margin: 0;
+  padding: 0 var(--space-md) var(--space-sm);
+  cursor: grab;
+  /* Esconde a scrollbar nativa — a navegação visível é por seta/drag/swipe. */
+  scrollbar-width: none;
+}
+
+.applications-carousel:active {
+  cursor: grabbing;
+}
+
+.applications-carousel::-webkit-scrollbar {
+  display: none;
+}
+
+/* Cartão fotográfico: imagem preenche o cartão inteiro, número reduzido a
+   marca d'água, nome em destaque sobre um gradiente sutil na base — a foto
+   é a protagonista, não um card de texto com número grande. */
+.applications-card {
+  position: relative;
+  flex: 0 0 auto;
+  width: 74vw;
+  max-width: 280px;
+  aspect-ratio: 4 / 5;
+  scroll-snap-align: start;
+  border-radius: var(--radius);
+  overflow: hidden;
+  background-color: var(--color-grafite);
+}
+
+.applications-card-photo {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.applications-card-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(13, 13, 13, 0) 45%, rgba(13, 13, 13, 0.75) 100%);
+  pointer-events: none;
+}
+
+.applications-card-index {
+  position: absolute;
+  top: var(--space-sm);
+  left: var(--space-sm);
+  font-family: var(--dy-font-mono);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  color: rgba(252, 251, 248, 0.7);
+}
+
+.applications-card-title {
+  position: absolute;
+  left: var(--space-sm);
+  right: var(--space-sm);
+  bottom: var(--space-sm);
+  margin: 0;
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: var(--dy-paper);
+  transition: transform var(--transition-base);
+}
+
+.applications-card:hover .applications-card-photo,
+.applications-card:focus-within .applications-card-photo {
+  transform: scale(1.02);
+}
+
+.applications-card:hover .applications-card-title,
+.applications-card:focus-within .applications-card-title {
+  transform: translateY(-2px);
+}
+
+.applications-arrow {
+  display: none;
+}
+
+@media (min-width: 700px) {
+  .applications-card {
+    width: 260px;
+  }
+
+  .applications-carousel {
+    padding-left: var(--dy-space-page-desktop);
+    padding-right: var(--dy-space-page-desktop);
+  }
+
+  .applications-arrow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 1px solid var(--color-border);
+    background-color: var(--color-bg);
+    color: var(--color-heading);
+    cursor: pointer;
+    z-index: 1;
+    transition: border-color var(--transition-fast), color var(--transition-fast);
+  }
+
+  .applications-arrow svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  .applications-arrow:hover,
+  .applications-arrow:focus-visible {
+    border-color: var(--color-champanhe);
+    color: var(--color-champanhe-text);
+  }
+
+  .applications-arrow--prev {
+    left: 8px;
+  }
+
+  .applications-arrow--next {
+    right: 8px;
+  }
+}
+
+/* ==========================================================================
+   Case real — curvas e volumes (antiga "Sustentabilidade")
+   Rodada anterior já tinha trocado o fundo claro por carbon full-bleed, mas
+   a composição em si ainda ficava presa a um max-width próprio (780/800px)
+   — numa seção de ~1300px de largura real (desktop grande), isso deixava
+   ~250px de vazio carbon de cada lado, ainda lendo como "componente
+   estreito centralizado", só que agora sobre preto em vez de branco.
+   Correção: usa .container (mesmo sistema de largura de TODAS as outras
+   seções — 900+, Teto, Aplicações) em vez de max-width bespoke, então o
+   conjunto ocupa a largura real do conteúdo da página, não uma ilha menor
+   dentro dela. */
+.case-piscina {
+  background-color: var(--color-bg-dark);
+  color: var(--color-text-on-dark);
+  padding: var(--space-2xl) 0;
+}
+
+/* Mobile: empilha na ordem do DOM (antes → texto → depois), largura cheia
+   do .container em cada bloco. Desktop/tablet: grid de 3 colunas abaixo. */
+.case-piscina-layout {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-lg);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+
+.case-piscina-text {
+  padding: var(--space-xl) var(--space-lg);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: var(--space-sm);
+}
+
+.case-piscina-eyebrow {
+  display: inline-block;
+  font-family: var(--dy-font-mono);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--dy-copper);
+}
+
+.case-piscina-text h2 {
+  font-size: 1.5rem;
+  color: var(--color-marfim);
+  margin: 0;
+}
+
+/* Body off-white (não dourado) — dourado fica só para o eyebrow, um
+   acento pequeno, não para o parágrafo inteiro. */
+.case-piscina-text > p {
+  max-width: 46ch;
+  color: var(--color-text-on-dark);
+  margin: 0;
+}
+
+.case-piscina-closing {
+  margin: var(--space-sm) 0 0;
+  font-family: var(--font-accent);
+  font-style: italic;
+  color: var(--color-marfim);
+}
+
+.case-piscina-media {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 3 / 4;
+  background-color: var(--color-grafite);
+}
+
+.case-piscina-media video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  /* Escurecimento leve (~15%) pedido para dar profundidade e valorizar a
+     geometria da curva — via CSS, os arquivos de vídeo não são alterados.
+     Aplicado igualmente aos dois vídeos para lerem como a mesma peça. */
+  filter: brightness(0.85);
+}
+
+/* Selo "Antes"/"Depois" — mesmo idioma visual do comparador da seção
+   Antes e Depois (.compare-label), não um componente novo. */
+.case-piscina-media-tag {
+  position: absolute;
+  bottom: var(--space-sm);
+  left: var(--space-sm);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 5px 10px;
+  border-radius: 999px;
+  background-color: rgba(13, 13, 13, 0.4);
+  color: var(--color-marfim);
+  backdrop-filter: blur(3px);
+  -webkit-backdrop-filter: blur(3px);
+  z-index: 1;
+}
+
+@media (min-width: 900px) {
+  .case-piscina-layout {
+    /* Vídeo / texto / vídeo — texto um pouco mais estreito que cada vídeo
+       (1fr contra 1.1fr). Altura da linha definida pelo conteúdo da coluna
+       de texto (mais alta, de propósito — ver comentário em .case-piscina-
+       media abaixo) — os dois vídeos esticam para acompanhar, então as
+       três colunas terminam sempre na mesma base, nunca com o texto
+       vazando por baixo do vídeo. */
+    grid-template-columns: 1.1fr 1fr 1.1fr;
+    align-items: stretch;
+    gap: 0;
+  }
+
+  /* Divisores finos entre os 3 blocos — mesma superfície carbon contínua,
+     não 3 cartões soltos. */
+  .case-piscina-text {
+    border-left: 1px solid var(--color-border-on-dark);
+    border-right: 1px solid var(--color-border-on-dark);
+    padding: var(--space-2xl) var(--space-xl);
+  }
+
+  /* Sem aspect-ratio fixo aqui: como o <video> é absolute/inset:0, esta
+     coluna não contribui altura própria para o grid — ela estica
+     (align-items:stretch) até a altura que a coluna de TEXTO já definiu
+     naturalmente (mesma técnica usada em .tetos-media/.dinoc-showcase-
+     media). Garante que os dois vídeos e o texto terminem exatamente na
+     mesma base, como uma peça só. */
+  .case-piscina-media {
+    aspect-ratio: auto;
+    height: 100%;
+    min-height: 460px;
+  }
+}
+
+/* ==========================================================================
+   FAQ
+   ========================================================================== */
+
+/* Ritmo mais compacto: menos respiro entre título e lista, seção não
+   precisa do padding-vertical padrão (64px) de todas as outras — os
+   próprios accordions já respiram o suficiente entre si. */
+#faq {
+  padding: var(--space-lg) 0;
+}
+
+#faq .section-header {
+  margin: 0 auto var(--space-md);
+  text-align: center;
+}
+
+.faq-list {
+  max-width: 800px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.faq-item {
+  border-bottom: 1px solid var(--color-border);
+}
+
+.faq-item:first-child {
+  border-top: 1px solid var(--color-border);
+}
+
+/* Duas colunas a partir de 900px — mesma lista, mesmos accordions, só o
+   container muda de flex (empilhado) para grid (2 colunas). A ordem no DOM
+   preenche por linha (Q1/Q2 na primeira linha, Q3/Q4 na segunda...), então
+   nada muda na lógica de abrir/fechar nem na leitura por teclado. */
+@media (min-width: 900px) {
+  .faq-list {
+    max-width: 1040px;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: var(--space-xl);
+    row-gap: 0;
+  }
+
+  /* :first-child só cobre a coluna esquerda; a segunda linha do grid (Q2)
+     também abre a composição e precisa do mesmo filete superior. */
+  .faq-item:nth-child(-n + 2) {
+    border-top: 1px solid var(--color-border);
+  }
+}
+
+.faq-question {
+  width: 100%;
+  text-align: left;
+  background-color: transparent;
+  border: none;
+  padding: var(--space-sm) 0;
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: 1rem;
+  color: var(--color-heading);
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--space-sm);
+  min-height: 44px;
+  transition: color var(--transition-fast);
+}
+
+/* Pergunta ativa ganha um leve acento — não um card, só cor. */
+.faq-question[aria-expanded="true"] {
+  color: var(--color-champanhe-text);
+}
+
+.faq-icon {
+  flex-shrink: 0;
+  color: currentColor;
+  transition: transform var(--transition-base);
+}
+
+.faq-question[aria-expanded="true"] .faq-icon {
+  transform: rotate(45deg);
+}
+
+.faq-answer {
+  display: grid;
+  grid-template-rows: 0fr;
+  overflow: hidden;
+  transition: grid-template-rows var(--transition-base);
+}
+
+.faq-answer[data-open="true"] {
+  grid-template-rows: 1fr;
+}
+
+.faq-answer > p {
+  /* Bug pré-existente corrigido: (1) sem margin:0, o margin-bottom padrão
+     do navegador (1em) impedia a linha 0fr de colapsar de verdade; (2) o
+     padding-bottom vivia fixo aqui em vez de só aparecer no estado aberto
+     (par do padding-top abaixo) — juntos, os dois deixavam uma lasca do
+     texto sempre visível sob cada pergunta fechada. */
+  margin: 0;
+  min-height: 0;
+  overflow: hidden;
+  padding-bottom: 0;
+  border-top: 1px solid transparent;
+}
+
+.faq-answer[data-open="true"] > p {
+  border-top-color: var(--color-champanhe);
+  padding-top: var(--space-sm);
+  padding-bottom: var(--space-sm);
+}
+
+/* Disabled genérico — estado reutilizável para qualquer .btn, se necessário. */
+.btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.btn:disabled:hover,
+.btn:disabled:focus-visible {
+  transform: none;
+}
+
+/* ==========================================================================
+   3M™ DI-NOC™ — possibilidades (showcase com hotspots)
+   ========================================================================== */
+
+.dinoc-showcase {
+  padding: var(--space-lg) 0;
+}
+
+/* Composição editorial: texto e foto lado a lado a partir de 900px (mesmo
+   breakpoint em que hotspots/tip já viram versão "desktop" — evita estado
+   intermediário dessincronizado). Abaixo disso, empilha em coluna única na
+   ordem do DOM: texto → 900+ → suporte → CTAs → imagem. */
+.dinoc-showcase-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-lg);
+}
+
+.dinoc-showcase-text {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.dinoc-showcase-eyebrow {
+  display: inline-block;
+  font-family: var(--dy-font-mono);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-champanhe-text);
+}
+
+.dinoc-showcase-headline-row {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-xs);
+}
+
+.dinoc-showcase-headline-row h2 {
+  margin: 0;
+  max-width: 20ch;
+}
+
+/* "900+" colado ao headline (não flutuando sozinho) — por isso vive dentro
+   de .dinoc-showcase-headline-row, com o mesmo gap apertado (--space-xs). */
+.dinoc-showcase-stat {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  line-height: 1;
+}
+
+.dinoc-showcase-stat-number {
+  font-family: var(--font-heading);
+  font-weight: 800;
+  font-size: clamp(2.5rem, 4.5vw, 3.375rem);
+  letter-spacing: -0.02em;
+  color: var(--color-champanhe-text);
+}
+
+.dinoc-showcase-stat-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+  margin-top: 4px;
+}
+
+.dinoc-showcase-support {
+  max-width: 42ch;
+  margin: 0;
+  font-size: 1rem;
+}
+
+.dinoc-showcase-media {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 3 / 2;
+  overflow: hidden;
+  border-radius: var(--radius);
+  background-color: var(--color-grafite);
+}
+
+.dinoc-showcase-media img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* Escurecimento sutil — só o suficiente para as legendas ficarem legíveis
+   em qualquer ponto da foto e dar profundidade, sem apagar a fotografia. */
+.dinoc-showcase-scrim {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(13, 13, 13, 0.16) 0%, rgba(13, 13, 13, 0.04) 30%, rgba(13, 13, 13, 0.04) 65%, rgba(13, 13, 13, 0.32) 100%);
+  pointer-events: none;
+}
+
+@media (min-width: 900px) {
+  .dinoc-showcase-grid {
+    /* ~38%/62%: texto compacto à esquerda, foto ocupando o restante à
+       direita, sem virar dois cartões — mesmo fundo, mesmo bloco. */
+    grid-template-columns: minmax(0, 38%) minmax(0, 62%);
+    align-items: stretch;
+    gap: var(--space-xl);
+  }
+
+  .dinoc-showcase-text {
+    justify-content: center;
+  }
+
+  /* Trecho da foto sem aspect-ratio fixo: como .dinoc-showcase-media img é
+     absolute, a coluna não contribui altura própria para o grid — ela
+     estica (align-items:stretch) até a altura que a coluna de texto já
+     definiu naturalmente. Resultado: a foto preenche a linha inteira,
+     começando no topo do texto e terminando na base da composição, sem
+     moldura vazia. min-height é só um piso de segurança. */
+  .dinoc-showcase-media {
+    aspect-ratio: auto;
+    height: 100%;
+    min-height: 420px;
+  }
+
+  /* Mantém a legenda na coluna da foto (coluna 2), não na do texto. O
+     ajuste de margin-top para este breakpoint (gap do grid maior aqui)
+     vive junto da regra base de .dinoc-showcase-note, mais abaixo neste
+     arquivo — precisa vir depois dela na cascata (mesma especificidade,
+     a base usa o shorthand `margin` e sobrescreveria um override colocado
+     aqui). */
+  .dinoc-showcase-note {
+    grid-column: 2;
+  }
+}
+
+/* Hotspots — no mobile é só um marcador pequeno (o nome completo vive em
+   .dinoc-showcase-panel, abaixo da foto, para não arriscar estourar a
+   largura); a partir de 900px vira uma pílula discreta com o nome do
+   acabamento direto sobre a fotografia (pedido do cliente: nomes, não só
+   números). --hx/--hy vêm inline por ponto. */
+/* Refinado para leitura editorial/arquitetônica, não pill de interface
+   SaaS: fundo carbon bem mais translúcido, borda fio-de-cabelo, tipografia
+   pequena com tracking maior (lê como legenda de planta, não botão),
+   padding reduzido, sem sombra. */
+.dinoc-hotspot {
+  position: absolute;
+  left: var(--hx);
+  top: var(--hy);
+  transform: translate(-50%, -50%);
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  width: 20px;
+  height: 20px;
+  justify-content: center;
+  border-radius: 999px;
+  border: 1px solid rgba(252, 251, 248, 0.45);
+  background: rgba(13, 13, 13, 0.24);
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
+  color: var(--dy-paper);
+  font-family: var(--dy-font-sans);
+  /* 11px, não 10px: piso de legibilidade para texto funcional/interativo
+     (rótulo de um botão clicável) — abaixo disso falha em telas de alta
+     densidade e mira de toque, mesmo com a leitura editorial pretendida. */
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+  cursor: pointer;
+  padding: 0;
+  transition: border-color var(--transition-fast), background-color var(--transition-fast), color var(--transition-fast);
+  opacity: 0;
+  transform: translate(-50%, -50%) scale(0.6);
+}
+
+.dinoc-hotspot-dot {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background-color: var(--dy-paper);
+  flex-shrink: 0;
+}
+
+.dinoc-hotspot-label {
+  display: none;
+}
+
+@media (min-width: 900px) {
+  .dinoc-hotspot {
+    width: auto;
+    height: auto;
+    padding: 4px 10px 4px 7px;
+  }
+
+  .dinoc-hotspot-label {
+    display: inline;
+  }
+}
+
+/* Entrada progressiva — só dispara quando .dinoc-showcase-media ganha
+   .is-visible (IntersectionObserver em js/dinoc-showcase.js), nunca no
+   parse da página (a seção fica bem abaixo da dobra). */
+.dinoc-showcase-media.is-visible .dinoc-hotspot {
+  animation: dinocHotspotIn var(--transition-base) forwards;
+}
+
+.dinoc-showcase-media.is-visible .dinoc-hotspot:nth-of-type(1) { animation-delay: 0ms; }
+.dinoc-showcase-media.is-visible .dinoc-hotspot:nth-of-type(2) { animation-delay: 60ms; }
+.dinoc-showcase-media.is-visible .dinoc-hotspot:nth-of-type(3) { animation-delay: 120ms; }
+.dinoc-showcase-media.is-visible .dinoc-hotspot:nth-of-type(4) { animation-delay: 180ms; }
+.dinoc-showcase-media.is-visible .dinoc-hotspot:nth-of-type(5) { animation-delay: 240ms; }
+.dinoc-showcase-media.is-visible .dinoc-hotspot:nth-of-type(6) { animation-delay: 300ms; }
+.dinoc-showcase-media.is-visible .dinoc-hotspot:nth-of-type(7) { animation-delay: 360ms; }
+.dinoc-showcase-media.is-visible .dinoc-hotspot:nth-of-type(8) { animation-delay: 420ms; }
+.dinoc-showcase-media.is-visible .dinoc-hotspot:nth-of-type(9) { animation-delay: 480ms; }
+
+@keyframes dinocHotspotIn {
+  from { opacity: 0; transform: translate(-50%, -50%) scale(0.6); }
+  to { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dinoc-hotspot,
+  .dinoc-showcase-media.is-visible .dinoc-hotspot {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+    animation: none;
+  }
+}
+
+.dinoc-hotspot:hover,
+.dinoc-hotspot:focus-visible,
+.dinoc-hotspot.is-active {
+  border-color: var(--dy-copper);
+  background-color: rgba(13, 13, 13, 0.55);
+  color: var(--color-champanhe);
+}
+
+.dinoc-hotspot:hover .dinoc-hotspot-dot,
+.dinoc-hotspot:focus-visible .dinoc-hotspot-dot,
+.dinoc-hotspot.is-active .dinoc-hotspot-dot {
+  background-color: var(--dy-copper);
+}
+
+.dinoc-hotspot:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-offset);
+}
+
+/* Ficha flutuante — só existe dentro da imagem a partir de 900px; abaixo
+   disso a informação vive em .dinoc-showcase-panel, fora da fotografia. */
+.dinoc-tip {
+  display: none;
+}
+
+@media (min-width: 900px) {
+  .dinoc-tip {
+    display: block;
+    position: absolute;
+    left: var(--space-md);
+    bottom: var(--space-md);
+    max-width: 260px;
+    padding: 12px 16px;
+    background: rgba(13, 13, 13, 0.82);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    border-left: 2px solid var(--color-champanhe);
+    opacity: 0;
+    transform: translateY(6px);
+    transition: opacity var(--transition-fast), transform var(--transition-fast);
+    pointer-events: none;
+  }
+
+  .dinoc-tip.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.dinoc-tip-name {
+  margin: 0;
+  font-size: 0.9375rem;
+  font-weight: 700;
+  color: var(--dy-paper);
+}
+
+.dinoc-tip-code {
+  margin: 4px 0 0;
+  font-family: var(--dy-font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.02em;
+  color: rgba(252, 251, 248, 0.75);
+}
+
+/* Ficha mobile — abaixo da imagem, nunca sobre a foto. Altura reservada
+   desde o início (min-height) para não gerar CLS quando o conteúdo troca. */
+.dinoc-showcase-panel {
+  margin-top: var(--space-sm);
+  min-height: 62px;
+  padding: 12px var(--space-sm);
+  background-color: var(--color-bg);
+  border-left: 2px solid var(--color-champanhe);
+}
+
+.dinoc-showcase-panel .dinoc-tip-name,
+.dinoc-showcase-panel .dinoc-tip-code {
+  color: var(--color-text);
+}
+
+.dinoc-showcase-panel .dinoc-tip-code {
+  color: var(--color-text-muted);
+}
+
+@media (min-width: 900px) {
+  .dinoc-showcase-panel {
+    display: none;
+  }
+}
+
+.dinoc-showcase-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-sm);
+  margin-top: var(--space-xs);
+}
+
+/* Legenda da foto — vive dentro de .dinoc-showcase-grid, logo depois de
+   .dinoc-showcase-media (rodapé da imagem), alinhada à esquerda como uma
+   legenda editorial, não mais centralizada sob a composição inteira.
+   O gap do grid (space-lg aqui, space-xl no desktop) existe para separar
+   texto↔foto, não foto↔legenda — margin-top negativa cancela a maior parte
+   desse gap, deixando só ~10px reais até o fim da imagem. */
+.dinoc-showcase-note {
+  text-align: left;
+  font-size: 11px;
+  color: var(--color-text-muted);
+  max-width: 60ch;
+  margin: calc(10px - var(--space-lg)) 0 0;
+}
+
+/* Precisa vir depois da regra base acima (mesma especificidade, cascata
+   por ordem) — recalcula o residual para ~12px reais, já que o gap do
+   grid neste breakpoint é space-xl, não space-lg. */
+@media (min-width: 900px) {
+  .dinoc-showcase-note {
+    margin-top: calc(12px - var(--space-xl));
+  }
+}
+
+/* ==========================================================================
+   Contato / CTA final — segunda seção escura
+   ========================================================================== */
+
+.contact {
+  background-color: var(--color-bg-dark);
+  color: var(--color-text-on-dark);
+  text-align: left;
+  /* Bottom reduzido (padrão de section é --space-xl/64px): a seção já
+     continua direto no rodapé (mesmo carbon, sem borda) — não precisa do
+     mesmo respiro inferior de uma seção que termina sozinha. */
+  padding-bottom: var(--space-lg);
+}
+
+/* Antes só a metade esquerda tinha conteúdo (o resto da seção escura ficava
+   vazio). Grid assimétrico usa a largura inteira: texto/CTA à esquerda,
+   dados de contato — os mesmos já existentes no site — à direita. */
+.contact-grid {
+  display: grid;
+  gap: var(--space-xl);
+}
+
+@media (min-width: 800px) {
+  .contact-grid {
+    grid-template-columns: 1.2fr 1fr;
+    align-items: center;
+    gap: var(--space-2xl);
+  }
+
+  .contact-info {
+    border-left: 1px solid var(--color-border-on-dark);
+    padding-left: var(--space-xl);
+  }
+}
+
+.contact h2 {
+  color: var(--color-text-on-dark);
+  max-width: 24ch;
+}
+
+.contact-primary p {
+  color: var(--color-text-muted-on-dark);
+  max-width: 50ch;
+}
+
+/* Incorpora o conceito da antiga seção "Cada projeto começa..." (removida)
+   sem criar novo bloco — uma linha curta, dourada (é um destaque pontual,
+   não um parágrafo longo), entre a descrição e o CTA. */
+.contact-analysis-note {
+  margin: var(--space-xs) 0 0;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--dy-copper);
+}
+
+.contact-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-sm);
+  margin-top: var(--space-lg);
+}
+
+.contact-microcopy {
+  font-size: 12px;
+  color: var(--color-text-muted-on-dark);
+  margin-top: var(--space-sm);
+}
+
+.contact-info {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.contact-details {
+  margin: 0;
+  font-size: 1.05rem;
+}
+
+.contact-details a {
+  color: var(--color-marfim);
+  border-bottom: 1px solid var(--color-champanhe);
+}
+
+.contact-institutional {
+  margin-top: var(--space-sm);
+  font-size: 12px;
+  color: var(--color-text-muted-on-dark);
+  max-width: 42ch;
+}
+
+/* ==========================================================================
+   Footer — continua #contato sem costura (mesmo carbon, sem borda entre os
+   dois): CTA → informações (em #contato) → assinatura monumental →
+   navegação/copyright, uma sequência única.
+   ========================================================================== */
+
+.site-footer {
+  background-color: var(--color-bg-dark);
+  color: var(--color-text-muted-on-dark);
+  /* Piso de legibilidade (15px) — nav e contatos do rodapé são conteúdo
+     funcional, não microcopy; só .site-footer-legal (info legal) fica
+     menor, com override próprio. */
+  font-size: 0.9375rem;
+}
+
+/* Instagram — vive em #contato .contact-info, logo abaixo do e-mail (mesma
+   coluna flex, mesmo eixo à esquerda). Ícone + @dynewbr + seta, sem card,
+   sem fundo, sem cor de marca do Instagram — só a paleta DYNEW. URL só no
+   href, nunca exibida como texto. */
+.dynew-social {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--color-text-muted-on-dark);
+  text-decoration: none;
+  font-family: var(--dy-font-mono);
+  font-size: 0.8125rem;
+  letter-spacing: 0.04em;
+  min-height: 44px;
+  transition: color var(--transition-fast);
+}
+
+.dynew-social-icon {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+}
+
+.dynew-social-arrow {
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
+  transition: transform var(--transition-fast);
+}
+
+.dynew-social:hover,
+.dynew-social:focus-visible {
+  color: var(--dy-copper);
+}
+
+.dynew-social:hover .dynew-social-arrow,
+.dynew-social:focus-visible .dynew-social-arrow {
+  transform: translate(2px, -2px);
+}
+
+/* Assinatura monumental — conjunto completo (ícone ND + wordmark), branco,
+   recorte próprio de assets/images/projetos/masters/LOGO CABEÇALHO/LOGO
+   BRANCO.png (mesma arte da versão dourada já usada no header, só cor
+   diferente — nenhum logo novo desenhado). overflow:hidden aqui é local ao
+   componente — nunca no body/html, então não pode gerar scroll horizontal
+   real mesmo se a marca tocar a borda. */
+.dynew-signature {
+  overflow: hidden;
+  text-align: center;
+  /* Respiro próprio no topo do rodapé — a marca é alta (ícone em cima do
+     nome, não é mais uma tira fina), por isso o padding generoso. Base
+     reduzida (space-lg, não space-2xl) para a faixa compacta ficar
+     diretamente abaixo da assinatura, sem vão entre as duas. */
+  padding: var(--space-md) var(--space-md) var(--space-lg);
+}
+
+/* Proporção própria (677×385, muito mais "quadrada" que o wordmark-só de
+   677×85): min(90vw,1100px) faria a marca ficar enorme em altura. Largura
+   recalibrada para o conjunto ícone+wordmark continuar monumental sem
+   dominar o rodapé inteiro. */
+.dynew-signature-mark {
+  width: min(48vw, 560px);
+  height: auto;
+  display: inline-block;
+}
+
+/* Entrada única (scale, não translateY) ao entrar no viewport — mesmo
+   mecanismo genérico de [data-reveal] (js/reveal.js), só a curva muda
+   aqui para a assinatura. */
+.dynew-signature[data-reveal] {
+  opacity: 0;
+  transform: scale(0.96);
+  transition: opacity 1s cubic-bezier(0.16, 1, 0.3, 1), transform 1s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.dynew-signature[data-reveal].is-revealed {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* Rodapé final: só copyright + nota legal, centralizados no mesmo eixo do
+   logo acima — sem nav, sem contato (já vive em #contato .contact-info,
+   logo acima do rodapé, sem duplicar). border-bottom (não border-top) para
+   a linha fina funcionar como fechamento da composição, não como abertura. */
+.site-footer-bottom {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-md);
+  padding: var(--space-md) 0 var(--space-lg);
+  border-bottom: 1px solid var(--color-border-on-dark);
+  text-align: center;
+}
+
+.site-footer-bottom p {
+  margin: 0;
+}
+
+/* Copyright + nota legal 3M: grupo próprio com respiro curto entre os
+   dois. */
+.site-footer-copy-group {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-xs);
+}
+
+.site-footer-copyright {
+  margin: 0;
+}
+
+/* Atribuição de marca 3M — movida da antiga seção "Confiança" (removida) só
+   como nota pequena de rodapé, logo abaixo do copyright, discreta. */
+.site-footer-legal {
+  margin: 0 auto;
+  font-size: 11px;
+  line-height: 1.5;
+  color: var(--color-text-muted-on-dark);
+  max-width: 62ch;
+  text-align: center;
+}
+
+/* Abaixo de 700px a nota legal é a última coisa antes da linha de
+   fechamento, na mesma altura do botão flutuante do WhatsApp (fixed,
+   canto inferior direito) — sem essa folga ela ficaria embaixo do botão.
+   max-width menor (não padding) mantém o bloco centralizado (margin:auto);
+   como a centralização empurra os dois lados igualmente, o recuo pedido de
+   um lado (space-md + 56px do botão + folga) precisa ser dobrado aqui. */
+@media (max-width: 699px) {
+  .site-footer-legal {
+    max-width: calc(100% - (var(--space-md) + 56px + var(--space-sm)) * 2);
+  }
+}
+
+/* ==========================================================================
+   Botão flutuante WhatsApp
+   ========================================================================== */
+
+/* Oculto na abertura do hero; aparece só depois de ~80px de scroll (ver
+   .is-visible, controlado por js/header-motion.js reaproveitando o mesmo
+   ScrollTrigger/scroll listener do dock do header — nenhum novo estado). */
+.whatsapp-float {
+  position: fixed;
+  right: var(--space-md);
+  bottom: var(--space-md);
+  z-index: 950;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background-color: var(--color-whatsapp);
+  color: #fff;
+  box-shadow: 0 4px 14px rgba(13, 13, 13, 0.28);
+  opacity: 0;
+  transform: translateY(12px) scale(0.92);
+  pointer-events: none;
+  transition: background-color var(--transition-fast), opacity var(--transition-base), transform var(--transition-base);
+}
+
+.whatsapp-float.is-visible {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  pointer-events: auto;
+}
+
+.whatsapp-float:hover,
+.whatsapp-float:focus-visible {
+  background-color: var(--color-whatsapp-dark);
+  transform: scale(1.05);
+}
+
+.whatsapp-float:active {
+  transform: scale(0.97);
+}
+
+.whatsapp-float svg {
+  width: 28px;
+  height: 28px;
+}

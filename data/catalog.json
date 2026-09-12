@@ -1,0 +1,308 @@
+{
+  "_meta": {
+    "description": "Curadoria inicial de códigos 3M DI-NOC verificados no catálogo global 2024 fornecido pelo usuário (3m-dinoc-architectural-finishes-sample-book-high-res.pdf, 85 páginas, >900 padrões). Cada código abaixo foi localizado e conferido diretamente no texto extraído do PDF (ver .tmp-audit/catalogo-texto.txt, não versionado). Nomes de padrão só foram preenchidos quando encontrados de forma inequívoca ao lado do código no PDF; nos demais casos, 'name' repete o código — nenhum nome foi inventado. Números de página são estimativas de melhor esforço (extração de texto sem paginação confiável) e precisam de confirmação visual antes de uso comercial. Nenhuma imagem foi extraída ainda (sem ferramenta de extração de imagem de PDF disponível neste ambiente — ver THIRD_PARTY_ASSETS.md). Nenhum destes 27 itens está confirmado como disponível em estoque no Brasil; todos exigem consulta.",
+    "catalog_source_file": "assets/catalogo/raw/3m-dinoc-architectural-finishes-sample-book-high-res.pdf",
+    "catalog_year": 2024,
+    "extracted_at": "2026-09-08",
+    "standard_roll_dimension": "1.22m x 50m (algumas séries especiais: 1.22m x 25m, conforme documento de conceito interno)"
+  },
+  "items": [
+    {
+      "code": "PS-2400MTRC",
+      "name": "Desert Sand",
+      "family": "solid-color",
+      "collection": "E-Series RC",
+      "functional_series": ["RC"],
+      "source": { "type": "3m-global-pdf-2024", "url": "", "catalog_year": 2024, "pdf_page": 19, "verified_at": "2026-09-08" },
+      "market_status": "CURRENT_GLOBAL_ONLY",
+      "availability_note": "Disponibilidade sujeita a consulta.",
+      "image": { "source_url": "", "local_original": "", "local_optimized": "", "rights_note": "", "discontinuation_check_required": true }
+    },
+    {
+      "code": "PS-2401MTRC",
+      "name": "Terracotta Brown",
+      "family": "solid-color",
+      "collection": "E-Series RC",
+      "functional_series": ["RC"],
+      "source": { "type": "3m-global-pdf-2024", "url": "", "catalog_year": 2024, "pdf_page": 19, "verified_at": "2026-09-08" },
+      "market_status": "CURRENT_GLOBAL_ONLY",
+      "availability_note": "Disponibilidade sujeita a consulta.",
+      "image": { "source_url": "", "local_original": "", "local_optimized": "", "rights_note": "", "discontinuation_check_required": true }
+    },
+    {
+      "code": "PS-2402MTRC",
+      "name": "Sage Green",
+      "family": "solid-color",
+      "collection": "E-Series RC",
+      "functional_series": ["RC"],
+      "source": { "type": "3m-global-pdf-2024", "url": "", "catalog_year": 2024, "pdf_page": 19, "verified_at": "2026-09-08" },
+      "market_status": "CURRENT_GLOBAL_ONLY",
+      "availability_note": "Disponibilidade sujeita a consulta.",
+      "image": { "source_url": "", "local_original": "", "local_optimized": "", "rights_note": "", "discontinuation_check_required": true }
+    },
+    {
+      "code": "PS-2403MTRC",
+      "name": "Air Blue",
+      "family": "solid-color",
+      "collection": "E-Series RC",
+      "functional_series": ["RC"],
+      "source": { "type": "3m-global-pdf-2024", "url": "", "catalog_year": 2024, "pdf_page": 19, "verified_at": "2026-09-08" },
+      "market_status": "CURRENT_GLOBAL_ONLY",
+      "availability_note": "Disponibilidade sujeita a consulta.",
+      "image": { "source_url": "", "local_original": "", "local_optimized": "", "rights_note": "", "discontinuation_check_required": true }
+    },
+    {
+      "code": "PS-2405MTRC",
+      "name": "Classic Navy",
+      "family": "solid-color",
+      "collection": "E-Series RC",
+      "functional_series": ["RC"],
+      "source": { "type": "3m-global-pdf-2024", "url": "", "catalog_year": 2024, "pdf_page": 19, "verified_at": "2026-09-08" },
+      "market_status": "CURRENT_GLOBAL_ONLY",
+      "availability_note": "Disponibilidade sujeita a consulta.",
+      "image": { "source_url": "", "local_original": "", "local_optimized": "", "rights_note": "", "discontinuation_check_required": true }
+    },
+    {
+      "code": "PS-2406MTRC",
+      "name": "Midnight Black",
+      "family": "solid-color",
+      "collection": "E-Series RC",
+      "functional_series": ["RC"],
+      "source": { "type": "3m-global-pdf-2024", "url": "", "catalog_year": 2024, "pdf_page": 19, "verified_at": "2026-09-08" },
+      "market_status": "CURRENT_GLOBAL_ONLY",
+      "availability_note": "Disponibilidade sujeita a consulta.",
+      "image": { "source_url": "", "local_original": "", "local_optimized": "", "rights_note": "", "discontinuation_check_required": true }
+    },
+    {
+      "code": "PW-2322MT",
+      "name": "PW-2322MT",
+      "family": "wood",
+      "collection": "Premium Wood",
+      "functional_series": [],
+      "source": { "type": "3m-global-pdf-2024", "url": "", "catalog_year": 2024, "pdf_page": 37, "verified_at": "2026-09-08" },
+      "market_status": "CURRENT_GLOBAL_ONLY",
+      "availability_note": "Disponibilidade sujeita a consulta.",
+      "image": { "source_url": "", "local_original": "", "local_optimized": "", "rights_note": "", "discontinuation_check_required": true }
+    },
+    {
+      "code": "PW-2325MT",
+      "name": "PW-2325MT",
+      "family": "wood",
+      "collection": "Premium Wood",
+      "functional_series": [],
+      "source": { "type": "3m-global-pdf-2024", "url": "", "catalog_year": 2024, "pdf_page": 15, "verified_at": "2026-09-08" },
+      "market_status": "CURRENT_GLOBAL_ONLY",
+      "availability_note": "Disponibilidade sujeita a consulta. Listado nos lançamentos 2024 do catálogo.",
+      "image": { "source_url": "", "local_original": "", "local_optimized": "", "rights_note": "", "discontinuation_check_required": true }
+    },
+    {
+      "code": "DW-2473MT",
+      "name": "DW-2473MT",
+      "family": "wood",
+      "collection": "Dry Wood",
+      "functional_series": [],
+      "source": { "type": "3m-global-pdf-2024", "url": "", "catalog_year": 2024, "pdf_page": 38, "verified_at": "2026-09-08" },
+      "market_status": "CURRENT_GLOBAL_ONLY",
+      "availability_note": "Disponibilidade sujeita a consulta.",
+      "image": { "source_url": "", "local_original": "", "local_optimized": "", "rights_note": "", "discontinuation_check_required": true }
+    },
+    {
+      "code": "DW-2481MT",
+      "name": "DW-2481MT",
+      "family": "wood",
+      "collection": "Dry Wood",
+      "functional_series": [],
+      "source": { "type": "3m-global-pdf-2024", "url": "", "catalog_year": 2024, "pdf_page": 39, "verified_at": "2026-09-08" },
+      "market_status": "CURRENT_GLOBAL_ONLY",
+      "availability_note": "Disponibilidade sujeita a consulta.",
+      "image": { "source_url": "", "local_original": "", "local_optimized": "", "rights_note": "", "discontinuation_check_required": true }
+    },
+    {
+      "code": "AE-2500MT",
+      "name": "AE-2500MT",
+      "family": "concrete-stucco",
+      "collection": "Fresco / Stucco",
+      "functional_series": [],
+      "source": { "type": "3m-global-pdf-2024", "url": "", "catalog_year": 2024, "pdf_page": 21, "verified_at": "2026-09-08" },
+      "market_status": "CURRENT_GLOBAL_ONLY",
+      "availability_note": "Disponibilidade sujeita a consulta.",
+      "image": { "source_url": "", "local_original": "", "local_optimized": "", "rights_note": "", "discontinuation_check_required": true }
+    },
+    {
+      "code": "AE-2503",
+      "name": "AE-2503",
+      "family": "concrete-stucco",
+      "collection": "Fresco / Stucco",
+      "functional_series": [],
+      "source": { "type": "3m-global-pdf-2024", "url": "", "catalog_year": 2024, "pdf_page": 34, "verified_at": "2026-09-08" },
+      "market_status": "CURRENT_GLOBAL_ONLY",
+      "availability_note": "Disponibilidade sujeita a consulta.",
+      "image": { "source_url": "", "local_original": "", "local_optimized": "", "rights_note": "", "discontinuation_check_required": true }
+    },
+    {
+      "code": "AE-2506",
+      "name": "AE-2506",
+      "family": "concrete-stucco",
+      "collection": "Fresco / Stucco",
+      "functional_series": [],
+      "source": { "type": "3m-global-pdf-2024", "url": "", "catalog_year": 2024, "pdf_page": 34, "verified_at": "2026-09-08" },
+      "market_status": "CURRENT_GLOBAL_ONLY",
+      "availability_note": "Disponibilidade sujeita a consulta.",
+      "image": { "source_url": "", "local_original": "", "local_optimized": "", "rights_note": "", "discontinuation_check_required": true }
+    },
+    {
+      "code": "AE-2508",
+      "name": "AE-2508",
+      "family": "concrete-stucco",
+      "collection": "Fresco / Stucco",
+      "functional_series": [],
+      "source": { "type": "3m-global-pdf-2024", "url": "", "catalog_year": 2024, "pdf_page": 15, "verified_at": "2026-09-08" },
+      "market_status": "CURRENT_GLOBAL_ONLY",
+      "availability_note": "Disponibilidade sujeita a consulta. Listado nos lançamentos 2024 do catálogo.",
+      "image": { "source_url": "", "local_original": "", "local_optimized": "", "rights_note": "", "discontinuation_check_required": true }
+    },
+    {
+      "code": "ME-2551",
+      "name": "ME-2551",
+      "family": "metal",
+      "collection": "Black Iron",
+      "functional_series": [],
+      "source": { "type": "3m-global-pdf-2024", "url": "", "catalog_year": 2024, "pdf_page": 24, "verified_at": "2026-09-08" },
+      "market_status": "CURRENT_GLOBAL_ONLY",
+      "availability_note": "Disponibilidade sujeita a consulta.",
+      "image": { "source_url": "", "local_original": "", "local_optimized": "", "rights_note": "", "discontinuation_check_required": true }
+    },
+    {
+      "code": "ME-2552",
+      "name": "ME-2552",
+      "family": "metal",
+      "collection": "Metal",
+      "functional_series": [],
+      "source": { "type": "3m-global-pdf-2024", "url": "", "catalog_year": 2024, "pdf_page": 23, "verified_at": "2026-09-08" },
+      "market_status": "CURRENT_GLOBAL_ONLY",
+      "availability_note": "Disponibilidade sujeita a consulta.",
+      "image": { "source_url": "", "local_original": "", "local_optimized": "", "rights_note": "", "discontinuation_check_required": true }
+    },
+    {
+      "code": "ME-2554",
+      "name": "ME-2554",
+      "family": "metal",
+      "collection": "Metal",
+      "functional_series": [],
+      "source": { "type": "3m-global-pdf-2024", "url": "", "catalog_year": 2024, "pdf_page": 20, "verified_at": "2026-09-08" },
+      "market_status": "CURRENT_GLOBAL_ONLY",
+      "availability_note": "Disponibilidade sujeita a consulta.",
+      "image": { "source_url": "", "local_original": "", "local_optimized": "", "rights_note": "", "discontinuation_check_required": true }
+    },
+    {
+      "code": "ME-2559",
+      "name": "ME-2559",
+      "family": "metal",
+      "collection": "Metal",
+      "functional_series": [],
+      "source": { "type": "3m-global-pdf-2024", "url": "", "catalog_year": 2024, "pdf_page": 20, "verified_at": "2026-09-08" },
+      "market_status": "CURRENT_GLOBAL_ONLY",
+      "availability_note": "Disponibilidade sujeita a consulta.",
+      "image": { "source_url": "", "local_original": "", "local_optimized": "", "rights_note": "", "discontinuation_check_required": true }
+    },
+    {
+      "code": "ME-2562",
+      "name": "ME-2562",
+      "family": "metal",
+      "collection": "Oxidized Metal",
+      "functional_series": [],
+      "source": { "type": "3m-global-pdf-2024", "url": "", "catalog_year": 2024, "pdf_page": 22, "verified_at": "2026-09-08" },
+      "market_status": "CURRENT_GLOBAL_ONLY",
+      "availability_note": "Disponibilidade sujeita a consulta.",
+      "image": { "source_url": "", "local_original": "", "local_optimized": "", "rights_note": "", "discontinuation_check_required": true }
+    },
+    {
+      "code": "ME-2564",
+      "name": "ME-2564",
+      "family": "metal",
+      "collection": "Oxidized Metal",
+      "functional_series": [],
+      "source": { "type": "3m-global-pdf-2024", "url": "", "catalog_year": 2024, "pdf_page": 15, "verified_at": "2026-09-08" },
+      "market_status": "CURRENT_GLOBAL_ONLY",
+      "availability_note": "Disponibilidade sujeita a consulta. Listado nos lançamentos 2024 do catálogo.",
+      "image": { "source_url": "", "local_original": "", "local_optimized": "", "rights_note": "", "discontinuation_check_required": true }
+    },
+    {
+      "code": "ST-2533MT",
+      "name": "ST-2533MT",
+      "family": "stone",
+      "collection": "Stone",
+      "functional_series": [],
+      "source": { "type": "3m-global-pdf-2024", "url": "", "catalog_year": 2024, "pdf_page": 30, "verified_at": "2026-09-08" },
+      "market_status": "CURRENT_GLOBAL_ONLY",
+      "availability_note": "Disponibilidade sujeita a consulta.",
+      "image": { "source_url": "", "local_original": "", "local_optimized": "", "rights_note": "", "discontinuation_check_required": true }
+    },
+    {
+      "code": "ST-2534MT",
+      "name": "ST-2534MT",
+      "family": "stone",
+      "collection": "Stone",
+      "functional_series": [],
+      "source": { "type": "3m-global-pdf-2024", "url": "", "catalog_year": 2024, "pdf_page": 30, "verified_at": "2026-09-08" },
+      "market_status": "CURRENT_GLOBAL_ONLY",
+      "availability_note": "Disponibilidade sujeita a consulta.",
+      "image": { "source_url": "", "local_original": "", "local_optimized": "", "rights_note": "", "discontinuation_check_required": true }
+    },
+    {
+      "code": "ST-2536MT",
+      "name": "ST-2536MT",
+      "family": "stone",
+      "collection": "Stone",
+      "functional_series": [],
+      "source": { "type": "3m-global-pdf-2024", "url": "", "catalog_year": 2024, "pdf_page": 15, "verified_at": "2026-09-08" },
+      "market_status": "CURRENT_GLOBAL_ONLY",
+      "availability_note": "Disponibilidade sujeita a consulta. Listado nos lançamentos 2024 do catálogo.",
+      "image": { "source_url": "", "local_original": "", "local_optimized": "", "rights_note": "", "discontinuation_check_required": true }
+    },
+    {
+      "code": "ST-2538MT",
+      "name": "ST-2538MT",
+      "family": "stone",
+      "collection": "Stone",
+      "functional_series": [],
+      "source": { "type": "3m-global-pdf-2024", "url": "", "catalog_year": 2024, "pdf_page": 30, "verified_at": "2026-09-08" },
+      "market_status": "CURRENT_GLOBAL_ONLY",
+      "availability_note": "Disponibilidade sujeita a consulta.",
+      "image": { "source_url": "", "local_original": "", "local_optimized": "", "rights_note": "", "discontinuation_check_required": true }
+    },
+    {
+      "code": "VM-2361",
+      "name": "VM-2361",
+      "family": "metal",
+      "collection": "Metal (VM)",
+      "functional_series": [],
+      "source": { "type": "3m-global-pdf-2024", "url": "", "catalog_year": 2024, "pdf_page": 25, "verified_at": "2026-09-08" },
+      "market_status": "UNVERIFIED",
+      "availability_note": "Disponibilidade sujeita a consulta. Família/coleção exata (prefixo VM) não confirmada com precisão no texto extraído — confirmar visualmente antes de publicar.",
+      "image": { "source_url": "", "local_original": "", "local_optimized": "", "rights_note": "", "discontinuation_check_required": true }
+    },
+    {
+      "code": "VM-2363",
+      "name": "VM-2363",
+      "family": "metal",
+      "collection": "Metal (VM)",
+      "functional_series": [],
+      "source": { "type": "3m-global-pdf-2024", "url": "", "catalog_year": 2024, "pdf_page": 25, "verified_at": "2026-09-08" },
+      "market_status": "UNVERIFIED",
+      "availability_note": "Disponibilidade sujeita a consulta. Família/coleção exata (prefixo VM) não confirmada com precisão no texto extraído — confirmar visualmente antes de publicar.",
+      "image": { "source_url": "", "local_original": "", "local_optimized": "", "rights_note": "", "discontinuation_check_required": true }
+    },
+    {
+      "code": "VM-2364",
+      "name": "VM-2364",
+      "family": "metal",
+      "collection": "Metal (VM)",
+      "functional_series": [],
+      "source": { "type": "3m-global-pdf-2024", "url": "", "catalog_year": 2024, "pdf_page": 15, "verified_at": "2026-09-08" },
+      "market_status": "UNVERIFIED",
+      "availability_note": "Disponibilidade sujeita a consulta. Listado nos lançamentos 2024. Família/coleção exata (prefixo VM) não confirmada com precisão no texto extraído.",
+      "image": { "source_url": "", "local_original": "", "local_optimized": "", "rights_note": "", "discontinuation_check_required": true }
+    }
+  ]
+}
