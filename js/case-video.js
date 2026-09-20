@@ -4,9 +4,11 @@
   var videos = document.querySelectorAll("[data-case-video]");
   if (!videos.length) return;
 
-  /* prefers-reduced-motion: nunca depende de autoplay — o poster já
-     apresenta o projeto adequadamente. */
-  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  /* prefers-reduced-motion NÃO bloqueia os dois vídeos: eles são conteúdo
+     demonstrativo (o "antes"/"depois" real do case), não decoração. Reduzir
+     movimento decorativo é diferente de desativar o conteúdo — os vídeos
+     continuam tocando muted+playsinline ao entrar/sair do viewport; só não
+     há (e nunca houve aqui) transições decorativas além disso. */
 
   /* Histerese entre tocar e pausar: um único threshold (ex.: 0.35) fazia o
      vídeo pausar assim que o ratio de interseção caísse um pouco abaixo

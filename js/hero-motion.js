@@ -68,11 +68,39 @@
     }
   }
 
-  // prefers-reduced-motion: mostra só a primeira cena, sem timeline.
+  // Reproduz/pausa o <video> de cada cena — não é uma timeline nova nem
+  // muda quando as cenas trocam (mesmo ponto de tl.call() de sempre), só
+  // evita decodificar os 4 vídeos ao mesmo tempo: cena 0 já nasce com
+  // preload="auto" (prioritária), as demais com preload="none" (lazy) e só
+  // começam a carregar/tocar no instante em que se tornam a cena ativa.
+  //
+  // play() defensivo: força muted (propriedade, não só atributo) logo antes
+  // de cada play() e engole a rejeição da Promise — necessário tanto no modo
+  // normal quanto no reduced-motion, onde este é o ÚNICO play() do hero.
+  function playSceneVideo(scene) {
+    var video = scene.querySelector(".hero-scene-video");
+    if (!video || !video.paused) return;
+    if (video.preload !== "auto") video.preload = "auto";
+    video.muted = true;
+    video.defaultMuted = true;
+    var playPromise = video.play();
+    if (playPromise && typeof playPromise.catch === "function") playPromise.catch(function () {});
+  }
+
+  function pauseSceneVideo(scene) {
+    var video = scene.querySelector(".hero-scene-video");
+    if (video && !video.paused) video.pause();
+  }
+
+  // prefers-reduced-motion: mostra só a primeira cena, sem crossfade/zoom e
+  // sem troca automática de cena — mas o vídeo da cena ativa continua
+  // reproduzindo (reduzir movimento decorativo não é o mesmo que desativar o
+  // conteúdo audiovisual principal).
   if (reduceMotion || typeof gsap === "undefined") {
     scenes.forEach(function (scene, i) {
       scene.classList.toggle("is-active", i === 0);
     });
+    playSceneVideo(scenes[0]);
     setRailStep(1, false);
     // Sem GSAP/ScrollTrigger neste modo — visibilidade do rail via scroll
     // simples (mesmo padrão do fallback de header-motion.js), não é um
@@ -95,24 +123,6 @@
 
   var HOLD = 4; // segundos por cena (3.5–4.5s)
   var CROSSFADE = 1; // segundos de transição (900–1200ms)
-
-  // Reproduz/pausa o <video> de cada cena — não é uma timeline nova nem
-  // muda quando as cenas trocam (mesmo ponto de tl.call() de sempre), só
-  // evita decodificar os 4 vídeos ao mesmo tempo: cena 0 já nasce com
-  // preload="auto" (prioritária), as demais com preload="none" (lazy) e só
-  // começam a carregar/tocar no instante em que se tornam a cena ativa.
-  function playSceneVideo(scene) {
-    var video = scene.querySelector(".hero-scene-video");
-    if (!video || !video.paused) return;
-    if (video.preload !== "auto") video.preload = "auto";
-    var playPromise = video.play();
-    if (playPromise && typeof playPromise.catch === "function") playPromise.catch(function () {});
-  }
-
-  function pauseSceneVideo(scene) {
-    var video = scene.querySelector(".hero-scene-video");
-    if (video && !video.paused) video.pause();
-  }
 
   scenes.forEach(function (scene, i) {
     gsap.set(scene, { autoAlpha: i === 0 ? 1 : 0, scale: 1 });
