@@ -40,8 +40,14 @@
     if (navList) navList.style.opacity = isDocked ? "1" : "0.78";
   }
 
-  // --- prefers-reduced-motion: dois estados instantâneos a 24px, sem scrub ---
+  // --- prefers-reduced-motion: dois estados a 24px, sem scrub/tween de
+  // GSAP — mas com uma transição CSS curta (150ms, só opacity) para que a
+  // troca pequeno<->grande do logo continue perceptível, em vez de um corte
+  // seco de um frame para o outro. ---
   if (reduceMotion || typeof gsap === "undefined") {
+    var REDUCED_TRANSITION = "opacity 150ms ease-out";
+    brandLockup.style.transition = REDUCED_TRANSITION;
+    brandWordmark.style.transition = REDUCED_TRANSITION;
     var applyState = function () {
       setDockedState(window.scrollY > 24);
       // Reaproveita este mesmo listener/estado de scroll (nenhum novo é
