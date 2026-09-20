@@ -70,9 +70,12 @@
      de imagem quebrada, mesmo por um instante) e só fica visível no
      evento "load". Como as imagens começam a carregar assim que o
      HTML é parseado — antes deste script (carregado no fim do body)
-     — uma imagem já pode ter falhado e perdido o evento "error" por
-     esse motivo; por isso cada <img> também é checada de forma
-     síncrona (img.complete && naturalWidth === 0 = já falhou). */
+     — uma imagem já pode ter terminado (sucesso ou falha) e perdido
+     o evento "load"/"error" por esse motivo; por isso cada <img>
+     também é checada de forma síncrona via img.complete: naturalWidth
+     === 0 significa que já falhou, naturalWidth > 0 significa que já
+     carregou (fetchpriority="high"/cache podem terminar o load antes
+     deste script registrar o listener). */
   function markPending(img) {
     var slot = img.closest("[data-photo-slot]");
     if (slot) slot.classList.add("is-pending");
@@ -80,8 +83,12 @@
   }
 
   document.querySelectorAll(".js-photo-slot-img").forEach(function (img) {
-    if (img.complete && img.naturalWidth === 0) {
-      markPending(img);
+    if (img.complete) {
+      if (img.naturalWidth === 0) {
+        markPending(img);
+      } else {
+        img.classList.add("is-loaded");
+      }
       return;
     }
     img.addEventListener("error", function () {
